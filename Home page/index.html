@@ -1,0 +1,152 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+</head>
+<body>
+   <nav class="container mx-auto py-3 px-22 "  >
+    <div class="flex items-center justify-between" >
+        <div>
+            <a href="index.html"><img src="../images/black-logo.png" class=" w-20" alt="company logo"></a>
+
+        </div>
+        <div class="hidden md:flex space-x-6" >
+            <a class="ml-5 hover:text-indigo-600 " href="../About us/index.html">About us</a>
+            <a class="ml-5 hover:text-indigo-600" href="../Blogpage/index.html">Blog</a>
+            <a class="ml-5 hover:text-indigo-600" href="../Contact/index.html">Contact</a>
+            <a class="ml-5 border-1 px-3 py-1 rounded-3xl hover:text-white hover:bg-black " href="">Login</a>
+            <!-- <a class="ml-5 border-1 px-3 py-1 rounded-3xl bg-black text-white " href="">Get Started</a> -->
+        </div>
+
+        <button id="mobile-btn" class="md:hidden cursor-pointer ">
+            <i class="ri-menu-line text-2xl"></i>
+        </button>
+
+    </div>
+
+        <div class="md:hidden">
+            <div id="mobile-menu" class="absolute flex hidden flex-col items-center space-y-4 font-bold bg-gray-50 py-8 left-6 right-6 drop-shadow-lg border-gray-300  ">
+                <a href="#">About us</a>
+                <a href="../Blogpage/index.html">Blog</a>
+                <a href="../Contact/index.html"  >Contact</a>
+                <a class="border-1 px-3 py-1 rounded-3xl hover:text-white hover:bg-black " href="">Login</a>
+
+            </div>
+        </div>
+
+   </nav>
+
+   <section >
+    <div class="container mx-auto px-6 space-x-6 flex flex-col md:flex-row px-15 " >
+        <div class="md:w-1/2 flex flex-col justify-center space-y-5 py-8 text-center md:text-left " >
+            <img w-[50px] src="../images/teamingUp.png" alt="Teaming-Up">
+
+        </div>
+        <div class="md:w-1/2 flex flex-col justify-center space-y-5 py-8 text-center md:text-left" >
+            <h1 class="font-bold text-3xl md:text-5xl " >
+                Meet your <span class="text-yellow-400" >team</span>
+                Build your <span class="text-yellow-400" >dream</span>
+            </h1>
+            <p>
+                Struggling to find teammates for your school project? [App Name] connects you with classmates, helping you build the perfect team to tackle assignments together. Once matched, organize tasks, share notes, and collaborate in one place
+            </p>
+            <a class="border-1 px py-1 rounded-lg bg-black text-center text-white w-30 self-center md:self-start " href="../SignupPage/index.html" s  >Get Started</a>
+
+        </div>
+
+    </div>
+
+
+   </section>
+
+   <section class="author px-10 " >
+        <div class="mx-auto my-32 text-center container  " >
+            <h2 class="font-bold text-4xl mb-30 " >Our features</h2>
+            <div class="mt-6 flex flex-col text-left space-x-0 justify-center space-y-5 md:flex-row md:space-x-5 md:space-y-0 mb-10 " >
+                <div class=" md:w-1/5 flex flex-col  p-6 space-y-2 rounded-3xl bg-slate-200 mb-10">
+                    <div class="bg-neutral-900 w-12 h-12 rounded-full -mt-11 "  ></div>
+                    <h5 class="font-bold text-lg " >Team Formation</h5>
+                    <p class="text-zinc-600 text-sm" >Easily create and join teams with your classmates.</p>
+                </div>
+
+                <div class=" md:w-1/5 flex flex-col p-6 space-y-2 rounded-3xl bg-slate-200 mb-10">
+                    <div class="bg-pink-700 w-12 h-12 rounded-full -mt-11  "  ></div>
+                    <h5 class="font-bold text-lg " >Project Selection</h5>
+                    <p class="text-zinc-600 text-sm" >Choose a subject that aligns with your interests.</p>
+                </div>
+
+                <div class=" md:w-1/5 flex flex-col p-6 space-y-2 rounded-3xl bg-slate-200 mb-10 ">
+                    <div class="bg-yellow-400 w-12 h-12 rounded-full -mt-11 "  ></div>
+                    <h5 class="font-bold text-lg " >Task Management</h5>
+                    <p class="text-zinc-600 text-sm" >Create, assign, and track tasks effectively</p>
+                </div>
+
+                <div class=" md:w-1/5 flex flex-col p-6 space-y-2 rounded-3xl bg-slate-200 mb-10">
+                    <div class="bg-indigo-600 w-12 h-12 rounded-full -mt-11 "  ></div>
+                    <h5 class="font-bold text-lg " >Note-Taking</h5>
+                    <p class="text-zinc-600 text-sm" >Centralized platform for storing and sharing notes</p>
+                </div>
+
+
+
+
+
+            </div>
+
+            <a href="../SignupPage/index.html" class="text-white bg-black px-3 py-2 rounded-lg text-sm cursor-pointer" >Get Started Today</a>
+        </div>
+   </section>
+
+   <footer class="bg-slate-900" >
+        <div class="container mx-auto flex flex-col-reverse  text-white px-15 py-10 justify-between space-y-8 md:flex-row  md:space-y-0  " >
+            <div class="flex flex-col  items-center justify-between space-y-12 md:space-y-2 md:items-start  ">
+                <div class="text-center mt-6 md:mt-0  ">
+
+                </div>
+                <div>
+                    <img src="../images/white-logo.png" alt="logo" class="h-8" >
+                </div>
+                <div class="flex space-x-4 " >
+                    <a href="#"><i class="ri-facebook-box-fill text-3xl "></i></a>
+                    <a href="#"><i class="ri-instagram-fill text-3xl "></i></a>
+                    <a href="#"><i class="ri-youtube-fill text-3xl "></i></a>
+                    <a href="#"><i class="ri-linkedin-fill text-3xl "></i></a>
+                    <a href="#"><i class="ri-twitter-fill text-3xl "></i></a>
+
+                </div>
+            </div>
+            <div class="flex justify-around space-x-32 ">
+                <div class="flex flex-col space-y-2  ">
+                    <a href="../About us/index.html" class="hover:text-slate-300">About us</a>
+                    <a href="../Blogpage/index.html" class="hover:text-slate-300">Blog</a>
+                    <a href="../Contact/index.html" class="hover:text-slate-300">Contact</a>
+                </div>
+                <div class="flex flex-col space-y-2  ">
+                    <a href="../About us/index.html" class="hover:text-slate-300">About us</a>
+                    <a href="../Blogpage/index.html" class="hover:text-slate-300">Blog</a>
+                    <a href="../Contact/index.html" class="hover:text-slate-300">Contact</a>
+                </div>
+
+            </div>
+            <div class="flex flex-col justify-between ">
+                <form action="#">
+                    <div class="flex space-x-3 ">
+                        <input type="text" placeholder="Subscribe to Newsletter" class="flex-1 py-2 px-6 rounded-full  " >
+                        <button class=" rounded-full px-4 py-2 bg-pink-700 cursor-pointer hover:bg-pink-600 " >Go</button>
+                    </div>
+                </form>
+                <div class="hidden md:block   ">Copyright &copy; 2025, All Rights Reserved</div>
+            </div>
+
+        </div>
+
+   </footer>
+
+   <script src="../js/script.js" >
+
+   </script>
+</body>
+</html>

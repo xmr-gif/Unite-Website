@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+</head>
+<body>
+   <nav class="container mx-auto py-3 px-22 "  >
+    <div class="flex items-center justify-between" >
+        <div>
+            <a href="../Home page/index.html"><img src="../images/black-logo.png" class=" w-20" alt="company logo"></a>
+
+        </div>
+        <div class="hidden md:flex space-x-6" >
+            <a class="ml-5 hover:text-indigo-600 " href="../About us/index.html">About us</a>
+            <a class="ml-5 hover:text-indigo-600" href="../Blogpage/index.html">Blog</a>
+            <a class="ml-5 hover:text-indigo-600" href="../Contact/index.html">Contact</a>
+            <a class="ml-5 border-1 px-3 py-1 rounded-3xl hover:text-white hover:bg-black " href="">Login</a>
+            <!-- <a class="ml-5 border-1 px-3 py-1 rounded-3xl bg-black text-white " href="">Get Started</a> -->
+        </div>
+
+        <button id="mobile-btn" class="md:hidden cursor-pointer ">
+            <i class="ri-menu-line text-2xl"></i>
+        </button>
+
+    </div>
+
+        <div class="md:hidden">
+            <div id="mobile-menu" class="absolute flex hidden flex-col items-center space-y-4 font-bold bg-gray-50 py-8 left-6 right-6 drop-shadow-lg border-gray-300  ">
+                <a href="../About us/index.html">About us</a>
+                <a href="../Blogpage/index.html">Blog</a>
+                <a href="../Contact/index.html">Contact</a>
+                <a class="border-1 px-3 py-1 rounded-3xl hover:text-white hover:bg-black " href="">Login</a>
+
+            </div>
+        </div>
+
+   </nav>
+
+   <section class="py-10  px-10 md:px-50" >
+        <div class="" >
+            <p class="text-zinc-500 text-sm mb-2" >Published November 20, 24 in <a class="underline" href="#">Inspiration</a></p>
+            <h1 class="font-bold text-5xl mb-3" >5 principles for effective AI leadership without deep expertise</h1>
+            <div class="flex mb-5" >
+                <i class="ri-account-circle-fill text-5xl "></i>
+                <div>
+                    <p>By username</p>
+                    <p class="text-sm text-zinc-500" >Professor at EHEI</>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-1 border-zinc-400 flex justify-center mb-5" >
+            <img src="382.AI-Research.png" class="w-100" alt="Miniature">
+        </div>
+
+        <div class="font-serif text-xl tracking-wide text-zinc-700 flex flex-col gap-5 pr-10 mb-7 " >
+            <p>In leadership roles, especially technical-leadership roles, there are few subjects you will be asked about more often than AI.</p>
+
+            <p>
+                But what if, like me until recently, you have lots of technical experience  but have yet to dive meaningfully into AI development?
+            </p>
+
+            <p>
+                While working as the SVP of Product Engineering at Slack, I was repeatedly  amazed at how rapidly Notion launched and evolved its AI offerings. As I began talking with Ivan, Akshay, and the leadership team about possibly joining the company, I wondered to myself, How can I be an AI leader without deep knowledge of AI?
+            </p>
+
+            <p>
+                I knew everyone would have questions.
+            </p>
+
+            <p>
+                Shareholders and investors want to know how we’re staying ahead of the curve.  Employees want to know how AI will alter their work. Journalists want to know how it will change our society and economy. All this  curiosity—some might say pressure—increases when you’re responsible for  teams actually developing large-scale AI products.
+            </p>
+
+            <p>
+                In leadership roles, especially technical-leadership roles, there are few subjects you will be asked about more often than AI.
+            </p>
+
+            <p>
+                But what if, like me until recently, you have lots of technical experience  but have yet to dive meaningfully into AI development?
+            </p>
+
+            <p>
+                While working as the SVP of Product Engineering at Slack, I was repeatedly  amazed at how rapidly Notion launched and evolved its AI offerings. As I began talking with Ivan, Akshay, and the leadership team about possibly joining the company, I wondered to myself, How can I be an AI leader without deep knowledge of AI?
+            </p>
+
+            <p>
+                I knew everyone would have questions.
+            </p>
+
+            <p>
+                Shareholders and investors want to know how we’re staying ahead of the curve.  Employees want to know how AI will alter their work. Journalists want to know how it will change our society and economy. All this  curiosity—some might say pressure—increases when you’re responsible for  teams actually developing large-scale AI products.
+            </p>
+
+        </div>
+
+        <div>
+            <p class="text-zinc-500 uppercase text-sm">share this post</p>
+            <div class="text-zinc-600 text-2xl " >
+                <a href="#" ><i class="ri-twitter-x-fill"></i></a>
+                <a href="#"><i class="ri-linkedin-box-fill"></i></a>
+                <a href="#"><i class="ri-facebook-box-fill"></i></a>
+
+            </div>
+
+        </div>
+
+   </section>
+
+
+   <section class="flex justify-center border-t-1 border-gray-300 pt-20 mb-20 " >
+        <div class="flex md:w-3/5 w-4/5 border-1 border-gray-700 rounded-3xl px-10 py-8 gap-3 shadow-xl" >
+            <img src="317.Pop-Up-Message.png" class="w-90 hidden md:block" alt="Newsletter">
+            <div class="flex flex-col py-5" >
+                <p class="text-3xl font-bold mb-5 " >Subscribe to our Newsletter !</p>
+                <p class="text-zinc-500 mb-5" >Subscribe to our newsletter and stay updated.</p>
+
+                <input type="email" placeholder="Your email" class="px-5 py-3 border-1 border-gray-300 mb-5 rounded-lg" >
+                <button class="px-5 py-3 bg-indigo-500 text-white font-medium rounded-lg cursor-pointer hover:bg-indigo-600" >Subscribe</button>
+
+
+
+            </div>
+        </div>
+   </section>
+
+
+
+
+
+   <footer class="bg-slate-900" >
+        <div class="container mx-auto flex flex-col-reverse  text-white px-15 py-10 justify-between space-y-8 md:flex-row  md:space-y-0  " >
+            <div class="flex flex-col  items-center justify-between space-y-12 md:space-y-2 md:items-start  ">
+                <div class="text-center mt-6 md:mt-0  ">
+
+                </div>
+                <div>
+                    <img src="../images/white-logo.png" alt="logo" class="h-8" >
+                </div>
+                <div class="flex space-x-4 " >
+                    <a href="#"><i class="ri-facebook-box-fill text-3xl "></i></a>
+                    <a href="#"><i class="ri-instagram-fill text-3xl "></i></a>
+                    <a href="#"><i class="ri-youtube-fill text-3xl "></i></a>
+                    <a href="#"><i class="ri-linkedin-fill text-3xl "></i></a>
+                    <a href="#"><i class="ri-twitter-fill text-3xl "></i></a>
+
+                </div>
+            </div>
+            <div class="flex justify-around space-x-32 ">
+                <div class="flex flex-col space-y-2  ">
+                    <a href="../About us/index.html" class="hover:text-slate-300">About us</a>
+                    <a href="../Blogpage/index.html" class="hover:text-slate-300">Blog</a>
+                    <a href="../Contact/index.html" class="hover:text-slate-300">Contact</a>
+                </div>
+                <div class="flex flex-col space-y-2  ">
+                    <a href="../About us/index.html" class="hover:text-slate-300">About us</a>
+                    <a href="../Blogpage/index.html" class="hover:text-slate-300">Blog</a>
+                    <a href="../Contact/index.html" class="hover:text-slate-300">Contact</a>
+                </div>
+
+            </div>
+            <div class="flex flex-col justify-between ">
+                <form action="#">
+                    <div class="flex space-x-3 hidden">
+                        <input type="text" placeholder="Subscribe to Newsletter" class="flex-1 py-2 px-6 rounded-full  " >
+                        <button class=" rounded-full px-4 py-2 bg-pink-700 cursor-pointer hover:bg-pink-600 " >Go</button>
+                    </div>
+                </form>
+                <div class="hidden md:block   ">Copyright &copy; 2025, All Rights Reserved</div>
+            </div>
+
+        </div>
+
+   </footer>
+   <script src="../js/script.js" ></script>
+</body>
+</html>
