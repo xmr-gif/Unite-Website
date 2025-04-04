@@ -10,19 +10,20 @@
 <body>
     <div class="flex" >
         <div class="py-5 px-20 w-1/4 h-screen " >
-            <img src="../../images/black-logo.png" class="w-20" alt="">
+            <a href="../Dashboard/index.html"><img src="../../images/black-logo.png" href="../Dashboard/index.html" class="w-20" alt="Logo"></a>
+
             <div class="mb-75" >
                 <div class="px-2  text-zinc-500 p-1 rounded-sm hover:bg-slate-100  mb-2 mt-10 cursor-pointer" onclick="window.location.href = '../Dashboard/index.html'" >
                     <a href="../Dashboard/index.html"><i class="ri-dashboard-fill"></i> Dashboard</a>
                 </div>
-                <div class="px-2  mb-2 bg-slate-200 p-1 rounded-sm cursor-pointer " >
-                    <a href="index.html"><i class="ri-group-fill"></i> Users</a>
+                <div class="px-2 text-zinc-500 mb-2 hover:bg-slate-100 p-1 rounded-sm cursor-pointer" >
+                    <a href="../Users/index.html"><i class="ri-group-fill"></i> Users</a>
                 </div>
-                <div class="px-2 text-zinc-500 mb-2 hover:bg-slate-100 p-1 rounded-sm cursor-pointer " >
-                    <a href=""><i class="ri-lightbulb-fill"></i> Subjects</a>
+                <div class="px-2 bg-slate-200  mb-2 hover:bg-slate-100 p-1 rounded-sm cursor-pointer " >
+                    <a href="#"><i class="ri-lightbulb-fill"></i> Subjects</a>
                 </div>
                 <div class="px-2 text-zinc-500 mb-2 hover:bg-slate-100 p-1 rounded-sm cursor-pointer" >
-                    <a href=""><i class="ri-booklet-fill"></i> Choices</a>
+                    <a href="../Choices/index.html"><i class="ri-booklet-fill"></i> Choices</a>
                 </div>
                 <div class="px-2 text-zinc-500 mb-2 hover:bg-slate-100 p-1 rounded-sm cursor-pointer" >
                     <a href=""><i class="ri-news-fill"></i> Blogs</a>
@@ -62,37 +63,33 @@
                 <div class="bg-white px-9 py-4 rounded-3xl h-[72vh] " >
                     <div class="flex justify-between border-b-1 pt-4 pb-5 border-zinc-400" >
                         <p class="text-2xl font-medium " >Subjects</p>
-                        <div class=" rounded-md bg-gray-100 p-1 text-zinc-500 border-b-2 ">
-                            <i class="ri-search-line"></i>
-                            <input type="search" placeholder="Search" >
+                        <div>
+                            <button class="bg-red-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-red-600" >Delete</button>
+                            <button class="bg-indigo-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-indigo-600" >+ New Subject</button>
                         </div>
+
+
 
                     </div>
 
                     <div class="flex text-zinc-500 py-2 border-zinc-200 border-b " >
-                        <p class="w-1/4" >Subject</p>
-                        <p class="w-1/4" >Created By</p>
-                        <p class="w-1/5" ></p>
+                        <p class="w-1/3" >Subject</p>
+                        <p class="w-1/3" >Created By</p>
                         <p class="w-1/5" >Created On</p>
                     </div>
 
                     <div class="snap-y" >
                         <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
                             <!-- Leader Column -->
-                            <div class="flex items-center w-1/4">
+                            <div class="flex items-center w-1/3">
                                 <input type="checkbox" class="mr-1">
                                 <p>Subject 1...</p>
                             </div>
 
                             <!-- Subject Column -->
-                            <p class="w-1/4">Professor's Name</p>
+                            <p class="w-1/3">Professor's Name</p>
 
                             <!-- Status Column -->
-                            <div class="w-1/5">
-
-
-
-                            </div>
 
                             <!-- Date Column -->
                             <p class="w-1/5">Feb 20th, 2025</p>
@@ -105,21 +102,15 @@
 
                         <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
                             <!-- Leader Column -->
-                            <div class="flex items-center w-1/4">
+                            <div class="flex items-center w-1/3">
                                 <input type="checkbox" class="mr-1">
-                                <img src="PP.webp" alt="" class="w-8 h-8 rounded-md mr-1">
-                                <p>Bedlou Oussama</p>
+                                <p>Subject 1...</p>
                             </div>
 
                             <!-- Subject Column -->
-                            <p class="w-1/4">email2@gmail.com</p>
+                            <p class="w-1/3">Professor's Name</p>
 
                             <!-- Status Column -->
-                            <div class="w-1/5">
-
-                                    <p >Student</p>
-
-                            </div>
 
                             <!-- Date Column -->
                             <p class="w-1/5">Feb 20th, 2025</p>
@@ -132,21 +123,35 @@
 
                         <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
                             <!-- Leader Column -->
-                            <div class="flex items-center w-1/4">
+                            <div class="flex items-center w-1/3">
                                 <input type="checkbox" class="mr-1">
-                                <img src="PP.webp" alt="" class="w-8 h-8 rounded-md mr-1">
-                                <p>Bedlou Oussama</p>
+                                <p>Subject 1...</p>
                             </div>
 
                             <!-- Subject Column -->
-                            <p class="w-1/4">email3@gmail.com</p>
+                            <p class="w-1/3">Professor's Name</p>
 
                             <!-- Status Column -->
-                            <div class="w-1/5">
 
-                                    <p >Professor</p>
+                            <!-- Date Column -->
+                            <p class="w-1/5">Feb 20th, 2025</p>
 
+                            <!-- Details Button -->
+                            <button class="border text-zinc-500 px-2 rounded-md border-zinc-400 cursor-pointer">
+                                Details
+                            </button>
+                        </div>
+                        <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
+                            <!-- Leader Column -->
+                            <div class="flex items-center w-1/3">
+                                <input type="checkbox" class="mr-1">
+                                <p>Subject 1...</p>
                             </div>
+
+                            <!-- Subject Column -->
+                            <p class="w-1/3">Professor's Name</p>
+
+                            <!-- Status Column -->
 
                             <!-- Date Column -->
                             <p class="w-1/5">Feb 20th, 2025</p>
@@ -159,47 +164,15 @@
 
                         <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
                             <!-- Leader Column -->
-                            <div class="flex items-center w-1/4">
+                            <div class="flex items-center w-1/3">
                                 <input type="checkbox" class="mr-1">
-                                <img src="PP.webp" alt="" class="w-8 h-8 rounded-md mr-1">
-                                <p>Bedlou Oussama</p>
+                                <p>Subject 1...</p>
                             </div>
 
                             <!-- Subject Column -->
-                            <p class="w-1/4">email4@gmail.com</p>
+                            <p class="w-1/3">Professor's Name</p>
 
                             <!-- Status Column -->
-                            <div class="w-1/5">
-
-                                    <p >Professor</p>
-
-                            </div>
-
-                            <!-- Date Column -->
-                            <p class="w-1/5">Feb 20th, 2025</p>
-
-                            <!-- Details Button -->
-                            <button class="border text-zinc-500 px-2 rounded-md border-zinc-400 cursor-pointer">
-                                Details
-                            </button>
-                        </div>
-
-                        <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
-                            <!-- Leader Column -->
-                            <div class="flex items-center w-1/4">
-                                <input type="checkbox" class="mr-1">
-                                <img src="PP.webp" alt="" class="w-8 h-8 rounded-md mr-1">
-                                <p>Bedlou Oussama</p>
-                            </div>
-
-                            <!-- Subject Column -->
-                            <p class="w-1/4">email5@gmail.com </p>
-
-                            <!-- Status Column -->
-                            <div class="w-1/5">
-                                    <p >Professor</p>
-
-                            </div>
 
                             <!-- Date Column -->
                             <p class="w-1/5">Feb 20th, 2025</p>
