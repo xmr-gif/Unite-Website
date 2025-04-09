@@ -1,8 +1,9 @@
 <?php
 require_once 'user.php'; // Include your User class
 require_once 'config.php'; // Include database configuration
+//dddddddd
 
-session_start();
+
 $errors = [];
 $_POST = array_map(fn($v) => $v ?? '', $_POST);
 
