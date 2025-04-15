@@ -125,7 +125,7 @@ if(isset($_POST['firstname'])) {
 
         <div class="flex w-3/4 shadow-sm rounded-lg " >
 
-            <div class="w-1/2 px-10 py-10 " >
+            <div class="w-1/2 px-10 py-10 hidden md:block" >
                 <img src="268.Vocabulary.png" alt="Teacher"  >
             </div>
             <div class="px-10 py-5" >
@@ -149,7 +149,7 @@ if(isset($_POST['firstname'])) {
                         </div>
                         <?php endif;?>
                     <div class="flex-col "  >
-                        <div class="flex gap-10" >
+                        <div class="flex-col md:flex-row gap-10" >
                             <input type="hidden" name="account_type" value="professor">
                             <div class="input flex flex-col w-fit static group">
                             <label
@@ -166,7 +166,8 @@ if(isset($_POST['firstname'])) {
                                 type="text"
                                 placeholder="Write here..."
                                 name="firstname"
-                                class="text-gray-300 focus:border-blue-500 focus:text-blue-400 input px-[10px] py-[11px] text-xs bg-white border-2 rounded-[5px] w-[210px] focus:outline-none placeholder:text-black/25"
+                                class="input  rounded-[5px] w-[460px]  placeholder:text-black/25
+                                text-gray-300  focus:text-blue-400 input px-[10px] py-[11px] text-xs bg-white border-2  focus:outline-none"
                             />
                             <div class="text-xs text-red-500" >
                                 <?php echo $errors['firstname'] ?? '' ?>
@@ -189,7 +190,8 @@ if(isset($_POST['firstname'])) {
                                 type="text"
                                 placeholder="Write here..."
                                 name="lastname"
-                                class="text-gray-300 focus:border-blue-500 focus:text-blue-400 input px-[10px] py-[11px] text-xs bg-white border-2 rounded-[5px] w-[210px] focus:outline-none placeholder:text-black/25"
+                                class="input  rounded-[5px] w-[460px]  placeholder:text-black/25
+                                text-gray-300  focus:text-blue-400 input px-[10px] py-[11px] text-xs bg-white border-2  focus:outline-none"
                             />
                             <div class="text-xs text-red-500" >
                                 <?php echo $errors['lastname'] ?? '' ?>

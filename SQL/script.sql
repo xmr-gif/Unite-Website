@@ -1,0 +1,146 @@
+CREATE DATABASE IF NOT EXISTS Unite_db character_set utf8mb4 collate utf8mb4_unicode_ci
+USE Unite_db;
+
+CREATE TABLE Professeur (
+    ID_Professeur INT Unsigned AUTO_INCREMENT PRIMARY Key ,
+    Nom VARCHAR(255) ,
+    Prenom VARCHAR(255) ,
+    Email VARCHAR(255) ,
+    Est_Admin BOOLEAN
+);
+
+CREATE TABLE Sujet (
+    ID_Sujet INT unsigned AUTO_INCREMENT PRIMARY key ,
+    Titre VARCHAR(255) ,
+    Date_Ajout Date ,
+    Est_Personnalise BOOLEAN ,
+    Est_Valide BOOLEAN ,
+    ID_Professeur INT unsigned ,
+    Foreign key (ID_Professeur) References Professeur (ID_Professeur)
+);
+
+CREATE TABLE Groupe (
+    ID_Groupe INT unsigned AUTO_INCREMENT PRIMARY key ,
+    ID_Sujet INT unsigned ,
+    Foreign key (ID_Sujet) References Sujet (ID_Sujet)
+);
+
+CREATE TABLE Etudiant (
+    ID_Etudiant INT Unsigned AUTO_INCREMENT PRIMARY Key ,
+    Nom VARCHAR(255) ,
+    Prenom VARCHAR(255) ,
+    Email VARCHAR(255) ,
+    Filiere_Precedente VARCHAR(255) ,
+    Dans_Un_Groupe BOOLEAN ,
+    Est_Chef BOOLEAN ,
+    Sexe VARCHAR(10) ,
+    ID_Groupe INT Unsigned ,
+    Foreign key (ID_Groupe) References Groupe (ID_Groupe)
+);
+
+CREATE TABLE Tache (
+    ID_Tache INT unsigned AUTO_INCREMENT PRIMARY key ,
+    Titre VARCHAR(255) ,
+    Date_Debut DATE ,
+    Date_Fin DATE ,
+    Etat VARCHAR(50) ,
+    ID_Etudiant INT unsigned ,
+    Foreign key (ID_Etudiant) References Etudiant (ID_Etudiant)
+);
+
+CREATE TABLE Note (
+    ID_Note INT unsigned AUTO_INCREMENT PRIMARY key ,
+    Titre VARCHAR(255) ,
+    Contenu TEXT ,
+    ID_Tache INT unsigned ,
+    Foreign key (ID_Tache) References Tache (ID_Tache)
+);
+
+CREATE TABLE Remarque (
+    ID_Remarque INT unsigned AUTO_INCREMENT PRIMARY key ,
+    Contenu TEXT ,
+    Date_Ajout DATE ,
+    ID_Sujet INT unsigned ,
+    Foreign key (ID_Sujet) References Sujet (ID_Sujet)
+);
+
+
+-- SQL SERVER
+
+
+IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'Unite_db')
+BEGIN
+    CREATE DATABASE Unite_db
+    COLLATE Latin1_General_100_CI_AS_SC;
+GO
+USE Unite_db;
+GO
+CREATE TABLE Professeur (
+    ID_Professeur INT IDENTITY(1,1) PRIMARY KEY,
+    Nom NVARCHAR(255),
+    Prenom NVARCHAR(255),
+    Email NVARCHAR(255),
+    Est_Admin BIT DEFAULT 0
+);
+GO
+
+CREATE TABLE Sujet (
+    ID_Sujet INT IDENTITY(1,1) PRIMARY KEY,
+    Titre NVARCHAR(255),
+    Date_Ajout DATE DEFAULT GETDATE(),
+    Est_Personnalise BIT DEFAULT 0,
+    Est_Valide BIT DEFAULT 0,
+    ID_Professeur INT,
+    FOREIGN KEY (ID_Professeur) REFERENCES Professeur(ID_Professeur)
+);
+GO
+
+CREATE TABLE Groupe (
+    ID_Groupe INT IDENTITY(1,1) PRIMARY KEY,
+    ID_Sujet INT,
+    FOREIGN KEY (ID_Sujet) REFERENCES Sujet(ID_Sujet)
+);
+GO
+
+CREATE TABLE Etudiant (
+    ID_Etudiant INT IDENTITY(1,1) PRIMARY KEY,
+    Nom NVARCHAR(255),
+    Prenom NVARCHAR(255),
+    Email NVARCHAR(255),
+    Filiere_Precedente NVARCHAR(255),
+    Dans_Un_Groupe BIT DEFAULT 0,
+    Est_Chef BIT DEFAULT 0,
+    Sexe NVARCHAR(10),
+    ID_Groupe INT,
+    FOREIGN KEY (ID_Groupe) REFERENCES Groupe(ID_Groupe)
+);
+GO
+
+CREATE TABLE Tache (
+    ID_Tache INT IDENTITY(1,1) PRIMARY KEY,
+    Titre NVARCHAR(255),
+    Date_Debut DATE,
+    Date_Fin DATE,
+    Etat NVARCHAR(50),
+    ID_Etudiant INT,
+    FOREIGN KEY (ID_Etudiant) REFERENCES Etudiant(ID_Etudiant)
+);
+GO
+
+CREATE TABLE Note (
+    ID_Note INT IDENTITY(1,1) PRIMARY KEY,
+    Titre NVARCHAR(255),
+    Contenu NVARCHAR(MAX),                      
+    ID_Tache INT,
+    FOREIGN KEY (ID_Tache) REFERENCES Tache(ID_Tache)
+);
+GO
+
+CREATE TABLE Remarque (
+    ID_Remarque INT IDENTITY(1,1) PRIMARY KEY,
+    Contenu NVARCHAR(MAX),
+    Date_Ajout DATE DEFAULT GETDATE(),
+    ID_Sujet INT,
+    FOREIGN KEY (ID_Sujet) REFERENCES Sujet(ID_Sujet)
+);
+GO

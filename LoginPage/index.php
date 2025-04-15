@@ -54,13 +54,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="hidden space-x-6" >
                 <a class="ml-5 hover:text-indigo-600 " href="#">About us</a>
                 <a class="ml-5 hover:text-indigo-600" href="#">Blog</a>
-                <a class="ml-5 hover:text-indigo-600" href="">Contact</a>
+                <a class="ml-5 hover:text-indigo-600" href="#">Contact</a>
                 <button class="ml-5 border-1 px-3 py-1 rounded-3xl hover:text-white hover:bg-black cursor-pointer " id="loginButton" >Login</button>
 
                 <!-- <a class="ml-5 border-1 px-3 py-1 rounded-3xl bg-black text-white " href="">Get Started</a> -->
             </div>
 
-            <button id="mobile-btn" class="md:hidden cursor-pointer">
+            <button id="mobile-btn" class="hidden cursor-pointer">
                 <i class="ri-menu-line text-2xl"></i>
             </button>
 
@@ -78,10 +78,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
        </nav>
 
-       <section  id="firstSection" class="flex justify-center items-center py-25" >
-            <div class="flex w-3/4  rounded-lg " >
+       <section  id="firstSection" class="flex justify-center items-center py-12 md:py-24" >
+            <div class="flex w-full flex-col md:flex-row md:w-3/4  rounded-lg " >
 
-        <div class="w-1/2 px-10 py-10 " >
+        <div class="w-1/2 hidden md:block px-10 py-10 " >
             <img src="211.-Coffee.png" alt="Teacher"  >
         </div>
         <div class="px-10 py-5" >
@@ -120,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <!-- end -->
-                    <div class="input flex flex-col w-full static group">
+                    <div class="input flex flex-col  md:w-full static group">
                         <label
                             for="email"
                             class="text-gray-400 group-focus-within:text-blue-500 js-changeColor text-xs font-semibold relative top-2 ml-[20px] px-[5px] bg-white w-fit transition-colors z-10"
@@ -142,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         </div>
 
-                        <div class="input flex flex-col w-full static group ">
+                        <div class="input flex flex-col  md:w-full static group ">
                         <label
                             for="ddd"
                             class="text-gray-400 group-focus-within:text-blue-500 js-changeColor text-xs font-semibold relative top-2 ml-[20px] px-[5px] bg-white w-fit transition-colors z-10"
@@ -206,7 +206,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-                <button class="bg-indigo-500 hover:bg-indigo-400 text-white py-2 mt-4 rounded-[5px] w-[460px] cursor-pointer text-base" >Login</button>
+                <button class="bg-indigo-500 hover:bg-indigo-400 text-white py-2 mt-4 rounded-[5px] w-[350px] md:w-[460px] cursor-pointer text-base" >Login</button>
                 </div>
 
             </form>
@@ -222,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-   <script src="../js/script.js" ></script>
+
 
 </body>
 </html>

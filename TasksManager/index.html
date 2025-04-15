@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Team Task Manager</title>
+    <meta name="description" content="Team Task Manager" />
+    <meta name="author" content="Lovable" />
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons via CDN -->
+    <script src="https://unpkg.com/lucide@0.462.0/dist/umd/lucide.min.js"></script>
+
+    <style>
+      /* Custom styles */
+      .task-card {
+        transition: all 0.2s ease;
+      }
+      .task-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      /* Toast Notification Styles */
+      #toast {
+        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      #toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-50">
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-4 right-4 z-50 hidden">
+      <div class="bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3">
+        <i data-lucide="check-circle" class="h-5 w-5"></i>
+        <span id="toast-message"></span>
+      </div>
+    </div>
+
+    <!-- Rest of the existing HTML remains the same as in the previous implementation -->
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <div class="py-5 px-6 w-1/4 h-screen border-r border-gray-200 bg-white">
+        <img src="../images/black-logo.png" class="w-20 mb-10 ml-4" alt="Logo" />
+
+        <div class="space-y-2">
+          <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+            <a class="flex items-center gap-2" href="#" >
+              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+              Dashboard
+            </a>
+          </div>
+          <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+            <span class="flex items-center gap-2">
+              <i data-lucide="user" class="w-4 h-4"></i>
+              Users
+            </span>
+          </div>
+          <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+            <span class="flex items-center gap-2">
+              <i data-lucide="lightbulb" class="w-4 h-4"></i>
+              Subjects
+            </span>
+          </div>
+          <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+            <span class="flex items-center gap-2">
+              <i data-lucide="book-open" class="w-4 h-4"></i>
+              Choices
+            </span>
+          </div>
+          <div class="px-4 py-2 bg-slate-200 rounded-md cursor-pointer">
+            <span class="flex items-center gap-2">
+              <i data-lucide="file-text" class="w-4 h-4"></i>
+              Blogs
+            </span>
+          </div>
+        </div>
+
+        <div class="absolute bottom-8 space-y-2 w-[calc(25%-48px)]">
+          <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+            <span class="flex items-center gap-2">
+              <i data-lucide="settings" class="w-4 h-4"></i>
+              Settings
+            </span>
+          </div>
+          <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+            <span class="flex items-center gap-2">
+              <i data-lucide="log-out" class="w-4 h-4"></i>
+              Log Out
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="h-screen bg-gray-100 py-5 w-3/4 px-7 overflow-y-auto">
+        <div>
+          <div class="flex justify-end w-full mb-5">
+            <button class="border border-zinc-400 text-zinc-600 h-10 w-10 rounded-xl flex items-center justify-center">
+              <i data-lucide="plus" class="h-4 w-4"></i>
+            </button>
+            <div class="h-10 w-10 ml-3 rounded-full bg-gray-300 overflow-hidden">
+              <img src="https://via.placeholder.com/40" alt="Profile" class="h-full w-full object-cover" />
+            </div>
+          </div>
+
+          <!-- Team Task Manager -->
+          <div class="bg-white px-9 py-4 rounded-3xl shadow-md h-[82vh] flex flex-col">
+            <div class="flex justify-between border-b border-zinc-200 pt-4 pb-5 mb-5">
+              <h2 class="text-2xl font-medium">Team Task Manager</h2>
+              <div class="flex gap-2">
+                <span class="bg-blue-500 text-white px-2 py-1 text-xs rounded-full" id="tasks-count">Tasks: 0</span>
+                <span class="bg-green-500 text-white px-2 py-1 text-xs rounded-full" id="completed-count">Completed: 0</span>
+                <span class="bg-purple-500 text-white px-2 py-1 text-xs rounded-full flex items-center" id="notes-count">
+                  <i data-lucide="message-square" class="h-3 w-3 mr-1"></i>
+                  Notes: 0
+                </span>
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <!-- New Task Form (initially hidden) -->
+              <form id="newTaskForm" class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm mb-4 hidden">
+                <div class="space-y-4">
+                  <div>
+                    <label for="taskTitle" class="block text-sm font-medium text-gray-700">Task Title</label>
+                    <input
+                      id="taskTitle"
+                      type="text"
+                      placeholder="Enter task title"
+                      class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label for="assignee" class="block text-sm font-medium text-gray-700">Assignee</label>
+                      <select
+                        id="assignee"
+                        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="" selected disabled>Select assignee</option>
+                        <option value="John Doe">John Doe</option>
+                        <option value="Sarah Smith">Sarah Smith</option>
+                        <option value="Mike Johnson">Mike Johnson</option>
+                        <option value="Emma Wilson">Emma Wilson</option>
+                        <option value="Unassigned">Unassigned</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label for="priority" class="block text-sm font-medium text-gray-700">Priority</label>
+                      <select
+                        id="priority"
+                        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="Medium" selected>Medium</option>
+                        <option value="Low">Low</option>
+                        <option value="High">High</option>
+                        <option value="Critical">Critical</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label for="startTime" class="flex items-center gap-1 text-sm font-medium text-gray-700">
+                        <i data-lucide="clock" class="h-3 w-3"></i> Start Time
+                      </label>
+                      <input
+                        id="startTime"
+                        type="datetime-local"
+                        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label for="endTime" class="flex items-center gap-1 text-sm font-medium text-gray-700">
+                        <i data-lucide="clock" class="h-3 w-3"></i> End Time
+                      </label>
+                      <input
+                        id="endTime"
+                        type="datetime-local"
+                        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label for="notes" class="block text-sm font-medium text-gray-700">Initial Notes (Optional)</label>
+                    <textarea
+                      id="notes"
+                      placeholder="Add any notes about this task..."
+                      class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      rows="3"
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div class="flex justify-end space-x-2 mt-6">
+                  <button type="button" id="cancelTaskBtn" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                    Cancel
+                  </button>
+                  <button type="submit" class="px-4 py-2 bg-blue-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <i data-lucide="plus" class="h-4 w-4 inline mr-1"></i> Add Task
+                  </button>
+                </div>
+              </form>
+
+              <!-- Simple Task Add Button -->
+              <div class="flex gap-2" id="simpleAddTask">
+                <input
+                  id="quickTaskInput"
+                  type="text"
+                  placeholder="Add a new task..."
+                  class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                  readonly
+                />
+                <button id="showFormBtn" class="px-4 py-2 bg-blue-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                  <i data-lucide="plus" class="h-4 w-4 inline mr-2"></i> Add Task
+                </button>
+              </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto">
+              <h3 class="font-semibold text-lg mb-2">Task List</h3>
+
+              <div class="space-y-3" id="taskList">
+                <!-- Tasks will be inserted here by JavaScript -->
+                <div class="text-center py-8 text-gray-500" id="empty-tasks-message">
+                  No tasks available. Add some tasks to get started!
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Task Notes Template (hidden) -->
+    <template id="task-notes-template">
+      <div class="mt-4 border-t border-gray-100 pt-4">
+        <div class="flex items-center justify-between mb-2">
+          <h5 class="font-medium">Notes & Comments</h5>
+        </div>
+
+        <div class="space-y-2 notes-list mb-3">
+          <!-- Notes will be inserted here -->
+        </div>
+
+        <form class="add-note-form mt-3 flex gap-2">
+          <input type="text" placeholder="Add a note..." class="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <button type="submit" class="px-3 py-2 bg-blue-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            Add
+          </button>
+        </form>
+      </div>
+    </template>
+
+    <!-- Note Item Template (hidden) -->
+    <template id="note-item-template">
+      <div class="bg-gray-50 p-2 rounded">
+        <div class="flex justify-between text-xs text-gray-500 mb-1">
+          <span class="font-medium note-author"></span>
+          <span class="note-date"></span>
+        </div>
+        <p class="text-sm note-content"></p>
+      </div>
+    </template>
+
+    <!-- Main JavaScript -->
+    <script>
+      // Initialize Lucide icons
+      lucide.createIcons();
+
+      // DOM Elements
+      const newTaskForm = document.getElementById('newTaskForm');
+      const simpleAddTask = document.getElementById('simpleAddTask');
+      const showFormBtn = document.getElementById('showFormBtn');
+      const quickTaskInput = document.getElementById('quickTaskInput');
+      const cancelTaskBtn = document.getElementById('cancelTaskBtn');
+      const taskList = document.getElementById('taskList');
+      const emptyTasksMessage = document.getElementById('empty-tasks-message');
+      const toastElement = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+
+      // Stats counters
+      const tasksCount = document.getElementById('tasks-count');
+      const completedCount = document.getElementById('completed-count');
+      const notesCount = document.getElementById('notes-count');
+
+      // Templates
+      const taskNotesTemplate = document.getElementById('task-notes-template');
+      const noteItemTemplate = document.getElementById('note-item-template');
+
+      // Data storage
+      let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+      // Show the new task form
+      function showNewTaskForm() {
+        newTaskForm.classList.remove('hidden');
+        simpleAddTask.classList.add('hidden');
+      }
+
+      // Hide the new task form
+      function hideNewTaskForm() {
+        newTaskForm.classList.add('hidden');
+        simpleAddTask.classList.remove('hidden');
+        newTaskForm.reset();
+      }
+
+      // Show toast notification
+      function showToast(message) {
+        toastMessage.textContent = message;
+        toastElement.classList.remove('hidden');
+        toastElement.classList.add('show');
+
+        // Hide toast after 3 seconds
+        setTimeout(() => {
+          toastElement.classList.remove('show');
+          setTimeout(() => {
+            toastElement.classList.add('hidden');
+          }, 300);
+        }, 3000);
+      }
+
+      // Format date for display
+      function formatDate(dateString) {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true
+        });
+      }
+
+      // Get priority badge color
+      function getPriorityColor(priority) {
+        switch(priority.toLowerCase()) {
+          case 'high': return 'bg-red-100 text-red-800';
+          case 'medium': return 'bg-yellow-100 text-yellow-800';
+          case 'low': return 'bg-green-100 text-green-800';
+          case 'critical': return 'bg-purple-100 text-purple-800';
+          default: return 'bg-gray-100 text-gray-800';
+        }
+      }
+
+      // Get status badge color
+      function getStatusColor(status) {
+        switch(status) {
+          case 'Done': return 'bg-green-100 text-green-800';
+          case 'In Progress': return 'bg-blue-100 text-blue-800';
+          case 'To Do': return 'bg-gray-100 text-gray-800';
+          default: return 'bg-gray-100 text-gray-800';
+        }
+      }
+
+      // Create a note element
+      function createNoteElement(note) {
+        const noteClone = noteItemTemplate.content.cloneNode(true);
+        noteClone.querySelector('.note-author').textContent = note.author;
+        noteClone.querySelector('.note-date').textContent = formatDate(note.timestamp);
+        noteClone.querySelector('.note-content').textContent = note.content;
+        return noteClone;
+      }
+
+      // Toggle task expanded state
+      function toggleTaskExpanded(taskId) {
+        const taskIndex = tasks.findIndex(t => t.id === taskId);
+        if (taskIndex !== -1) {
+          tasks[taskIndex].isExpanded = !tasks[taskIndex].isExpanded;
+          saveAndRenderTasks();
+        }
+      }
+
+      // Add a note to a task
+      function addNoteToTask(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const form = event.target;
+        const taskId = parseInt(form.getAttribute('data-task-id'));
+        const noteInput = form.querySelector('input');
+
+        if (noteInput.value.trim() === '') return;
+
+        const taskIndex = tasks.findIndex(t => t.id === taskId);
+        if (taskIndex !== -1) {
+          const newNote = {
+            id: tasks[taskIndex].notes.length + 1,
+            author: 'Current User',
+            content: noteInput.value.trim(),
+            timestamp: new Date().toISOString()
+          };
+
+          tasks[taskIndex].notes.push(newNote);
+          saveAndRenderTasks();
+
+          // Show success message
+          showToast('Note added successfully!');
+
+          // Clear the input without hiding the form
+          noteInput.value = '';
+
+          // Keep the focus on the input field
+          setTimeout(() => {
+            noteInput.focus();
+          }, 0);
+        }
+      }
+
+      // Complete a task
+      function completeTask(taskId) {
+        const taskIndex = tasks.findIndex(t => t.id === taskId);
+        if (taskIndex !== -1) {
+          tasks[taskIndex].status = 'Done';
+          saveAndRenderTasks();
+          showToast('Task marked as completed!');
+        }
+      }
+
+      // Delete a task
+      function deleteTask(taskId) {
+        if (confirm('Are you sure you want to delete this task?')) {
+          tasks = tasks.filter(t => t.id !== taskId);
+          saveAndRenderTasks();
+          showToast('Task deleted!');
+        }
+      }
+
+      // Save tasks to localStorage and render
+      function saveAndRenderTasks() {
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        renderTasks();
+      }
+
+      // Render all tasks
+      function renderTasks() {
+        // Update stats
+        tasksCount.textContent = `Tasks: ${tasks.length}`;
+        completedCount.textContent = `Completed: ${tasks.filter(t => t.status === 'Done').length}`;
+
+        let totalNotes = 0;
+        tasks.forEach(task => {
+          totalNotes += task.notes.length;
+        });
+        notesCount.textContent = `Notes: ${totalNotes}`;
+
+        // Clear task list
+        taskList.innerHTML = '';
+
+        // Show empty message if no tasks
+        if (tasks.length === 0) {
+          emptyTasksMessage.classList.remove('hidden');
+          taskList.appendChild(emptyTasksMessage);
+          return;
+        } else {
+          emptyTasksMessage.classList.add('hidden');
+        }
+
+        // Render each task
+        tasks.forEach(task => {
+          const taskCard = document.createElement('div');
+          taskCard.className = 'bg-white p-4 rounded-lg border border-gray-200 shadow-sm task-card';
+
+          taskCard.innerHTML = `
+            <div class="flex justify-between items-center cursor-pointer">
+              <div class="flex-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h4 class="font-medium ${task.status === 'Done' ? 'line-through text-gray-400' : ''}">
+                    ${task.title}
+                  </h4>
+                  <span class="px-2 py-1 rounded-full text-xs ${getStatusColor(task.status)}">
+                    ${task.status}
+                  </span>
+                  <span class="px-2 py-1 rounded-full text-xs ${getPriorityColor(task.priority)}">
+                    <i data-lucide="flag" class="h-3 w-3 inline mr-1"></i>
+                    ${task.priority}
+                  </span>
+                  ${task.notes.length > 0 ? `
+                    <span class="px-2 py-1 rounded-full text-xs border border-gray-300 flex items-center">
+                      <i data-lucide="message-square" class="h-3 w-3 mr-1"></i>
+                      ${task.notes.length}
+                    </span>
+                  ` : ''}
+                </div>
+                <p class="text-sm text-gray-500 flex items-center gap-2 mt-1 flex-wrap">
+                  <span class="flex items-center">
+                    <i data-lucide="user" class="h-3 w-3 mr-1"></i>
+                    ${task.assignee || 'Unassigned'}
+                  </span>
+                  ${(task.startTime || task.endTime) ? `
+                    <span class="text-gray-300">|</span>
+                    <span class="flex items-center">
+                      <i data-lucide="calendar" class="h-3 w-3 mr-1"></i>
+                      ${task.startTime ? formatDate(task.startTime) : ''}
+                      ${task.startTime && task.endTime ? " - " : ""}
+                      ${task.endTime ? formatDate(task.endTime) : ''}
+                    </span>
+                  ` : ''}
+                </p>
+              </div>
+
+              <div class="flex items-center gap-2">
+                ${task.status !== 'Done' ? `
+                  <button class="h-8 px-2 py-1 bg-green-50 hover:bg-green-100 border-green-200 text-green-700 rounded text-sm complete-task-btn" data-task-id="${task.id}">
+                    <i data-lucide="check" class="h-4 w-4 mr-1 inline"></i> Mark Done
+                  </button>
+                ` : ''}
+                <button class="h-8 w-8 bg-red-50 hover:bg-red-100 border-red-200 text-red-700 rounded text-sm flex items-center justify-center delete-task-btn" data-task-id="${task.id}">
+                  <i data-lucide="trash-2" class="h-4 w-4"></i>
+                </button>
+              </div>
+            </div>
+          `;
+
+          // Add notes section if task is expanded
+          if (task.isExpanded) {
+            const notesSection = document.importNode(taskNotesTemplate.content, true);
+            const notesList = notesSection.querySelector('.notes-list');
+
+            // Add existing notes
+            if (task.notes.length > 0) {
+              task.notes.forEach(note => {
+                notesList.appendChild(createNoteElement(note));
+              });
+            } else {
+              notesList.innerHTML = '<p class="text-sm text-gray-500">No notes yet.</p>';
+            }
+
+            // Setup note form
+            const noteForm = notesSection.querySelector('.add-note-form');
+            noteForm.setAttribute('data-task-id', task.id);
+
+            taskCard.appendChild(notesSection);
+          }
+
+          taskList.appendChild(taskCard);
+        });
+
+        // Add event listeners to task cards
+        document.querySelectorAll('.task-card').forEach(card => {
+          card.querySelector('.flex.justify-between').addEventListener('click', (e) => {
+            // Don't toggle if clicking on a button
+            if (e.target.closest('button')) return;
+
+            const taskId = parseInt(card.querySelector('button').getAttribute('data-task-id'));
+            toggleTaskExpanded(taskId);
+          });
+        });
+
+        // Add event listeners to buttons
+        document.querySelectorAll('.complete-task-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            completeTask(parseInt(btn.getAttribute('data-task-id')));
+          });
+        });
+
+        document.querySelectorAll('.delete-task-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteTask(parseInt(btn.getAttribute('data-task-id')));
+          });
+        });
+
+        document.querySelectorAll('.add-note-form').forEach(form => {
+          form.addEventListener('submit', addNoteToTask);
+        });
+
+        // Re-initialize Lucide icons for dynamically added content
+        lucide.createIcons();
+      }
+
+      // Handle form submission for new task
+      newTaskForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // Get form values
+        const title = document.getElementById('taskTitle').value.trim();
+        const assignee = document.getElementById('assignee').value;
+        const priority = document.getElementById('priority').value;
+        const startTime = document.getElementById('startTime').value;
+        const endTime = document.getElementById('endTime').value;
+        const notes = document.getElementById('notes').value.trim();
+
+        if (title === '') {
+          showToast('Task title cannot be empty!');
+          return;
+        }
+
+        // Create task object
+        const newTask = {
+          id: Date.now(),
+          title,
+          status: 'To Do',
+          assignee: assignee || 'Unassigned',
+          priority: priority || 'Medium',
+          notes: notes ? [
+            {
+              id: 1,
+              author: 'Current User',
+              content: notes,
+              timestamp: new Date().toISOString()
+            }
+          ] : [],
+          startTime,
+          endTime,
+          isExpanded: false
+        };
+
+        // Add task to list
+        tasks.push(newTask);
+
+        // Save and render tasks
+        saveAndRenderTasks();
+
+        // Reset form and hide
+        newTaskForm.reset();
+        hideNewTaskForm();
+
+        showToast('Task added successfully!');
+      });
+
+      // Event listeners for showing/hiding the form
+      showFormBtn.addEventListener('click', showNewTaskForm);
+      quickTaskInput.addEventListener('click', showNewTaskForm);
+      cancelTaskBtn.addEventListener('click', hideNewTaskForm);
+
+      // Initial render
+      renderTasks();
+
+      // Load default tasks if none exist
+      if (tasks.length === 0) {
+        tasks = [
+          {
+            id: 1,
+            title: 'Design team dashboard',
+            status: 'In Progress',
+            assignee: 'John Doe',
+            priority: 'High',
+            notes: [
+              { id: 1, author: 'Sarah Smith', content: 'I think we should use blue for the primary color.', timestamp: new Date('2025-04-10T10:00:00').toISOString() }
+            ],
+            startTime: '2025-04-10T09:00',
+            endTime: '2025-04-12T18:00',
+            isExpanded: false
+          },
+          {
+            id: 2,
+            title: 'Create user documentation',
+            status: 'To Do',
+            assignee: 'Sarah Smith',
+            priority: 'Medium',
+            notes: [],
+            startTime: '2025-04-15T10:00',
+            endTime: '2025-04-20T17:00',
+            isExpanded: false
+          },
+          {
+            id: 3,
+            title: 'Fix navigation bug',
+            status: 'Done',
+            assignee: 'Mike Johnson',
+            priority: 'High',
+            notes: [
+              { id: 1, author: 'Emma Wilson', content: 'The issue was in the router configuration.', timestamp: new Date('2025-04-09T14:22:00').toISOString() },
+              { id: 2, author: 'Mike Johnson', content: 'Fixed by updating the dependencies.', timestamp: new Date('2025-04-09T16:45:00').toISOString() }
+            ],
+            startTime: '2025-04-08T08:00',
+            endTime: '2025-04-09T17:00',
+            isExpanded: false
+          },
+          {
+            id: 4,
+            title: 'Update API endpoints',
+            status: 'In Progress',
+            assignee: 'Emma Wilson',
+            priority: 'Low',
+            notes: [],
+            startTime: '2025-04-11T09:00',
+            endTime: '2025-04-14T18:00',
+            isExpanded: false
+          }
+        ];
+
+        saveAndRenderTasks();
+      }
+    </script>
+  </body>
+</html>
