@@ -1,0 +1,26 @@
+tasks.forEach(task => {
+    if (!task.startTime || !task.endTime) return;
+
+    const position = calculateTaskPosition(task, date);
+    if (!position) return;
+
+    const taskElement = document.createElement('div');
+    taskElement.className = `calendar-task ${getTaskBackgroundColor(task)} border-l-4 truncate`;
+    taskElement.style.top = `${position.top}px`;
+    taskElement.style.height = `${position.height}px`;
+    taskElement.style.width = 'calc(100% - 8px)';
+    taskElement.style.left = '4px';
+    taskElement.style.padding = '2px 4px';
+    taskElement.style.fontSize = '0.625rem'; // Extra small font
+
+    taskElement.innerHTML = `
+      <div class="font-medium truncate">${task.title}</div>
+      <div class="text-[0.5rem] truncate">${task.assignee}</div>
+    `;
+
+    taskElement.addEventListener('click', () => showTaskDetails(task.id));
+
+    dayColumn.appendChild(taskElement);
+  });
+
+  calendarGrid.appendChild(dayColumn);

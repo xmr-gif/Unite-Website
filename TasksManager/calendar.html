@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Team Timebox Calendar</title>
+    <meta name="description" content="Team Timebox Calendar" />
+    <meta name="author" content="Lovable" />
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@0.462.0/dist/umd/lucide.min.js"></script>
+
+    <style>
+        /* the problem */
+        .day-column {
+        position: relative;
+        }
+
+      .task-card {
+        transition: all 0.2s ease;
+      }
+      .task-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+
+      #toast {
+        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      #toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: 60px repeat(7, 1fr);
+        overflow-y: auto;
+      }
+
+      .time-slot {
+        height: 60px;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .calendar-cell {
+        min-height: 60px;
+        border-right: 1px solid #e5e7eb;
+        border-bottom: 1px solid #e5e7eb;
+        position: relative;
+      }
+
+      .calendar-task {
+        position: absolute;
+        padding: 4px;
+        border-radius: 4px;
+        font-size: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        z-index: 10;
+        transition: all 0.2s ease;
+      }
+
+      .calendar-task:hover {
+        z-index: 20;
+        transform: scale(1.02);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .view-selector {
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .view-selector button {
+        padding: 8px 16px;
+        background: white;
+        border: 1px solid #e5e7eb;
+      }
+
+      .view-selector button.active {
+        background: #3b82f6;
+        color: white;
+      }
+
+      .day-header {
+        text-align: center;
+        padding: 10px;
+        background-color: #f9fafb;
+        border-bottom: 1px solid #e5e7eb;
+        border-right: 1px solid #e5e7eb;
+      }
+
+      .current-day {
+        background-color: #eff6ff;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-50">
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-4 right-4 z-50 hidden">
+      <div class="bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3">
+        <i data-lucide="check-circle" class="h-5 w-5"></i>
+        <span id="toast-message"></span>
+      </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <div class="py-5 px-6 w-1/4 h-screen border-r border-gray-200 bg-white">
+        <img src="../images/black-logo.png" class="w-20 mb-10 ml-4" alt="Logo" />
+
+        <div class="space-y-2">
+          <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+            <a class="flex items-center gap-2" href="#" >
+              <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+              Dashboard
+            </a>
+          </div>
+          <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+            <span class="flex items-center gap-2">
+              <i data-lucide="user" class="w-4 h-4"></i>
+              Users
+            </span>
+          </div>
+          <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+            <span class="flex items-center gap-2">
+              <i data-lucide="lightbulb" class="w-4 h-4"></i>
+              Subjects
+            </span>
+          </div>
+          <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+            <span class="flex items-center gap-2">
+              <i data-lucide="book-open" class="w-4 h-4"></i>
+              Choices
+            </span>
+          </div>
+          <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+            <a class="flex items-center gap-2" href="index.html">
+              <i data-lucide="file-text" class="w-4 h-4"></i>
+              Tasks
+            </a>
+          </div>
+          <div class="px-4 py-2 bg-slate-200 rounded-md cursor-pointer">
+            <a class="flex items-center gap-2" href="calendar.html">
+              <i data-lucide="calendar" class="w-4 h-4"></i>
+              Calendar
+            </a>
+          </div>
+        </div>
+
+        <div class="absolute bottom-8 space-y-2 w-[calc(25%-48px)]">
+          <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+            <span class="flex items-center gap-2">
+              <i data-lucide="settings" class="w-4 h-4"></i>
+              Settings
+            </span>
+          </div>
+          <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+            <span class="flex items-center gap-2">
+              <i data-lucide="log-out" class="w-4 h-4"></i>
+              Log Out
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="h-screen bg-gray-100 py-5 w-3/4 px-7 overflow-y-auto">
+        <div>
+          <div class="flex justify-end w-full mb-5">
+            <button class="border border-zinc-400 text-zinc-600 h-10 w-10 rounded-xl flex items-center justify-center">
+              <i data-lucide="plus" class="h-4 w-4"></i>
+            </button>
+            <div class="h-10 w-10 ml-3 rounded-full bg-gray-300 overflow-hidden">
+              <img src="https://via.placeholder.com/40" alt="Profile" class="h-full w-full object-cover" />
+            </div>
+          </div>
+
+          <!-- Calendar Container -->
+          <div class="bg-white px-6 py-4 rounded-3xl shadow-md h-[82vh] flex flex-col">
+            <div class="flex justify-between border-b border-zinc-200 pt-4 pb-5 mb-4">
+              <h2 class="text-2xl font-medium">Team Timebox Calendar</h2>
+              <div class="flex gap-2">
+                <span class="bg-blue-500 text-white px-2 py-1 text-xs rounded-full flex items-center" id="tasks-count">
+                  <i data-lucide="check-circle" class="h-3 w-3 mr-1"></i>
+                  Tasks: 0
+                </span>
+              </div>
+            </div>
+
+            <!-- Calendar Navigation -->
+            <div class="flex justify-between items-center mb-4">
+              <div class="flex gap-2">
+                <button id="prev-btn" class="p-2 border border-gray-200 rounded-lg hover:bg-gray-50">
+                  <i data-lucide="chevron-left" class="h-4 w-4"></i>
+                </button>
+                <button id="today-btn" class="p-2 border border-gray-200 rounded-lg hover:bg-gray-50">
+                  Today
+                </button>
+                <button id="next-btn" class="p-2 border border-gray-200 rounded-lg hover:bg-gray-50">
+                  <i data-lucide="chevron-right" class="h-4 w-4"></i>
+                </button>
+              </div>
+
+              <h3 id="current-date-range" class="text-lg font-medium">April 10 - 16, 2025</h3>
+
+              <div class="view-selector flex">
+                <button id="day-view" class="rounded-l-lg">Day</button>
+                <button id="week-view" class="active">Week</button>
+                <button id="month-view" class="rounded-r-lg">Month</button>
+              </div>
+            </div>
+
+            <!-- Calendar Content -->
+            <div class="flex-1 overflow-hidden">
+              <!-- Day Headers -->
+              <div id="calendar-header" class="calendar-grid">
+                <div class="day-header"></div>
+                <div class="day-header">Sun</div>
+                <div class="day-header">Mon</div>
+                <div class="day-header">Tue</div>
+                <div class="day-header">Wed</div>
+                <div class="day-header">Thu</div>
+                <div class="day-header">Fri</div>
+                <div class="day-header">Sat</div>
+              </div>
+
+              <!-- Calendar Grid -->
+              <div id="calendar-grid" class="calendar-grid overflow-y-auto" style="height: calc(100% - 40px);">
+                <!-- Time slots (8 AM to 6 PM) -->
+                <div class="time-slots">
+                  <div class="time-slot flex items-start justify-end pr-2 pt-1 text-xs text-gray-500">8 AM</div>
+                  <div class="time-slot flex items-start justify-end pr-2 pt-1 text-xs text-gray-500">9 AM</div>
+                  <div class="time-slot flex items-start justify-end pr-2 pt-1 text-xs text-gray-500">10 AM</div>
+                  <div class="time-slot flex items-start justify-end pr-2 pt-1 text-xs text-gray-500">11 AM</div>
+                  <div class="time-slot flex items-start justify-end pr-2 pt-1 text-xs text-gray-500">12 PM</div>
+                  <div class="time-slot flex items-start justify-end pr-2 pt-1 text-xs text-gray-500">1 PM</div>
+                  <div class="time-slot flex items-start justify-end pr-2 pt-1 text-xs text-gray-500">2 PM</div>
+                  <div class="time-slot flex items-start justify-end pr-2 pt-1 text-xs text-gray-500">3 PM</div>
+                  <div class="time-slot flex items-start justify-end pr-2 pt-1 text-xs text-gray-500">4 PM</div>
+                  <div class="time-slot flex items-start justify-end pr-2 pt-1 text-xs text-gray-500">5 PM</div>
+                  <div class="time-slot flex items-start justify-end pr-2 pt-1 text-xs text-gray-500">6 PM</div>
+                </div>
+
+                <!-- Calendar grid cells will be generated dynamically by JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Task Details Popup Template -->
+    <div id="task-details-popup" class="hidden fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-5 max-h-[80vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-medium" id="popup-task-title">Task Title</h3>
+          <button id="close-popup" class="text-gray-500 hover:text-gray-700">
+            <i data-lucide="x" class="h-5 w-5"></i>
+          </button>
+        </div>
+
+        <div class="space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="font-medium">Status:</span>
+            <span id="popup-task-status" class="px-2 py-1 rounded-full text-xs"></span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="font-medium">Priority:</span>
+            <span id="popup-task-priority" class="px-2 py-1 rounded-full text-xs"></span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="font-medium">Assignee:</span>
+            <span id="popup-task-assignee"></span>
+          </div>
+
+          <div>
+            <span class="font-medium">Time:</span>
+            <div id="popup-task-time" class="text-sm"></div>
+          </div>
+
+          <div id="popup-notes-section">
+            <h4 class="font-medium mb-2">Notes & Comments</h4>
+            <div id="popup-notes-list" class="space-y-2 mb-3">
+              <!-- Notes will be inserted here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main JavaScript -->
+    <script>
+      // Initialize Lucide icons
+      lucide.createIcons();
+
+      // DOM Elements
+      const calendarGrid = document.getElementById('calendar-grid');
+      const calendarHeader = document.getElementById('calendar-header');
+      const currentDateRange = document.getElementById('current-date-range');
+      const tasksCount = document.getElementById('tasks-count');
+      const taskDetailsPopup = document.getElementById('task-details-popup');
+      const closePopupBtn = document.getElementById('close-popup');
+      const toastElement = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+
+      // View selection buttons
+      const dayViewBtn = document.getElementById('day-view');
+      const weekViewBtn = document.getElementById('week-view');
+      const monthViewBtn = document.getElementById('month-view');
+
+      // Navigation buttons
+      const prevBtn = document.getElementById('prev-btn');
+      const todayBtn = document.getElementById('today-btn');
+      const nextBtn = document.getElementById('next-btn');
+
+      // Calendar state
+      let currentView = 'week'; // 'day', 'week', or 'month'
+      let currentDate = new Date();
+      let tasks = [];
+
+      // Day names and month names for formatting
+      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                         'July', 'August', 'September', 'October', 'November', 'December'];
+
+      // Load tasks from localStorage
+      function loadTasks() {
+        tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        tasksCount.textContent = `Tasks: ${tasks.length}`;
+      }
+
+      // Show toast notification
+      function showToast(message) {
+        toastMessage.textContent = message;
+        toastElement.classList.remove('hidden');
+        toastElement.classList.add('show');
+
+        // Hide toast after 3 seconds
+        setTimeout(() => {
+          toastElement.classList.remove('show');
+          setTimeout(() => {
+            toastElement.classList.add('hidden');
+          }, 300);
+        }, 3000);
+      }
+
+      // Format date for display
+      function formatDate(dateString) {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true
+        });
+      }
+
+      // Get the week dates for the current date
+      function getWeekDates(date) {
+        const currentDay = date.getDay(); // 0 for Sunday, 1 for Monday, etc.
+        const result = [];
+
+        // Get Sunday of this week
+        const sunday = new Date(date);
+        sunday.setDate(date.getDate() - currentDay);
+
+        // Generate all days of the week
+        for (let i = 0; i < 7; i++) {
+          const day = new Date(sunday);
+          day.setDate(sunday.getDate() + i);
+          result.push(day);
+        }
+
+        return result;
+      }
+
+      // Update the calendar header dates display
+      function updateCalendarHeader(dates) {
+        // Clear existing header cells except the first one (time column)
+        const headerCells = calendarHeader.querySelectorAll('.day-header');
+
+        // Update the date in each header cell
+        for (let i = 1; i < headerCells.length; i++) {
+          const date = dates[i - 1];
+          const isCurrentDay = date.toDateString() === new Date().toDateString();
+
+          headerCells[i].textContent = `${dayNames[date.getDay()]} ${date.getDate()}`;
+
+          if (isCurrentDay) {
+            headerCells[i].classList.add('current-day');
+          } else {
+            headerCells[i].classList.remove('current-day');
+          }
+        }
+      }
+
+      // Update the date range display in the header
+      function updateDateRangeDisplay(dates) {
+        if (currentView === 'day') {
+          const date = dates[0] || currentDate;
+          currentDateRange.textContent = `${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+        } else if (currentView === 'week') {
+          const startDate = dates[0];
+          const endDate = dates[6];
+
+          if (startDate.getMonth() === endDate.getMonth()) {
+            currentDateRange.textContent = `${monthNames[startDate.getMonth()]} ${startDate.getDate()} - ${endDate.getDate()}, ${startDate.getFullYear()}`;
+          } else {
+            currentDateRange.textContent = `${monthNames[startDate.getMonth()]} ${startDate.getDate()} - ${monthNames[endDate.getMonth()]} ${endDate.getDate()}, ${startDate.getFullYear()}`;
+          }
+        } else if (currentView === 'month') {
+          currentDateRange.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+        }
+      }
+
+      // Get priority badge color
+      function getPriorityColor(priority) {
+        switch(priority.toLowerCase()) {
+          case 'high': return 'bg-red-100 text-red-800';
+          case 'medium': return 'bg-yellow-100 text-yellow-800';
+          case 'low': return 'bg-green-100 text-green-800';
+          case 'critical': return 'bg-purple-100 text-purple-800';
+          default: return 'bg-gray-100 text-gray-800';
+        }
+      }
+
+      // Get status badge color
+      function getStatusColor(status) {
+        switch(status) {
+          case 'Done': return 'bg-green-100 text-green-800';
+          case 'In Progress': return 'bg-blue-100 text-blue-800';
+          case 'To Do': return 'bg-gray-100 text-gray-800';
+          default: return 'bg-gray-100 text-gray-800';
+        }
+      }
+
+      // Get task background color based on status and priority
+      function getTaskBackgroundColor(task) {
+        if (task.status === 'Done') {
+          return 'bg-green-200 border-green-500';
+        } else if (task.priority === 'High' || task.priority === 'Critical') {
+          return 'bg-red-200 border-red-500';
+        } else if (task.priority === 'Medium') {
+          return 'bg-yellow-200 border-yellow-500';
+        } else {
+          return 'bg-blue-200 border-blue-500';
+        }
+      }
+
+      // Calculate task position and height in the calendar
+      function calculateTaskPosition(task, date) {
+        if (!task.startTime || !task.endTime) return null;
+
+        const startTime = new Date(task.startTime);
+        const endTime = new Date(task.endTime);
+
+        // Check if the task is on this day
+        const taskDate = new Date(startTime);
+        if (taskDate.toDateString() !== date.toDateString()) return null;
+
+        // Calculate position (start hour - 8) * 60px
+        const startHour = startTime.getHours() + startTime.getMinutes() / 60;
+        const endHour = endTime.getHours() + endTime.getMinutes() / 60;
+
+        // Only show tasks between 8AM and 6PM
+        if (startHour >= 18 || endHour <= 8) return null;
+
+        const clampedStartHour = Math.max(8, startHour);
+        const clampedEndHour = Math.min(18, endHour);
+
+        const top = (clampedStartHour - 8) * 60;
+        const height = Math.max((clampedEndHour - clampedStartHour) * 60, 30); // Minimum height of 30px
+
+        return {
+          top: top,
+          height: height
+        };
+      }
+
+      // Show task details in popup
+      function showTaskDetails(taskId) {
+        const task = tasks.find(t => t.id === taskId);
+        if (!task) return;
+
+        // Update popup content
+        document.getElementById('popup-task-title').textContent = task.title;
+
+        const statusElement = document.getElementById('popup-task-status');
+        statusElement.textContent = task.status;
+        statusElement.className = `px-2 py-1 rounded-full text-xs ${getStatusColor(task.status)}`;
+
+        const priorityElement = document.getElementById('popup-task-priority');
+        priorityElement.textContent = task.priority;
+        priorityElement.className = `px-2 py-1 rounded-full text-xs ${getPriorityColor(task.priority)}`;
+
+        document.getElementById('popup-task-assignee').textContent = task.assignee || 'Unassigned';
+
+        const timeText = `${task.startTime ? formatDate(task.startTime) : ''}
+                        ${task.startTime && task.endTime ? " - " : ""}
+                        ${task.endTime ? formatDate(task.endTime) : ''}`;
+        document.getElementById('popup-task-time').textContent = timeText;
+
+        // Display notes
+        const notesSection = document.getElementById('popup-notes-section');
+        const notesList = document.getElementById('popup-notes-list');
+
+        if (task.notes && task.notes.length > 0) {
+          notesList.innerHTML = '';
+          notesSection.classList.remove('hidden');
+
+          task.notes.forEach(note => {
+            const noteElement = document.createElement('div');
+            noteElement.className = 'bg-gray-50 p-2 rounded';
+            noteElement.innerHTML = `
+              <div class="flex justify-between text-xs text-gray-500 mb-1">
+                <span class="font-medium">${note.author}</span>
+                <span>${formatDate(note.timestamp)}</span>
+              </div>
+              <p class="text-sm">${note.content}</p>
+            `;
+            notesList.appendChild(noteElement);
+          });
+        } else {
+          notesList.innerHTML = '<p class="text-sm text-gray-500">No notes available.</p>';
+        }
+
+        // Show the popup
+        taskDetailsPopup.classList.remove('hidden');
+      }
+
+      // Close task details popup
+      function closeTaskDetails() {
+        taskDetailsPopup.classList.add('hidden');
+      }
+
+      // Render week view
+      function renderWeekView() {
+        // Get the dates for the current week
+        const weekDates = getWeekDates(currentDate);
+
+        // Update the calendar header with dates
+        updateCalendarHeader(weekDates);
+        updateDateRangeDisplay(weekDates);
+
+        // Create the calendar grid
+        calendarGrid.innerHTML = '';
+
+        // Add the time column
+        const timeColumn = document.createElement('div');
+        timeColumn.className = 'time-slots';
+
+        // Add time slots from 8 AM to 6 PM
+        for (let hour = 8; hour <= 18; hour++) {
+          const timeSlot = document.createElement('div');
+          timeSlot.className = 'time-slot flex items-start justify-end pr-2 pt-1 text-xs text-gray-500';
+          timeSlot.textContent = `${hour > 12 ? hour - 12 : hour} ${hour >= 12 ? 'PM' : 'AM'}`;
+          timeColumn.appendChild(timeSlot);
+        }
+
+        calendarGrid.appendChild(timeColumn);
+
+        // Create a column for each day of the week
+        weekDates.forEach(date => {
+          const dayColumn = document.createElement('div');
+          dayColumn.className = 'day-column flex-1';
+
+          // Create time slots for this day
+          for (let hour = 8; hour <= 18; hour++) {
+            const timeSlot = document.createElement('div');
+            timeSlot.className = 'calendar-cell time-slot';
+            dayColumn.appendChild(timeSlot);
+            console.log(timeSlot.innerHTML);
+
+
+          }
+
+          // Add tasks for this day
+          tasks.forEach(task => {
+    if (!task.startTime || !task.endTime) return;
+
+    const position = calculateTaskPosition(task, date);
+    if (!position) return;
+
+    const taskElement = document.createElement('div');
+    taskElement.className = `calendar-task ${getTaskBackgroundColor(task)} border-l-4 truncate`;
+    taskElement.style.top = `${position.top}px`;
+    taskElement.style.height = `${position.height}px`;
+    taskElement.style.width = 'calc(100% - 8px)';
+    taskElement.style.left = '4px';
+    taskElement.style.padding = '2px 4px';
+    taskElement.style.fontSize = '0.625rem'; // Extra small font
+
+    taskElement.innerHTML = `
+      <div class="font-medium truncate">${task.title}</div>
+      <div class="text-[0.5rem] truncate">${task.assignee}</div>
+    `;
+
+    taskElement.addEventListener('click', () => showTaskDetails(task.id));
+
+    dayColumn.appendChild(taskElement);
+  });
+
+  calendarGrid.appendChild(dayColumn);
+
+        });
+      }
+
+      // Render day view
+      function renderDayView() {
+        // Array with just the current date
+        const dateArray = [new Date(currentDate)];
+
+        // Update header and date range
+        updateCalendarHeader(dateArray);
+        updateDateRangeDisplay(dateArray);
+
+        // Create the calendar grid
+        calendarGrid.innerHTML = '';
+
+        // Add the time column
+        const timeColumn = document.createElement('div');
+        timeColumn.className = 'time-slots';
+
+        for (let hour = 8; hour <= 18; hour++) {
+          const timeSlot = document.createElement('div');
+          timeSlot.className = 'time-slot flex items-start justify-end pr-2 pt-1 text-xs text-gray-500';
+          timeSlot.textContent = `${hour > 12 ? hour - 12 : hour} ${hour >= 12 ? 'PM' : 'AM'}`;
+          timeColumn.appendChild(timeSlot);
+        }
+
+        calendarGrid.appendChild(timeColumn);
+
+        // Create a single day column
+        const dayColumn = document.createElement('div');
+        dayColumn.className = 'day-column flex-1';
+        dayColumn.style.gridColumn = '2 / span 7'; // Span all 7 days
+
+        // Create time slots
+        for (let hour = 8; hour <= 18; hour++) {
+          const timeSlot = document.createElement('div');
+          timeSlot.className = 'calendar-cell time-slot';
+          dayColumn.appendChild(timeSlot);
+
+        }
+
+        // Add tasks for this day
+
+        tasks.forEach(task => {
+          if (!task.startTime || !task.endTime) return;
+
+          const position = calculateTaskPosition(task, currentDate);
+          if (!position) return;
+
+          const taskElement = document.createElement('div');
+          taskElement.className = `calendar-task ${getTaskBackgroundColor(task)} border-l-4 truncate`;
+          taskElement.style.top = `${position.top}px`;
+          taskElement.style.height = `${position.height}px`;
+          taskElement.style.width = 'calc(100% - 16px)';
+          taskElement.style.left = '8px';
+          taskElement.style.padding = '2px 4px';
+          taskElement.style.fontSize = '0.75rem'; // Slightly larger for day view
+
+          taskElement.innerHTML = `
+            <div class="font-medium truncate">${task.title}</div>
+            <div class="text-xs truncate">${task.assignee}</div>
+            <div class="text-[0.6rem] truncate">${formatDate(task.startTime)} - ${formatDate(task.endTime)}</div>
+          `;
+
+          taskElement.addEventListener('click', () => showTaskDetails(task.id));
+
+          timeSlot.appendChild(taskElement);
+        });
+
+        calendarGrid.appendChild(dayColumn);
+      }
+
+
+      // Render month view
+      function renderMonthView() {
+        // Get first day of the month
+        const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+        // Update date range display
+        updateDateRangeDisplay([firstDay]);
+
+        // Modify header to show just days of week
+        const headerCells = calendarHeader.querySelectorAll('.day-header');
+        for (let i = 1; i < headerCells.length; i++) {
+          headerCells[i].textContent = dayNames[i - 1];
+          headerCells[i].classList.remove('current-day');
+        }
+
+        // Create the calendar grid for month view
+        calendarGrid.innerHTML = '';
+
+        // Add a placeholder for the time column
+        const timeColumn = document.createElement('div');
+        timeColumn.className = 'time-slots';
+        calendarGrid.appendChild(timeColumn);
+
+        // Calculate the day of the week the month starts on (0 = Sunday, 1 = Monday, etc.)
+        const startDay = firstDay.getDay();
+
+        // Calculate the number of days in the month
+        const daysInMonth = lastDay.getDate();
+
+        // Calculate the number of weeks to display (maximum 6)
+        const weeksToDisplay = Math.ceil((startDay + daysInMonth) / 7);
+
+        // Create grid cells for each day
+        let dayCounter = 1;
+
+        // Create cells for each week
+        for (let week = 0; week < weeksToDisplay; week++) {
+          // For each day of the week
+          for (let day = 0; day < 7; day++) {
+            // Skip days before the start of the month
+            if (week === 0 && day < startDay) {
+              const emptyCell = document.createElement('div');
+              emptyCell.className = 'calendar-cell h-32 bg-gray-50';
+              calendarGrid.appendChild(emptyCell);
+              continue;
+            }
+
+            // Skip days after the end of the month
+            if (dayCounter > daysInMonth) {
+              const emptyCell = document.createElement('div');
+              emptyCell.className = 'calendar-cell h-32 bg-gray-50';
+              calendarGrid.appendChild(emptyCell);
+              continue;
+            }
+
+            // Create cell for this day
+            const dayCell = document.createElement('div');
+            const currentDayDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), dayCounter);
+            const isToday = currentDayDate.toDateString() === new Date().toDateString();
+
+            dayCell.className = `calendar-cell h-32 relative overflow-auto ${isToday ? 'bg-blue-50' : ''}`;
+
+            // Add date number in top-left
+            const dateLabel = document.createElement('div');
+            dateLabel.className = `absolute top-1 left-2 text-sm font-medium ${isToday ? 'text-blue-600' : 'text-gray-700'}`;
+            dateLabel.textContent = dayCounter;
+            dayCell.appendChild(dateLabel);
+
+            // Add tasks for this day
+            const dayTasks = tasks.filter(task => {
+              if (!task.startTime) return false;
+              const taskDate = new Date(task.startTime);
+              return taskDate.getDate() === dayCounter &&
+                     taskDate.getMonth() === currentDate.getMonth() &&
+                     taskDate.getFullYear() === currentDate.getFullYear();
+            });
+
+            // Container for tasks
+            const tasksContainer = document.createElement('div');
+            tasksContainer.className = 'absolute top-7 left-0 right-0 px-1 space-y-1';
+
+            dayTasks.forEach((task, index) => {
+              // Only show first 2 tasks, then show a "+X more" indicator
+              if (index < 2) {
+                const taskElement = document.createElement('div');
+                taskElement.className = `${getTaskBackgroundColor(task)} border-l-2 px-1 py-0.5 truncate text-[0.625rem] rounded cursor-pointer`;
+                taskElement.textContent = task.title;
+                taskElement.addEventListener('click', () => showTaskDetails(task.id));
+                tasksContainer.appendChild(taskElement);
+              } else if (index === 2) {
+                const moreElement = document.createElement('div');
+                moreElement.className = 'bg-gray-200 px-1 py-0.5 text-[0.625rem] text-center rounded';
+                moreElement.textContent = `+${dayTasks.length - 2} more`;
+                tasksContainer.appendChild(moreElement);
+              }
+            });
+
+            dayCell.appendChild(tasksContainer);
+            calendarGrid.appendChild(dayCell);
+
+            dayCounter++;
+          }
+        }
+      }
+
+      // Render the calendar based on current view
+      function renderCalendar() {
+        if (currentView === 'day') {
+          renderDayView();
+        } else if (currentView === 'week') {
+          renderWeekView();
+        } else if (currentView === 'month') {
+          renderMonthView();
+        }
+      }
+
+      // Navigate to previous period
+      function navigatePrevious() {
+        if (currentView === 'day') {
+          currentDate.setDate(currentDate.getDate() - 1);
+        } else if (currentView === 'week') {
+          currentDate.setDate(currentDate.getDate() - 7);
+        } else if (currentView === 'month') {
+          currentDate.setMonth(currentDate.getMonth() - 1);
+        }
+        renderCalendar();
+      }
+
+      // Navigate to next period
+      function navigateNext() {
+        if (currentView === 'day') {
+          currentDate.setDate(currentDate.getDate() + 1);
+        } else if (currentView === 'week') {
+          currentDate.setDate(currentDate.getDate() + 7);
+        } else if (currentView === 'month') {
+          currentDate.setMonth(currentDate.getMonth() + 1);
+        }
+        renderCalendar();
+      }
+
+      // Navigate to today
+      function navigateToday() {
+        currentDate = new Date();
+        renderCalendar();
+      }
+
+      // Switch to day view
+      function switchToDayView() {
+        currentView = 'day';
+        dayViewBtn.classList.add('active');
+        weekViewBtn.classList.remove('active');
+        monthViewBtn.classList.remove('active');
+        renderCalendar();
+      }
+
+      // Switch to week view
+      function switchToWeekView() {
+        currentView = 'week';
+        dayViewBtn.classList.remove('active');
+        weekViewBtn.classList.add('active');
+        monthViewBtn.classList.remove('active');
+        renderCalendar();
+      }
+
+      // Switch to month view
+      function switchToMonthView() {
+        currentView = 'month';
+        dayViewBtn.classList.remove('active');
+        weekViewBtn.classList.remove('active');
+        monthViewBtn.classList.add('active');
+        renderCalendar();
+      }
+
+      // Attach event listeners
+      prevBtn.addEventListener('click', navigatePrevious);
+      nextBtn.addEventListener('click', navigateNext);
+      todayBtn.addEventListener('click', navigateToday);
+      dayViewBtn.addEventListener('click', switchToDayView);
+      weekViewBtn.addEventListener('click', switchToWeekView);
+      monthViewBtn.addEventListener('click', switchToMonthView);
+      closePopupBtn.addEventListener('click', closeTaskDetails);
+
+      // Initialize calendar
+      loadTasks();
+      renderCalendar();
+
+      // Watch for changes in local storage (e.g., tasks updated in the task manager)
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'tasks') {
+          loadTasks();
+          renderCalendar();
+          showToast('Calendar updated with latest tasks');
+        }
+      });
+    </script>
+  </body>
+</html>
