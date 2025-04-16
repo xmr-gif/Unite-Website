@@ -14,14 +14,14 @@
                 CONCAT(	Nom, ' ', Prenom) AS FullName,
                 Email,
                 'Professor' AS Role,
-                RegistrationDate
+                DateRegistration
             FROM professeur
             UNION ALL
             SELECT
                 CONCAT(Nom, ' ', Prenom) AS FullName,
                 Email,
                 'Student' AS Role,
-                RegistrationDate
+                DateRegistration
             FROM etudiant
             ORDER BY RegistrationDate DESC";
  $state = $pdo->prepare($sql);
