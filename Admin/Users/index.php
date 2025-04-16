@@ -1,3 +1,36 @@
+<?php
+ $host ='localhost';
+ $db = 'unite_db';
+ $user='root';
+ $pass ='';
+ try {
+     $pdo = new PDO ("mysql:host=$host;port=3307;dbname=$db",$user,$pass);
+     echo "Connexion reussite";
+     
+ } catch (PDOException $e) {
+     echo "La connexion n'est pas reussie ".$e->getMessage() ;
+ }
+ $sql = "SELECT
+                CONCAT(	Nom, ' ', Prenom) AS FullName,
+                Email,
+                'Professor' AS Role,
+                RegistrationDate
+            FROM professeur
+            UNION ALL
+            SELECT
+                CONCAT(Nom, ' ', Prenom) AS FullName,
+                Email,
+                'Student' AS Role,
+                RegistrationDate
+            FROM etudiant
+            ORDER BY RegistrationDate DESC";
+ $state = $pdo->prepare($sql);
+ $state->execute();
+ $users = $state->fetchAll();
+ 
+print_r($users);
+print_r($users[1]["FullName"]);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,23 +127,23 @@
                         <p class="w-1/5" ><a href="">Role <i class="ri-filter-3-fill"></i></a></p>
                         <p class="w-1/5" ><a href="">Member Since <i class="ri-filter-3-fill"></i></a></p>
                     </div>
-
+            <?php foreach ($users as $user): ?>
                     <div class="snap-y" >
                         <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
                             <!-- Leader Column -->
                             <div class="flex items-center w-1/4">
                                 <input type="checkbox" class="mr-1">
                                 <img src="PP.webp" alt="" class="w-8 h-8 rounded-md mr-1">
-                                <p>Bedlou Oussama</p>
+                                <p><?= $user["FullName"] ?></p>
                             </div>
 
                             <!-- Subject Column -->
-                            <p class="w-1/4">email1@gmail.com</p>
+                            <p class="w-1/4"><?= $user["Email"] ?></p>
 
                             <!-- Status Column -->
                             <div class="w-1/5">
 
-                                    <p >Student</p>
+                                    <p ><?= $user["Role"] ?></p>
 
                             </div>
 
@@ -122,115 +155,8 @@
                                 Details
                             </button>
                         </div>
-
-                        <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
-                            <!-- Leader Column -->
-                            <div class="flex items-center w-1/4">
-                                <input type="checkbox" class="mr-1">
-                                <img src="PP.webp" alt="" class="w-8 h-8 rounded-md mr-1">
-                                <p>Bedlou Oussama</p>
-                            </div>
-
-                            <!-- Subject Column -->
-                            <p class="w-1/4">email2@gmail.com</p>
-
-                            <!-- Status Column -->
-                            <div class="w-1/5">
-
-                                    <p >Student</p>
-
-                            </div>
-
-                            <!-- Date Column -->
-                            <p class="w-1/5">Feb 20th, 2025</p>
-
-                            <!-- Details Button -->
-                            <button class="border text-zinc-500 px-2 rounded-md border-zinc-400 cursor-pointer">
-                                Details
-                            </button>
-                        </div>
-
-                        <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
-                            <!-- Leader Column -->
-                            <div class="flex items-center w-1/4">
-                                <input type="checkbox" class="mr-1">
-                                <img src="PP.webp" alt="" class="w-8 h-8 rounded-md mr-1">
-                                <p>Bedlou Oussama</p>
-                            </div>
-
-                            <!-- Subject Column -->
-                            <p class="w-1/4">email3@gmail.com</p>
-
-                            <!-- Status Column -->
-                            <div class="w-1/5">
-
-                                    <p >Professor</p>
-
-                            </div>
-
-                            <!-- Date Column -->
-                            <p class="w-1/5">Feb 20th, 2025</p>
-
-                            <!-- Details Button -->
-                            <button class="border text-zinc-500 px-2 rounded-md border-zinc-400 cursor-pointer">
-                                Details
-                            </button>
-                        </div>
-
-                        <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
-                            <!-- Leader Column -->
-                            <div class="flex items-center w-1/4">
-                                <input type="checkbox" class="mr-1">
-                                <img src="PP.webp" alt="" class="w-8 h-8 rounded-md mr-1">
-                                <p>Bedlou Oussama</p>
-                            </div>
-
-                            <!-- Subject Column -->
-                            <p class="w-1/4">email4@gmail.com</p>
-
-                            <!-- Status Column -->
-                            <div class="w-1/5">
-
-                                    <p >Professor</p>
-
-                            </div>
-
-                            <!-- Date Column -->
-                            <p class="w-1/5">Feb 20th, 2025</p>
-
-                            <!-- Details Button -->
-                            <button class="border text-zinc-500 px-2 rounded-md border-zinc-400 cursor-pointer">
-                                Details
-                            </button>
-                        </div>
-
-                        <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
-                            <!-- Leader Column -->
-                            <div class="flex items-center w-1/4">
-                                <input type="checkbox" class="mr-1">
-                                <img src="PP.webp" alt="" class="w-8 h-8 rounded-md mr-1">
-                                <p>Bedlou Oussama</p>
-                            </div>
-
-                            <!-- Subject Column -->
-                            <p class="w-1/4">email5@gmail.com </p>
-
-                            <!-- Status Column -->
-                            <div class="w-1/5">
-                                    <p >Professor</p>
-
-                            </div>
-
-                            <!-- Date Column -->
-                            <p class="w-1/5">Feb 20th, 2025</p>
-
-                            <!-- Details Button -->
-                            <button class="border text-zinc-500 px-2 rounded-md border-zinc-400 cursor-pointer">
-                                Details
-                            </button>
-                        </div>
-
-                    </div>
+              <?php endforeach ; ?>
+                       
 
 
 
