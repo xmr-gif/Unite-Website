@@ -32,7 +32,7 @@ CREATE TABLE Etudiant (
     Prenom VARCHAR(255) ,
     Email VARCHAR(255) ,
     Filiere_Precedente VARCHAR(255) ,
-    DateRegistration DATETIME DEFAULT CURRENT_TIMESTAMP;
+    DateRegistration DATETIME DEFAULT CURRENT_TIMESTAMP , 
     Dans_Un_Groupe BOOLEAN ,
     Est_Chef BOOLEAN ,
     Sexe VARCHAR(10) ,

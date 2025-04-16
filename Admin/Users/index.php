@@ -4,32 +4,42 @@
  $user='root';
  $pass ='';
  try {
-     $pdo = new PDO ("mysql:host=$host;port=3307;dbname=$db",$user,$pass);
-     echo "Connexion reussite";
+     $pdo = new PDO ("mysql:host=$host;port=3306;dbname=$db",$user,$pass);
+     //echo "Connexion reussite";
      
  } catch (PDOException $e) {
      echo "La connexion n'est pas reussie ".$e->getMessage() ;
  }
  $sql = "SELECT
-                CONCAT(	Nom, ' ', Prenom) AS FullName,
-                Email,
-                'Professor' AS Role,
-                DateRegistration
-            FROM professeur
-            UNION ALL
-            SELECT
-                CONCAT(Nom, ' ', Prenom) AS FullName,
-                Email,
-                'Student' AS Role,
-                DateRegistration
-            FROM etudiant
-            ORDER BY RegistrationDate DESC";
+            CONCAT(Nom, ' ', Prenom) AS FullName,
+            Email,
+            'Professor' AS Role,
+            DateRegistration,
+            NULL AS Filiere_precedente,  -- Student fields
+            NULL AS Dans_Un_Groupe,
+            NULL AS Sexe,
+            NULL AS Est_Chef,
+            Est_Admin                   -- Professor-specific field
+        FROM professeur
+        UNION ALL
+        SELECT
+            CONCAT(Nom, ' ', Prenom) AS FullName,
+            Email,
+            'Student' AS Role,
+            DateRegistration,
+            Filiere_precedente,         -- Student fields
+            Dans_Un_Groupe,
+            Sexe,
+            Est_Chef,
+            NULL AS Est_Admin           -- Professor field
+        FROM etudiant
+        ORDER BY DateRegistration DESC";
  $state = $pdo->prepare($sql);
  $state->execute();
  $users = $state->fetchAll();
- 
+ /*
 print_r($users);
-print_r($users[1]["FullName"]);
+print_r($users[1]["FullName"]);*/
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,6 +50,12 @@ print_r($users[1]["FullName"]);
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/lucide@0.462.0/dist/umd/lucide.min.js"></script>
     <title>Users</title>
+    <style>
+#userModal {
+    transition: opacity 0.3s ease-in-out;
+    backdrop-filter: blur(2px);
+}
+</style>
 </head>
 <body>
     <div class="flex" >
@@ -146,15 +162,33 @@ print_r($users[1]["FullName"]);
                                     <p ><?= $user["Role"] ?></p>
 
                             </div>
+                            <?php
+                                $date = new DateTime($user["DateRegistration"]);
+                                $formattedDate = $date->format('F jS, Y'); 
+                            ?>
 
                             <!-- Date Column -->
-                            <p class="w-1/5">Feb 20th, 2025</p>
+                            <p class="w-1/5"><?=$formattedDate?></p>
 
                             <!-- Details Button -->
-                            <button class="border text-zinc-500 px-2 rounded-md border-zinc-400 cursor-pointer">
+
+                            <button 
+                                class="details-btn border text-zinc-500 px-2 rounded-md border-zinc-400 cursor-pointer"
+                                data-fullname="<?= htmlspecialchars($user['FullName'], ENT_QUOTES) ?>"
+                                data-email="<?= htmlspecialchars($user['Email'], ENT_QUOTES) ?>"
+                                data-role="<?= htmlspecialchars($user['Role'], ENT_QUOTES) ?>"
+                                data-date="<?= htmlspecialchars($formattedDate, ENT_QUOTES) ?>"
+                                data-filiere="<?= htmlspecialchars($user['Filiere_precedente'] ?? 'Undefined', ENT_QUOTES) ?>"
+                                data-dans-un-groupe="<?= htmlspecialchars($user['Dans_Un_Groupe'] ?? 'Undefined', ENT_QUOTES) ?>"
+                                data-sexe="<?= htmlspecialchars($user['Sexe'] ?? 'Undefined', ENT_QUOTES) ?>"
+                                data-est-chef="<?= htmlspecialchars($user['Est_Chef'] ?? 'Undefined', ENT_QUOTES) ?>"
+                                data-est-admin="<?= htmlspecialchars($user['Est_Admin'] ?? 'Undefined', ENT_QUOTES) ?>"
+                            >
                                 Details
                             </button>
+                            
                         </div>
+                        
               <?php endforeach ; ?>
                        
 
@@ -166,9 +200,139 @@ print_r($users[1]["FullName"]);
 
         </div>
     </div>
-    <script>
-        lucide.createIcons();
-    </script>
+
+<!-- User Details Modal -->
+<div id="userModal" class="hidden fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-5 max-h-[80vh] overflow-y-auto">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-medium">User Details</h3>
+      <button class="close-modal text-gray-500 hover:text-gray-700">
+        <i data-lucide="x" class="h-5 w-5"></i>
+      </button>
+    </div>
+
+    <div class="space-y-3">
+      <!-- Common Fields -->
+      <div class="flex items-center gap-2">
+        <span class="font-medium w-24">Full Name:</span>
+        <span id="modalFullName" class="text-gray-600"></span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="font-medium w-24">Email:</span>
+        <span id="modalEmail" class="text-gray-600"></span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="font-medium w-24">Role:</span>
+        <span id="modalRole" class="text-gray-600"></span>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="font-medium w-24">Member Since:</span>
+        <span id="modalDate" class="text-gray-600"></span>
+      </div>
+
+      <!-- Student-specific Fields -->
+      <div id="studentFields" class="hidden space-y-3 pt-3 border-t border-gray-200">
+    <div class="flex items-center gap-2">
+        <span class="font-medium w-24">Previous Field:</span>
+        <span id="modalFiliere" class="text-gray-600"></span>
+    </div>
+    <div class="flex items-center gap-2">
+        <span class="font-medium w-24">In Group:</span>
+        <span id="modalDansUnGroupe" class="text-gray-600"></span>
+    </div>
+    <div class="flex items-center gap-2">
+        <span class="font-medium w-24">Gender:</span>
+        <span id="modalSexe" class="text-gray-600"></span>
+    </div>
+    <div class="flex items-center gap-2">
+        <span class="font-medium w-24">Is Leader:</span>
+        <span id="modalEstChef" class="text-gray-600"></span>
+    </div>
+</div>
+
+      <!-- Professor-specific Fields -->
+      <div id="adminFields" class="hidden space-y-3 pt-3 border-t border-gray-200">
+        <div class="flex items-center gap-2">
+          <span class="font-medium w-24">Is Admin:</span>
+          <span id="modalEstAdmin" class="text-gray-600"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4 flex justify-end">
+      <button class="close-modal px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    lucide.createIcons();
+
+    document.addEventListener('click', function(e) {
+        const button = e.target.closest('.details-btn');
+        if (!button) return;
+
+        const user = button.dataset;
+        const modal = document.getElementById('userModal');
+        const studentFields = document.getElementById('studentFields');
+        const adminFields = document.getElementById('adminFields');
+
+        // Set common fields
+        document.getElementById('modalFullName').textContent = user.fullname || 'Undefined';
+        document.getElementById('modalEmail').textContent = user.email || 'Undefined';
+        document.getElementById('modalRole').textContent = user.role || 'Undefined';
+        document.getElementById('modalDate').textContent = user.date || 'Undefined';
+
+        // Handle role-specific fields
+        if (user.role === 'Student') {
+            studentFields.classList.remove('hidden');
+            adminFields.classList.add('hidden');
+            
+            document.getElementById('modalFiliere').textContent = 
+                user.filiere !== 'undefined' ? user.filiere : 'Undefined';
+            
+            document.getElementById('modalDansUnGroupe').textContent = 
+                user.dansUnGroupe === '1' ? 'Yes' : 
+                user.dansUnGroupe === '0' ? 'No' : 'Undefined';
+            
+            document.getElementById('modalSexe').textContent = 
+                user.sexe !== 'undefined' ? user.sexe : 'Undefined';
+            
+            document.getElementById('modalEstChef').textContent = 
+                user.estChef === '1' ? 'Yes' : 
+                user.estChef === '0' ? 'No' : 'Undefined';
+
+        } else if (user.role === 'Professor') {
+            studentFields.classList.add('hidden');
+            adminFields.classList.remove('hidden');
+            document.getElementById('modalEstAdmin').textContent = 
+                user.estAdmin === '1' ? 'Yes' : 
+                user.estAdmin === '0' ? 'No' : 'Undefined';
+        }
+
+        modal.classList.remove('hidden');
+    });
+
+    // Close modal handlers
+    document.querySelectorAll('.close-modal').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.getElementById('userModal').classList.add('hidden');
+        });
+    });
+
+    window.addEventListener('click', (e) => {
+        const modal = document.getElementById('userModal');
+        if (e.target === modal) {
+            modal.classList.add('hidden');
+        }
+    });
+});
+</script>
 
 </body>
 </html>
