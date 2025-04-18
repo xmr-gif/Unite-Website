@@ -6,7 +6,7 @@
  try {
      $pdo = new PDO ("mysql:host=$host;port=3306;dbname=$db",$user,$pass);
      //echo "Connexion reussite";
-     
+
  } catch (PDOException $e) {
      echo "La connexion n'est pas reussie ".$e->getMessage() ;
  }
@@ -64,25 +64,25 @@ print_r($users[1]["FullName"]);*/
 
             <div class="space-y-2">
               <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
-                <a class="flex items-center gap-2" href="#" >
+                <a class="flex items-center gap-2" href="../Dashboard/index.html" >
                   <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
                   Dashboard
                 </a>
               </div>
               <div class="px-4 py-2 bg-slate-200 rounded-md cursor-pointer">
-                <a class="flex items-center gap-2">
+                <a class="flex items-center gap-2" href="#" >
                   <i data-lucide="user" class="w-4 h-4"></i>
                   Users
                 </a>
               </div>
               <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
-                <a class="flex items-center gap-2">
+                <a class="flex items-center gap-2" href="../Subjects/index.html" >
                   <i data-lucide="lightbulb" class="w-4 h-4"></i>
                   Subjects
                 </a>
               </div>
               <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
-                <a class="flex items-center gap-2">
+                <a class="flex items-center gap-2" href="../Choices/index.html" >
                   <i data-lucide="book-open" class="w-4 h-4"></i>
                   Choices
                 </a>
@@ -119,9 +119,9 @@ print_r($users[1]["FullName"]);*/
         <div class="h-screen bg-gray-100 py-5 w-4/5 px-7 " >
             <div >
                 <div class="flex justify-end w-full mb-5" >
-                    <div class="border border-zinc-400 text-zinc-600 p-5 w-10 h-10 flex justify-center items-center rounded-xl cursor-pointer">
+                    <button id="openAssignAdmin" class="border border-zinc-400 text-zinc-600 p-5 w-10 h-10 flex justify-center items-center rounded-xl cursor-pointer">
                         +
-                    </div>
+                    </button>
                     <img src="PP.webp" alt="" class="w-10 h-10 rounded-full ml-3">
 
                 </div>
@@ -164,7 +164,7 @@ print_r($users[1]["FullName"]);*/
                             </div>
                             <?php
                                 $date = new DateTime($user["DateRegistration"]);
-                                $formattedDate = $date->format('F jS, Y'); 
+                                $formattedDate = $date->format('F jS, Y');
                             ?>
 
                             <!-- Date Column -->
@@ -172,7 +172,7 @@ print_r($users[1]["FullName"]);*/
 
                             <!-- Details Button -->
 
-                            <button 
+                            <button
                                 class="details-btn border text-zinc-500 px-2 rounded-md border-zinc-400 cursor-pointer"
                                 data-fullname="<?= htmlspecialchars($user['FullName'], ENT_QUOTES) ?>"
                                 data-email="<?= htmlspecialchars($user['Email'], ENT_QUOTES) ?>"
@@ -186,11 +186,11 @@ print_r($users[1]["FullName"]);*/
                             >
                                 Details
                             </button>
-                            
+
                         </div>
-                        
+
               <?php endforeach ; ?>
-                       
+
 
 
 
@@ -269,70 +269,33 @@ print_r($users[1]["FullName"]);*/
     </div>
   </div>
 </div>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    lucide.createIcons();
+<!-- Assign Admin Modal -->
+<div id="assignAdminModal" class="hidden fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-5 max-h-[80vh] overflow-y-auto">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-medium">Assign Admin Status</h3>
+      <button class="close-assign-modal text-gray-500 hover:text-gray-700">
+        <i data-lucide="x" class="h-5 w-5"></i>
+      </button>
+    </div>
 
-    document.addEventListener('click', function(e) {
-        const button = e.target.closest('.details-btn');
-        if (!button) return;
+    <div id="professorsList" class="space-y-3">
+      <!-- Professors will be loaded here -->
+    </div>
 
-        const user = button.dataset;
-        const modal = document.getElementById('userModal');
-        const studentFields = document.getElementById('studentFields');
-        const adminFields = document.getElementById('adminFields');
+    <div class="mt-4 flex justify-end">
+      <button class="close-assign-modal px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
 
-        // Set common fields
-        document.getElementById('modalFullName').textContent = user.fullname || 'Undefined';
-        document.getElementById('modalEmail').textContent = user.email || 'Undefined';
-        document.getElementById('modalRole').textContent = user.role || 'Undefined';
-        document.getElementById('modalDate').textContent = user.date || 'Undefined';
+    <script>lucide.createIcons();</script>
+    <script src="js/user-modal.js"></script>
+    <script src="js/admin-assign.js"></script>
 
-        // Handle role-specific fields
-        if (user.role === 'Student') {
-            studentFields.classList.remove('hidden');
-            adminFields.classList.add('hidden');
-            
-            document.getElementById('modalFiliere').textContent = 
-                user.filiere !== 'undefined' ? user.filiere : 'Undefined';
-            
-            document.getElementById('modalDansUnGroupe').textContent = 
-                user.dansUnGroupe === '1' ? 'Yes' : 
-                user.dansUnGroupe === '0' ? 'No' : 'Undefined';
-            
-            document.getElementById('modalSexe').textContent = 
-                user.sexe !== 'undefined' ? user.sexe : 'Undefined';
-            
-            document.getElementById('modalEstChef').textContent = 
-                user.estChef === '1' ? 'Yes' : 
-                user.estChef === '0' ? 'No' : 'Undefined';
 
-        } else if (user.role === 'Professor') {
-            studentFields.classList.add('hidden');
-            adminFields.classList.remove('hidden');
-            document.getElementById('modalEstAdmin').textContent = 
-                user.estAdmin === '1' ? 'Yes' : 
-                user.estAdmin === '0' ? 'No' : 'Undefined';
-        }
-
-        modal.classList.remove('hidden');
-    });
-
-    // Close modal handlers
-    document.querySelectorAll('.close-modal').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.getElementById('userModal').classList.add('hidden');
-        });
-    });
-
-    window.addEventListener('click', (e) => {
-        const modal = document.getElementById('userModal');
-        if (e.target === modal) {
-            modal.classList.add('hidden');
-        }
-    });
-});
-</script>
 
 </body>
 </html>

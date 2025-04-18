@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/lucide@0.462.0/dist/umd/lucide.min.js"></script>
+    <title>Profile Settings</title>
+</head>
+<body>
+    <div class="flex">
+        <!-- Sidebar - Same as before -->
+        <div class="py-5 px-6 w-1/4 h-screen border-r border-gray-200 bg-white">
+            <img src="../../images/black-logo.png" class="w-20 mb-10 ml-4" alt="Logo" />
+
+            <div class="space-y-2">
+                <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+                    <a class="flex items-center gap-2" href="#">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                        Dashboard
+                    </a>
+                </div>
+                <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+                    <a class="flex items-center gap-2">
+                        <i data-lucide="user" class="w-4 h-4"></i>
+                        Users
+                    </a>
+                </div>
+                <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+                    <a class="flex items-center gap-2">
+                        <i data-lucide="lightbulb" class="w-4 h-4"></i>
+                        Subjects
+                    </a>
+                </div>
+                <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+                    <a class="flex items-center gap-2">
+                        <i data-lucide="book-open" class="w-4 h-4"></i>
+                        Choices
+                    </a>
+                </div>
+                <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+                    <a class="flex items-center gap-2" href="index.html">
+                        <i data-lucide="file-text" class="w-4 h-4"></i>
+                        Blogs
+                    </a>
+                </div>
+                <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+                    <a class="flex items-center gap-2" href="calendar.html">
+                        <i data-lucide="users" class="w-4 h-4"></i>
+                        Groups
+                    </a>
+                </div>
+            </div>
+
+            <div class="absolute bottom-8 space-y-2 w-[calc(25%-48px)]">
+                <div class="px-4 py-2 bg-slate-200 rounded-md cursor-pointer">
+                    <span class="flex items-center gap-2">
+                        <i data-lucide="settings" class="w-4 h-4"></i>
+                        Settings
+                    </span>
+                </div>
+                <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+                    <span class="flex items-center gap-2">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                        Log Out
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Section -->
+        <section class="h-screen bg-gray-100 py-5 w-4/5 px-7">
+            <div>
+                <!-- Header with plus button and profile picture -->
+                <div class="flex justify-end w-full mb-5">
+                    <div class="border border-zinc-400 text-zinc-600 p-5 w-10 h-10 flex justify-center items-center rounded-xl cursor-pointer">
+                        +
+                    </div>
+                    <img src="../../images/PP.webp" alt="" class="w-10 h-10 rounded-full ml-3">
+                </div>
+
+                <!-- Main content card -->
+                <div class="bg-white px-9 py-4 rounded-3xl h-[72vh] overflow-y-auto">
+                    <!-- Profile Settings Header -->
+                    <div class="border-b border-zinc-200 pt-4 pb-5">
+                        <p class="text-2xl font-medium">Profile Settings</p>
+                    </div>
+
+                    <!-- Profile Settings Form -->
+                    <form class="mt-8 max-w-2xl">
+                        <div class="space-y-6">
+                            <!-- Profile Picture Section -->
+                            <div class="flex items-center space-x-4">
+                                <img src="../../images/PP.webp" alt="Profile Picture" class="w-20 h-20 rounded-full">
+                                <div>
+                                    <label class="bg-indigo-500 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-indigo-600">
+                                        <span>Change Photo</span>
+                                        <input type="file" class="hidden" accept="image/*">
+                                    </label>
+                                    <p class="text-sm text-zinc-500 mt-1">JPG, GIF or PNG. Max size of 800K</p>
+                                </div>
+                            </div>
+
+                            <!-- Personal Information -->
+                            <div class="grid grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-zinc-700 mb-1">First Name</label>
+                                    <input type="text" class="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-zinc-700 mb-1">Last Name</label>
+                                    <input type="text" class="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                </div>
+                            </div>
+
+                            <!-- Contact Information -->
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-zinc-700 mb-1">Email Address</label>
+                                    <input type="email" class="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-zinc-700 mb-1">Phone Number</label>
+                                    <input type="tel" class="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                </div>
+                            </div>
+
+                            <!-- Password Change -->
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-zinc-700 mb-1">Current Password</label>
+                                    <input type="password" class="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-zinc-700 mb-1">New Password</label>
+                                    <input type="password" class="w-full px-3 py-2 border border-zinc-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                </div>
+                            </div>
+
+                            <!-- Save Button -->
+                            <div class="pt-4">
+                                <button type="submit" class="bg-indigo-500 text-white px-6 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Handle file input change
+        document.querySelector('input[type="file"]').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.querySelector('img.w-20').src = e.target.result;
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        // Handle form submission
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Add your form submission logic here
+            alert('Changes saved successfully!');
+        });
+    </script>
+</body>
+</html>

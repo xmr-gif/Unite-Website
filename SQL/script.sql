@@ -7,7 +7,7 @@ CREATE TABLE Professeur (
     Prenom VARCHAR(255),
     Email VARCHAR(255),
     DateRegistration DATETIME DEFAULT CURRENT_TIMESTAMP,
-    Est_Admin BOOLEAN
+    Est_Admin BOOLEAN DEFAULT FALSE -- Default set to FALSE
 );
 
 CREATE TABLE Sujet (
@@ -32,7 +32,7 @@ CREATE TABLE Etudiant (
     Prenom VARCHAR(255) ,
     Email VARCHAR(255) ,
     Filiere_Precedente VARCHAR(255) ,
-    DateRegistration DATETIME DEFAULT CURRENT_TIMESTAMP , 
+    DateRegistration DATETIME DEFAULT CURRENT_TIMESTAMP ,
     Dans_Un_Groupe BOOLEAN ,
     Est_Chef BOOLEAN ,
     Sexe VARCHAR(10) ,
