@@ -13,7 +13,7 @@ CREATE TABLE Professeur (
 CREATE TABLE Sujet (
     ID_Sujet INT unsigned AUTO_INCREMENT PRIMARY key ,
     Titre VARCHAR(255) ,
-    Date_Ajout Date ,
+    Date_Ajout DATETIME DEFAULT CURRENT_TIMESTAMP ,
     Est_Personnalise BOOLEAN ,
     Est_Valide BOOLEAN ,
     ID_Professeur INT unsigned ,
