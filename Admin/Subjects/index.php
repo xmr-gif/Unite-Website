@@ -1,3 +1,23 @@
+<?php
+ $host ='localhost';
+ $db = 'unite_db';
+ $user='root';
+ $pass ='';
+ try {
+     $pdo = new PDO ("mysql:host=$host;port=3306;dbname=$db",$user,$pass);
+     //echo "Connexion reussite";
+
+ } catch (PDOException $e) {
+     echo "La connexion n'est pas reussie ".$e->getMessage() ;
+ }
+
+ $query = "SELECT * FROM sujet";
+  $stmt = $pdo->prepare($query);
+  $stmt->execute();
+  $subjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +27,17 @@
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/lucide@0.462.0/dist/umd/lucide.min.js"></script>
     <title>Subjects</title>
+    <style>
+      <style>
+    .transition-opacity {
+        transition-property: opacity;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .duration-300 {
+        transition-duration: 300ms;
+    }
+</style>
+    </style>
 </head>
 <body>
     <div class="flex" >
@@ -82,7 +113,7 @@
                     <div class="flex justify-between border-b-1 pt-4 pb-5 border-zinc-400" >
                         <p class="text-2xl font-medium " >Subjects</p>
                         <div>
-                            <button class="bg-red-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-red-600" >Delete</button>
+                            <button class="bg-red-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer transition-opacity duration-300 opacity-0 pointer-events-none checkbox-button" id="delete-button" >Delete</button>
                             <button class="bg-indigo-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-indigo-600" >+ New Subject</button>
                         </div>
 
@@ -95,111 +126,53 @@
                         <p class="w-1/3" >Created By</p>
                         <p class="w-1/5" >Created On</p>
                     </div>
-
+                    <?php foreach ($subjects as $subject): ?>
+                        
                     <div class="snap-y" >
                         <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
                             <!-- Leader Column -->
                             <div class="flex items-center w-1/3">
-                                <input type="checkbox" class="mr-1">
-                                <p>Subject 1...</p>
+                                <input type="checkbox" class="mr-1 checkbox-button ">
+                                <p><?=$subject['Titre']?></p>
                             </div>
 
+                            <?php
+                            $id = $subject['ID_Professeur']; 
+                            $query2 = "SELECT CONCAT(Nom, ' ', Prenom) AS FullName FROM Professeur WHERE ID_Professeur = $id";
+                            $stmt2 = $pdo->prepare($query2);
+                            $stmt2->execute();
+                            $professor = $stmt2->fetch(PDO::FETCH_ASSOC);
+                            $professorName = $professor['FullName'];
+                            
+                            ?>
+
                             <!-- Subject Column -->
-                            <p class="w-1/3">Professor's Name</p>
+                            <p class="w-1/3"><?=$professorName?></p>
 
                             <!-- Status Column -->
+                             <?php
+                             
+                             $date = new DateTime($subject["Date_Ajout"]);
+                             $formattedDate = $date->format('F jS, Y');
+                  
+                             
+                             ?>
 
                             <!-- Date Column -->
-                            <p class="w-1/5">Feb 20th, 2025</p>
+                            <p class="w-1/5"><?=$formattedDate?></p>
 
                             <!-- Details Button -->
                             <button class="border text-zinc-500 px-2 rounded-md border-zinc-400 cursor-pointer">
                                 Details
                             </button>
                         </div>
+                        <?php endforeach ; ?>
 
-                        <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
-                            <!-- Leader Column -->
-                            <div class="flex items-center w-1/3">
-                                <input type="checkbox" class="mr-1">
-                                <p>Subject 1...</p>
-                            </div>
+                        
+                        
+                        
 
-                            <!-- Subject Column -->
-                            <p class="w-1/3">Professor's Name</p>
-
-                            <!-- Status Column -->
-
-                            <!-- Date Column -->
-                            <p class="w-1/5">Feb 20th, 2025</p>
-
-                            <!-- Details Button -->
-                            <button class="border text-zinc-500 px-2 rounded-md border-zinc-400 cursor-pointer">
-                                Details
-                            </button>
-                        </div>
-
-                        <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
-                            <!-- Leader Column -->
-                            <div class="flex items-center w-1/3">
-                                <input type="checkbox" class="mr-1">
-                                <p>Subject 1...</p>
-                            </div>
-
-                            <!-- Subject Column -->
-                            <p class="w-1/3">Professor's Name</p>
-
-                            <!-- Status Column -->
-
-                            <!-- Date Column -->
-                            <p class="w-1/5">Feb 20th, 2025</p>
-
-                            <!-- Details Button -->
-                            <button class="border text-zinc-500 px-2 rounded-md border-zinc-400 cursor-pointer">
-                                Details
-                            </button>
-                        </div>
-                        <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
-                            <!-- Leader Column -->
-                            <div class="flex items-center w-1/3">
-                                <input type="checkbox" class="mr-1">
-                                <p>Subject 1...</p>
-                            </div>
-
-                            <!-- Subject Column -->
-                            <p class="w-1/3">Professor's Name</p>
-
-                            <!-- Status Column -->
-
-                            <!-- Date Column -->
-                            <p class="w-1/5">Feb 20th, 2025</p>
-
-                            <!-- Details Button -->
-                            <button class="border text-zinc-500 px-2 rounded-md border-zinc-400 cursor-pointer">
-                                Details
-                            </button>
-                        </div>
-
-                        <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
-                            <!-- Leader Column -->
-                            <div class="flex items-center w-1/3">
-                                <input type="checkbox" class="mr-1">
-                                <p>Subject 1...</p>
-                            </div>
-
-                            <!-- Subject Column -->
-                            <p class="w-1/3">Professor's Name</p>
-
-                            <!-- Status Column -->
-
-                            <!-- Date Column -->
-                            <p class="w-1/5">Feb 20th, 2025</p>
-
-                            <!-- Details Button -->
-                            <button class="border text-zinc-500 px-2 rounded-md border-zinc-400 cursor-pointer">
-                                Details
-                            </button>
-                        </div>
+                        
 
                     </div>
 
@@ -214,6 +187,7 @@
     <script>
         lucide.createIcons();
     </script>
+    <script src="script.js" ></script>
 
 </body>
 </html>

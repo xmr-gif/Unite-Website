@@ -2,8 +2,7 @@
 header('Content-Type: application/json');
 
 $host = 'localhost';
-$db   = 'unite_db'; // Database name
-$user = 'root';
+$db   = 'unite_db'; 
 $pass = '';
 
 try {
