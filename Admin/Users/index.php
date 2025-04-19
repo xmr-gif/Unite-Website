@@ -4,7 +4,7 @@
  $user='root';
  $pass ='';
  try {
-     $pdo = new PDO ("mysql:host=$host;port=3306;dbname=$db",$user,$pass);
+     $pdo = new PDO ("mysql:host=$host;port=3307;dbname=$db",$user,$pass);
      //echo "Connexion reussite";
 
  } catch (PDOException $e) {
@@ -76,7 +76,7 @@ print_r($users[1]["FullName"]);*/
                 </a>
               </div>
               <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
-                <a class="flex items-center gap-2" href="../Subjects/index.html" >
+                <a class="flex items-center gap-2" href="../Subjects/index.php" >
                   <i data-lucide="lightbulb" class="w-4 h-4"></i>
                   Subjects
                 </a>
