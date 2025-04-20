@@ -36,6 +36,33 @@
     .duration-300 {
         transition-duration: 300ms;
     }
+    /* Modal transition */
+#addSubjectModal {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Success/Error message styling */
+.success-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem;
+    background: #d1fae5;
+    color: #065f46;
+    border-radius: 0.5rem;
+    z-index: 1000;
+}
+
+.error-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem;
+    background: #fee2e2;
+    color: #991b1b;
+    border-radius: 0.5rem;
+    z-index: 1000;
+}
 </style>
     </style>
 </head>
@@ -110,11 +137,14 @@
 
 
                 <div class="bg-white px-9 py-4 rounded-3xl h-[72vh] " >
+                <form method="POST" action="delete.php" id="deleteForm" >
                     <div class="flex justify-between border-b-1 pt-4 pb-5 border-zinc-400" >
                         <p class="text-2xl font-medium " >Subjects</p>
                         <div>
-                            <button class="bg-red-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer transition-opacity duration-300 opacity-0 pointer-events-none checkbox-button" id="delete-button" >Delete</button>
-                            <button class="bg-indigo-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-indigo-600" >+ New Subject</button>
+                            <button  type="submit" class="bg-red-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer transition-opacity duration-300 opacity-0 pointer-events-none checkbox-button" id="delete-button" >Delete</button>
+                            <button type="button" class="bg-indigo-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-indigo-600 new-subject-btn">
+                                + New Subject
+                            </button>
                         </div>
 
 
@@ -127,23 +157,25 @@
                         <p class="w-1/5" >Created On</p>
                     </div>
                     <?php foreach ($subjects as $subject): ?>
-                        
+
                     <div class="snap-y" >
                         <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
                             <!-- Leader Column -->
                             <div class="flex items-center w-1/3">
-                                <input type="checkbox" class="mr-1 checkbox-button ">
+                            <input type="checkbox" name="selected_subjects[]"
+                                value="<?= htmlspecialchars($subject['ID_Sujet']) ?>"
+                                class="mr-1 checkbox-button">
                                 <p><?=$subject['Titre']?></p>
                             </div>
 
                             <?php
-                            $id = $subject['ID_Professeur']; 
+                            $id = $subject['ID_Professeur'];
                             $query2 = "SELECT CONCAT(Nom, ' ', Prenom) AS FullName FROM Professeur WHERE ID_Professeur = $id";
                             $stmt2 = $pdo->prepare($query2);
                             $stmt2->execute();
                             $professor = $stmt2->fetch(PDO::FETCH_ASSOC);
                             $professorName = $professor['FullName'];
-                            
+
                             ?>
 
                             <!-- Subject Column -->
@@ -151,11 +183,11 @@
 
                             <!-- Status Column -->
                              <?php
-                             
+
                              $date = new DateTime($subject["Date_Ajout"]);
                              $formattedDate = $date->format('F jS, Y');
-                  
-                             
+
+
                              ?>
 
                             <!-- Date Column -->
@@ -167,12 +199,12 @@
                             </button>
                         </div>
                         <?php endforeach ; ?>
+                        </form>
 
-                        
-                        
-                        
 
-                        
+
+
+
 
                     </div>
 
@@ -184,10 +216,82 @@
 
         </div>
     </div>
-    <script>
-        lucide.createIcons();
-    </script>
-    <script src="script.js" ></script>
+
+    <!-- Add Subject Modal -->
+<div id="addSubjectModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Add New Subject</h3>
+
+            <form method="POST" action="add_subject.php" class="mt-4">
+                <div class="mb-4 text-left">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Title:</label>
+                    <input type="text" name="title" required
+                           class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <div class="mb-4 text-left">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Description:</label>
+                    <textarea name="description" rows="4" required
+                              class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                </div>
+
+                <div class="items-center px-4 py-3">
+                    <button type="submit"
+                            class="px-4 py-2 bg-indigo-500 text-white text-base font-medium rounded-md shadow-sm hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        Add Subject
+                    </button>
+                    <button type="button" onclick="closeModal()"
+                            class="ml-3 px-4 py-2 bg-gray-100 text-gray-700 text-base font-medium rounded-md shadow-sm hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    // Modal handling
+    const modal = document.getElementById('addSubjectModal');
+    const newSubjectBtn = document.querySelector('.new-subject-btn');
+
+    function openModal(e) {
+        e.preventDefault(); // Prevent any default button behavior
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function closeModal() {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
+    // Proper event listener with error handling
+    if (newSubjectBtn) {
+        newSubjectBtn.addEventListener('click', openModal);
+    } else {
+        console.error('New subject button not found!');
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+
+    // Prevent form submission from enter key in modal
+    document.querySelector('#addSubjectModal form').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+        }
+    });
+</script>
+<script src="script.js" >
+
+</script>
+
+
 
 </body>
 </html>
