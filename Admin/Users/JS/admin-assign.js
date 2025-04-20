@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const response = await fetch('get_professors.php');
             if (!response.ok) throw new Error('Network response was not ok');
-
             const professors = await response.json();
             renderProfessors(professors);
             document.getElementById('assignAdminModal').classList.remove('hidden');
@@ -52,6 +51,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 const result = await response.json();
+                console.log(result);
+                
 
                 if (result.success) {
                     button.textContent = result.new_status ? 'Revoke Admin' : 'Make Admin';
