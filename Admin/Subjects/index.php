@@ -52,13 +52,13 @@
                 </a>
               </div>
               <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
-                <a class="flex items-center gap-2">
+                <a class="flex items-center gap-2" href="../Users/index.php" >
                   <i data-lucide="user" class="w-4 h-4"></i>
                   Users
                 </a>
               </div>
               <div class="px-4 py-2 bg-slate-200 rounded-md cursor-pointer">
-                <a class="flex items-center gap-2">
+                <a class="flex items-center gap-2" href="index.php">
                   <i data-lucide="lightbulb" class="w-4 h-4"></i>
                   Subjects
                 </a>
@@ -116,7 +116,7 @@
                           <form action="delete.php" method="POST">
                             <button class="bg-red-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer transition-opacity duration-300 opacity-0 pointer-events-none checkbox-button" id="delete-button" >Delete</button>
                           
-                            <button class="bg-indigo-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-indigo-600" type="button" >+ New Subject</button>
+                            <button  id="creationSubjet" class="bg-indigo-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-indigo-600" type="button" >+ New Subject</button>
                         </div>
 
 
@@ -192,32 +192,61 @@
 
         </div>
     </div>
-    <div class="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-lg">
-    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Créer un nouveau sujet</h2>
+    <div id="new-subject-form" class="hidden fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-sm transition-opacity duration-200">
+    <div class="max-w-2xl w-full mx-4 bg-white rounded-xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95">
+        <div class="relative p-8">
+            <!-- Bouton de fermeture amélioré -->
+            <button id="close" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
 
-    <form action="creer_sjt.php" method="POST">
-        <!-- Titre du Sujet -->
-        <div class="mb-4">
-            <label for="titre" class="block text-sm font-medium text-gray-700">Titre du Sujet</label>
-            <input type="text" id="titre" name="titre" class="mt-1 p-3 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Créer un nouveau sujet</h2>
+
+            <form action="creer_sjt.php" method="POST" class="space-y-6">
+                <!-- Titre du Sujet -->
+                <div class="space-y-2">
+                    <label for="titre" class="block text-sm font-medium text-gray-700">Titre du Sujet</label>
+                    <input type="text" id="titre" name="titre" 
+                           class="mt-1 block w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 hover:border-indigo-300" 
+                           required>
+                </div>
+
+                <!-- Description -->
+                <div class="space-y-2">
+                    <label for="description" class="block text-sm font-medium text-gray-700">Description du Sujet</label>
+                    <textarea id="description" name="description" rows="3"
+                              class="mt-1 block w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 hover:border-indigo-300"
+                              required></textarea>
+                </div>
+
+                <!-- Bouton de soumission -->
+                <div class="flex justify-end pt-4">
+                    <button type="submit" class="px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200">
+                        Créer le Sujet
+                    </button>
+                </div>
+            </form>
         </div>
-
-        <!-- Description -->
-        <div class="mb-4">
-            <label for="date_ajout" class="block text-sm font-medium text-gray-700">Description du Sujet</label>
-            <input type="text" id="description" name="description" class="mt-1 p-3 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
-        </div>
-
-
-        <!-- Bouton de soumission -->
-        <div class="flex justify-end">
-            <button type="submit" class="bg-indigo-600 text-white text-sm px-4 py-2 rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Créer le Sujet</button>
-        </div>
-    </form>
+    </div>
 </div>
-
     <script>
         lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', function() {
+        const buttonCreer = document.getElementById('creationSubjet'); // Le bouton + New Subject
+        const form = document.getElementById('new-subject-form'); // Le formulaire
+        const close = document.getElementById('close')
+
+        buttonCreer.addEventListener('click', function() {
+            // Toggle l'affichage du formulaire
+            form.classList.toggle('hidden');
+
+            close.addEventListener('click', function() {
+            form.classList.add('hidden');
+    });
+            });
+        });
     </script>
     <script src="script.js" ></script>
 
