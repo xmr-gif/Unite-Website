@@ -9,7 +9,7 @@ checkboxes.forEach(checkbox => {
 
 function updateDeleteButtonState() {
     const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-    
+
     if (anyChecked) {
         deleteBtn.classList.remove('opacity-0', 'pointer-events-none');
         deleteBtn.classList.add('opacity-100');

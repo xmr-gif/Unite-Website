@@ -27,81 +27,84 @@
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
                     <!-- Avatar Items -->
                     <div class="avatar-item relative group">
-                        <img src="Avatars/1.png" 
-                             class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300 
+                        <img src="Avatars/1.png"
+                             class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300
                                     hover:scale-105 hover:ring-4 hover:ring-indigo-100"
                              data-avatar="1">
-                        <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0 
+                        <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0
                                     transition-all duration-300 pointer-events-none"></div>
                     </div>
                     <div class="avatar-item relative group">
-                        <img src="Avatars/2.png" 
-                             class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300 
+                        <img src="Avatars/2.png"
+                             class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300
                                     hover:scale-105 hover:ring-4 hover:ring-indigo-100"
                              data-avatar="1">
-                        <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0 
+                        <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0
                                     transition-all duration-300 pointer-events-none"></div>
                     </div>
                     <div class="avatar-item relative group">
-                        <img src="Avatars/3.png" 
-                             class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300 
+                        <img src="Avatars/3.png"
+                             class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300
                                     hover:scale-105 hover:ring-4 hover:ring-indigo-100"
                              data-avatar="1">
-                        <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0 
+                        <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0
                                     transition-all duration-300 pointer-events-none"></div>
                     </div>
                     <div class="avatar-item relative group">
-                        <img src="Avatars/4.png" 
-                             class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300 
+                        <img src="Avatars/4.png"
+                             class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300
                                     hover:scale-105 hover:ring-4 hover:ring-indigo-100"
                              data-avatar="1">
-                        <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0 
+                        <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0
                                     transition-all duration-300 pointer-events-none"></div>
                     </div>
                     <div class="avatar-item relative group">
-                        <img src="Avatars/5.png" 
-                             class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300 
+                        <img src="Avatars/5.png"
+                             class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300
                                     hover:scale-105 hover:ring-4 hover:ring-indigo-100"
                              data-avatar="1">
-                        <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0 
+                        <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0
                                     transition-all duration-300 pointer-events-none"></div>
                     </div>
                     <div class="avatar-item relative group">
-                        <img src="Avatars/8.png" 
-                             class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300 
+                        <img src="Avatars/8.png"
+                             class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300
                                     hover:scale-105 hover:ring-4 hover:ring-indigo-100"
                              data-avatar="1">
-                        <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0 
+                        <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0
                                     transition-all duration-300 pointer-events-none"></div>
                     </div>
                     <div class="avatar-item relative group">
-                        <img src="Avatars/7.png" 
-                             class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300 
+                        <img src="Avatars/7.png"
+                             class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300
                                     hover:scale-105 hover:ring-4 hover:ring-indigo-100"
                              data-avatar="1">
-                        <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0 
+                        <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0
                                     transition-all duration-300 pointer-events-none"></div>
                     </div>
                     <div class="avatar-item relative group">
-                        <img src="Avatars/6.png" 
-                             class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300 
+                        <img src="Avatars/6.png"
+                             class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300
                                     hover:scale-105 hover:ring-4 hover:ring-indigo-100"
                              data-avatar="1">
-                        <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0 
+                        <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0
                                     transition-all duration-300 pointer-events-none"></div>
                     </div>
                     <!-- Repeat for other avatars (2-8) -->
                 </div>
 
                 <div class="flex flex-col sm:flex-row items-center justify-end gap-4">
-                    
-                    <button class="w-full sm:w-auto px-8 py-3 bg-indigo-600 text-white rounded-lg 
-                                hover:bg-indigo-700 transition-colors duration-300 disabled:opacity-50 
-                                disabled:cursor-not-allowed cursor-pointer" "
+
+                <form action="update_avatar.php" method="post">
+                    <input type="hidden" id="selected_avatar" name="selected_avatar" value="">
+                    <button class="w-full sm:w-auto px-8 py-3 bg-indigo-600 text-white rounded-lg
+                            hover:bg-indigo-700 transition-colors duration-300 disabled:opacity-50
+                            disabled:cursor-not-allowed cursor-pointer"
                             id="continueBtn"
                             disabled>
                         Continue to Dashboard
                     </button>
+                </form>
                 </div>
             </div>
         </div>

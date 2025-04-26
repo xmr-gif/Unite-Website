@@ -13,11 +13,12 @@ CREATE TABLE Professeur (
 CREATE TABLE Sujet (
     ID_Sujet INT unsigned AUTO_INCREMENT PRIMARY key ,
     Titre VARCHAR(255) ,
+    Descrition TEXT ,
     Date_Ajout DATETIME DEFAULT CURRENT_TIMESTAMP ,
     Est_Personnalise BOOLEAN ,
     Est_Valide BOOLEAN ,
     ID_Professeur INT unsigned ,
-    Foreign key (ID_Professeur) References Professeur (ID_Professeur)
+    Foreign key (id) References Professors (id)
 );
 
 CREATE TABLE Groupe (
