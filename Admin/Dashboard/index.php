@@ -69,7 +69,7 @@
                 </a>
               </div>
               <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
-                <a class="flex items-center gap-2" href="calendar.html">
+                <a class="flex items-center gap-2" href="../groupe/index.php">
                   <i data-lucide="users" class="w-4 h-4"></i>
                   Groups
                 </a>
