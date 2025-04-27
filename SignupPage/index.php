@@ -32,7 +32,6 @@ if(isset($_POST['Prenom'])) {
 
         if($validation->save($table)) {
             echo "<div class='success'>Registration successful!</div>";
-            session_start();
 
             // Store essential information in the session
             $_SESSION['account_type'] = $accountType;

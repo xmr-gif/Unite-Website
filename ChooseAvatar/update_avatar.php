@@ -6,70 +6,72 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_avatar'])) {
     $avatar_number = $_POST['selected_avatar'];
 
     // Check if basic user info is in the session (from signup)
-    if (isset($_SESSION['account_type']) && isset($_SESSION['firstname']) && isset($_SESSION['lastname']) && isset($_SESSION['email'])) {
+    if (isset($_SESSION['account_type']) && isset($_SESSION['Prenom']) && isset($_SESSION['Nom']) && isset($_SESSION['Email'])) {
         $account_type = $_SESSION['account_type'];
-        $firstname = $_SESSION['firstname'];
-        $lastname = $_SESSION['lastname'];
-        $email = $_SESSION['email'];
-        $table = ($account_type === 'professor') ? 'professors' : 'students';
-        $id_column = ($account_type === 'professor') ? 'D_Professeur' : 'D_Etudiant'; // Adjust column names
+        $prenom = $_SESSION['Prenom'];
+        $nom = $_SESSION['Nom'];
+        $email = $_SESSION['Email'];
+        $table = ($account_type === 'professor') ? 'Professeur' : 'Etudiant';
+        $id_column = ($account_type === 'professor') ? 'ID_Professeur' : 'ID_Etudiant'; // Ensure this matches your database
 
-        // Database connection details (replace with your actual credentials)
-        $servername = "your_servername";
-        $username = "your_username";
-        $password = "your_password";
-        $dbname = "your_dbname";
-
+        // Database connection details
+        $host ='localhost';
+        $db = 'unite_db';
+        $user='root';
+        $pass ='';
         try {
-            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo = new PDO ("mysql:host=$host;port=3306;dbname=$db",$user,$pass);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Recommended for error handling
+            //echo "Connexion reussite";
 
-            // First, save the basic user information if the ID isn't in the session yet
-            if (!isset($_SESSION[$account_type . '_id'])) {
-                $sql_insert = "INSERT INTO $table (Nom, Prenom, Email, Password) VALUES (:lastname, :firstname, :email, :password)"; // You'll likely need to handle password hashing on signup
-                $stmt_insert = $conn->prepare($sql_insert);
-                $stmt_insert->bindParam(':lastname', $lastname);
-                $stmt_insert->bindParam(':firstname', $firstname);
-                $stmt_insert->bindParam(':email', $email);
-                $stmt_insert->bindParam(':password', $dummy_password); // Replace with actual password from signup (consider hashing earlier)
-                $dummy_password = 'temporary'; // Placeholder - you MUST handle the actual password securely
-
-                if ($stmt_insert->execute()) {
-                    // Get the last inserted ID
-                    $user_id = $conn->lastInsertId();
-                    $_SESSION[$account_type . '_id'] = $user_id; // Store the new ID in the session
-                } else {
-                    echo "Error saving basic user information.";
-                    exit();
-                }
-            }
-
-            // Now, update the avatar using the ID from the session
-            if (isset($_SESSION[$account_type . '_id'])) {
-                $user_id = $_SESSION[$account_type . '_id'];
-                $avatar_column = 'Avatar'; // Assuming 'Avatar' is the column name
-
-                $sql_update = "UPDATE $table SET $avatar_column = :avatar WHERE $id_column = :user_id";
-                $stmt_update = $conn->prepare($sql_update);
-                $stmt_update->bindParam(':avatar', $avatar_number);
-                $stmt_update->bindParam(':user_id', $user_id);
-
-                if ($stmt_update->execute()) {
-                    // Avatar updated successfully, redirect to the dashboard
-                    header("Location: ../Home page/dashboard.php"); // Adjust path as needed
-                    exit();
-                } else {
-                    echo "Error updating avatar.";
-                }
-            } else {
-                echo "User ID not found in session after signup.";
-            }
-
-        } catch(PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
+        } catch (PDOException $e) {
+            echo "La connexion n'est pas reussie ".$e->getMessage() ;
+            exit(); // Stop execution if connection fails
         }
 
-        $conn = null; // Close connection
+        // First, save the basic user information if the ID isn't in the session yet
+        if (!isset($_SESSION[$account_type . '_id'])) {
+            $sql_insert = "INSERT INTO $table (Nom, Prenom, Email, Mdp) VALUES (:nom, :prenom, :email, :mdp)";
+            $stmt_insert = $pdo->prepare($sql_insert); // Use $pdo
+            $stmt_insert->bindParam(':nom', $nom);
+            $stmt_insert->bindParam(':prenom', $prenom);
+            $stmt_insert->bindParam(':email', $email);
+            $stmt_insert->bindParam(':mdp', $hashed_password); // Use $hashed_password - IMPORTANT!
+            $hashed_password = 'temporary'; // THIS IS STILL A PLACEHOLDER - YOU MUST GET THE HASHED PASSWORD FROM SIGNUP
+
+            if ($stmt_insert->execute()) {
+                // Get the last inserted ID
+                $user_id = $pdo->lastInsertId(); // Use $pdo
+                $_SESSION[$account_type . '_id'] = $user_id;
+            } else {
+                echo "Error saving basic user information.";
+                print_r($stmt_insert->errorInfo()); // Debug database errors
+                exit();
+            }
+        }
+
+        // Now, update the avatar using the ID from the session
+        if (isset($_SESSION[$account_type . '_id'])) {
+            $user_id = $_SESSION[$account_type . '_id'];
+            $avatar_column = 'Avatar';
+
+            $sql_update = "UPDATE $table SET $avatar_column = :avatar WHERE $id_column = :user_id";
+            $stmt_update = $pdo->prepare($sql_update); // Use $pdo
+            $stmt_update->bindParam(':avatar', $avatar_number);
+            $stmt_update->bindParam(':user_id', $user_id);
+
+            if ($stmt_update->execute()) {
+                // Avatar updated successfully, redirect to the dashboard
+                header("Location: ../Home page/dashboard.php"); // Adjust path as needed
+                exit();
+            } else {
+                echo "Error updating avatar.";
+                print_r($stmt_update->errorInfo()); // Debug database errors
+            }
+        } else {
+            echo "User ID not found in session after signup.";
+        }
+
     } else {
         echo "Essential user information not found in session.";
     }

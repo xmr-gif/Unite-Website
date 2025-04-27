@@ -38,7 +38,7 @@
                         <img src="Avatars/2.png"
                              class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300
                                     hover:scale-105 hover:ring-4 hover:ring-indigo-100"
-                             data-avatar="1">
+                             data-avatar="2">
                         <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0
                                     transition-all duration-300 pointer-events-none"></div>
                     </div>
@@ -46,7 +46,7 @@
                         <img src="Avatars/3.png"
                              class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300
                                     hover:scale-105 hover:ring-4 hover:ring-indigo-100"
-                             data-avatar="1">
+                             data-avatar="3">
                         <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0
                                     transition-all duration-300 pointer-events-none"></div>
                     </div>
@@ -54,7 +54,7 @@
                         <img src="Avatars/4.png"
                              class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300
                                     hover:scale-105 hover:ring-4 hover:ring-indigo-100"
-                             data-avatar="1">
+                             data-avatar="4">
                         <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0
                                     transition-all duration-300 pointer-events-none"></div>
                     </div>
@@ -62,7 +62,7 @@
                         <img src="Avatars/5.png"
                              class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300
                                     hover:scale-105 hover:ring-4 hover:ring-indigo-100"
-                             data-avatar="1">
+                             data-avatar="5">
                         <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0
                                     transition-all duration-300 pointer-events-none"></div>
                     </div>
@@ -70,7 +70,7 @@
                         <img src="Avatars/8.png"
                              class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300
                                     hover:scale-105 hover:ring-4 hover:ring-indigo-100"
-                             data-avatar="1">
+                             data-avatar="8">
                         <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0
                                     transition-all duration-300 pointer-events-none"></div>
                     </div>
@@ -78,7 +78,7 @@
                         <img src="Avatars/7.png"
                              class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300
                                     hover:scale-105 hover:ring-4 hover:ring-indigo-100"
-                             data-avatar="1">
+                             data-avatar="7">
                         <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0
                                     transition-all duration-300 pointer-events-none"></div>
                     </div>
@@ -86,7 +86,7 @@
                         <img src="Avatars/6.png"
                              class="w-full h-auto rounded-full cursor-pointer transform transition-all duration-300
                                     hover:scale-105 hover:ring-4 hover:ring-indigo-100"
-                             data-avatar="1">
+                             data-avatar="6">
                         <div class="absolute inset-0 ring-2 ring-indigo-500 rounded-full scale-105 opacity-0
                                     transition-all duration-300 pointer-events-none"></div>
                     </div>
@@ -111,28 +111,32 @@
     </section>
 
     <script>
-        // Avatar Selection Logic
-        const avatarItems = document.querySelectorAll('.avatar-item');
-        const continueBtn = document.getElementById('continueBtn');
-        let selectedAvatar = null;
 
-        avatarItems.forEach(item => {
-            item.addEventListener('click', () => {
-                // Remove previous selection
-                if(selectedAvatar) {
+const avatarItems = document.querySelectorAll('.avatar-item');
+const continueBtn = document.getElementById('continueBtn');
+const selectedAvatarInput = document.getElementById('selected_avatar'); // Get the input field
+let selectedAvatar = null;
+
+avatarItems.forEach(item => {
+    item.addEventListener('click', () => {
+        // ... (visual selection logic) ...
+
+        if(selectedAvatar) {
                     selectedAvatar.querySelector('img').classList.remove('scale-105', 'ring-indigo-100');
                     selectedAvatar.querySelector('div').classList.remove('opacity-100');
                 }
 
-                // Set new selection
-                item.querySelector('img').classList.add('scale-105', 'ring-indigo-100');
-                item.querySelector('div').classList.add('opacity-100');
-                selectedAvatar = item;
+        item.querySelector('img').classList.add('scale-105', 'ring-indigo-100');
+        item.querySelector('div').classList.add('opacity-100');
 
-                // Enable continue button
-                continueBtn.disabled = false;
-            });
-        });
+        selectedAvatar = item;
+        const avatarNumber = selectedAvatar.querySelector('img').getAttribute('data-avatar');
+        selectedAvatarInput.value = avatarNumber; // Set the value of the hidden input
+
+        continueBtn.disabled = false;
+    });
+});
+        
     </script>
 </body>
 </html>

@@ -70,7 +70,7 @@ print_r($users[1]["FullName"]);*/
                 </a>
               </div>
               <div class="px-4 py-2 bg-slate-200 rounded-md cursor-pointer">
-                <a class="flex items-center gap-2" href="#" >
+                <a class="flex items-center gap-2" href="" >
                   <i data-lucide="user" class="w-4 h-4"></i>
                   Users
                 </a>
@@ -132,7 +132,7 @@ print_r($users[1]["FullName"]);*/
                         <p class="text-2xl font-medium " >Users</p>
                         <div class=" rounded-md bg-gray-100 p-1 text-zinc-500 border-b-2 ">
                             <i class="ri-search-line"></i>
-                            <input type="search" placeholder="Search" >
+                            <input type="search" id="searchInput" placeholder="Search" >
                         </div>
 
                     </div>
@@ -150,7 +150,7 @@ print_r($users[1]["FullName"]);*/
                             <div class="flex items-center w-1/4">
                                 <input type="checkbox" class="mr-1">
                                 <img src="PP.webp" alt="" class="w-8 h-8 rounded-md mr-1">
-                                <p><?= $user["FullName"] ?></p>
+                                <p class="full-name" ><?= $user["FullName"] ?></p>
                             </div>
 
                             <!-- Subject Column -->
@@ -294,7 +294,26 @@ print_r($users[1]["FullName"]);*/
     <script>lucide.createIcons();</script>
     <script src="js/user-modal.js"></script>
     <script src="js/admin-assign.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+    
+    // Sélectionner toutes les lignes d'utilisateurs
+    const userRows = document.querySelectorAll('.flex.items-center.text-sm.font-medium.border-zinc-200.border-b.py-2');
 
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase();
+
+        userRows.forEach(row => {
+            // Récupérer le fullname 
+            const fullName = row.querySelector('.full-name')?.textContent.toLowerCase() || '';
+            
+            // Affiche o masque 
+            row.style.display = fullName.includes(query) ? '' : 'none';
+        });
+    });
+});
+</script>
 
 
 </body>
