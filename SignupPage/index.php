@@ -28,13 +28,13 @@ if(isset($_POST['Prenom'])) {
         $table = ($accountType === 'professor') ? 'Professeur' : 'Etudiant';
 
         // Debug: Show account type detection
-        echo "<p>Trying to save to table: $table</p>";
+        echo "<p>Trying to save to table: $table $accountType</p>";
 
         if($validation->save($table)) {
             echo "<div class='success'>Registration successful!</div>";
 
             // Store essential information in the session
-            $_SESSION['account_type'] = $accountType;
+            $_SESSION['account_type'] = $table;
             $_SESSION['Prenom'] = $_POST['Prenom'];
             $_SESSION['Nom'] = $_POST['Nom'];
             $_SESSION['Email'] = $_POST['Email'];
@@ -42,9 +42,6 @@ if(isset($_POST['Prenom'])) {
             // After successful registration and session setting, redirect to the avatars page
             header("Location: ../ChooseAvatar/index.php"); // Assuming your avatars page is named 'avatars.php'
             exit();
-
-            // Clear POST data (moved after potential redirect)
-            unset($_POST);
         } else {
             // Get database errors
             // $dbErrors = $validation->getErrors();

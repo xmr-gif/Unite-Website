@@ -6,7 +6,7 @@ if (isset($_POST['subject']) && is_array($_POST['subject'])) {
     $db = 'unite_db';
     $user = 'root';
     $pass = '';
-    $pdo = new PDO("mysql:host=$host;port=3306;dbname=$db", $user, $pass);
+    $pdo = new PDO("mysql:host=$host;port=3307;dbname=$db", $user, $pass);
 
     // Supprimer tous les sujets cochés
     $placeholders = implode(',', array_fill(0, count($ids), '?'));

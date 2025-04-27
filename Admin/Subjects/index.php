@@ -4,7 +4,7 @@ $db = 'unite_db';
 $user='root';
 $pass ='';
 try {
-    $pdo = new PDO ("mysql:host=$host;port=3306;dbname=$db",$user,$pass);
+    $pdo = new PDO ("mysql:host=$host;port=3307;dbname=$db",$user,$pass);
     //echo "Connexion reussite";
 
 } catch (PDOException $e) {
@@ -45,44 +45,6 @@ $query = "SELECT * FROM sujet";
             <img src="../../images/black-logo.png" class="w-20 mb-10 ml-4" alt="Logo" />
 
             <div class="space-y-2">
-<<<<<<< HEAD
-                <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
-                    <a class="flex items-center gap-2" href="#" >
-                        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-                        Dashboard
-                    </a>
-                </div>
-                <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
-                    <a class="flex items-center gap-2" href="../Users/index.php" >
-                        <i data-lucide="user" class="w-4 h-4"></i>
-                        Users
-                    </a>
-                </div>
-                <div class="px-4 py-2 bg-slate-200 rounded-md cursor-pointer">
-                    <a class="flex items-center gap-2" href="index.php">
-                        <i data-lucide="lightbulb" class="w-4 h-4"></i>
-                        Subjects
-                    </a>
-                </div>
-                <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
-                    <a class="flex items-center gap-2">
-                        <i data-lucide="book-open" class="w-4 h-4"></i>
-                        Choices
-                    </a>
-                </div>
-                <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
-                    <a class="flex items-center gap-2" href="index.html">
-                        <i data-lucide="file-text" class="w-4 h-4"></i>
-                        Blogs
-                    </a>
-                </div>
-                <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
-                    <a class="flex items-center gap-2" href="calendar.html">
-                        <i data-lucide="users" class="w-4 h-4"></i>
-                        Groups
-                    </a>
-                </div>
-=======
               <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
                 <a class="flex items-center gap-2" href="#" >
                   <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
@@ -119,7 +81,6 @@ $query = "SELECT * FROM sujet";
                   Groups
                 </a>
               </div>
->>>>>>> aed5c8df0fb60a063918d5814350d433893b035a
             </div>
 
             <div class="absolute bottom-8 space-y-2 w-[calc(25%-48px)]">
@@ -152,18 +113,11 @@ $query = "SELECT * FROM sujet";
                     <div class="flex justify-between border-b-1 pt-4 pb-5 border-zinc-400" >
                         <p class="text-2xl font-medium " >Subjects</p>
                         <div>
-<<<<<<< HEAD
                             <form action="delete.php" method="POST" id="deleteForm">
                                 <button class="bg-red-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer transition-opacity duration-300 opacity-0 pointer-events-none checkbox-button" id="delete-button" type="button">Delete</button>
 
                                 <button  id="creationSubjet" class="bg-indigo-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-indigo-600" type="button" >+ New Subject</button>
                             </form>
-=======
-                          <form action="delete.php" method="POST">
-                            <button class="bg-red-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer transition-opacity duration-300 opacity-0 pointer-events-none checkbox-button" id="delete-button" >Delete</button>
-                          
-                            <button  id="creationSubjet" class="bg-indigo-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-indigo-600" type="button" >+ New Subject</button>
->>>>>>> aed5c8df0fb60a063918d5814350d433893b035a
                         </div>
 
 
@@ -231,18 +185,12 @@ $query = "SELECT * FROM sujet";
     <div id="new-subject-form" class="hidden fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-sm transition-opacity duration-200">
     <div class="max-w-2xl w-full mx-4 bg-white rounded-xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95">
         <div class="relative p-8">
-<<<<<<< HEAD
             <button id="close" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors duration-200 cursor-pointer ">
-=======
-            <!-- Bouton de fermeture amélioré -->
-            <button id="close" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors duration-200">
->>>>>>> aed5c8df0fb60a063918d5814350d433893b035a
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
 
-<<<<<<< HEAD
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Create a New Subject</h2>
 
             <form action="add_subject.php" method="POST" class="space-y-6">
@@ -255,44 +203,20 @@ $query = "SELECT * FROM sujet";
 
                 <div class="space-y-2">
                     <label for="description" class="block text-sm font-medium text-gray-700">Description of the Subject</label>
-=======
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Créer un nouveau sujet</h2>
-
-            <form action="creer_sjt.php" method="POST" class="space-y-6">
-                <!-- Titre du Sujet -->
-                <div class="space-y-2">
-                    <label for="titre" class="block text-sm font-medium text-gray-700">Titre du Sujet</label>
-                    <input type="text" id="titre" name="titre" 
-                           class="mt-1 block w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 hover:border-indigo-300" 
-                           required>
-                </div>
-
-                <!-- Description -->
-                <div class="space-y-2">
-                    <label for="description" class="block text-sm font-medium text-gray-700">Description du Sujet</label>
->>>>>>> aed5c8df0fb60a063918d5814350d433893b035a
                     <textarea id="description" name="description" rows="3"
                               class="mt-1 block w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 hover:border-indigo-300"
                               required></textarea>
                 </div>
 
-<<<<<<< HEAD
                 <div class="flex justify-end pt-4">
                     <button type="submit" class="px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200 cursor-pointer ">
                         Create Subject
-=======
-                <!-- Bouton de soumission -->
-                <div class="flex justify-end pt-4">
-                    <button type="submit" class="px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200">
-                        Créer le Sujet
->>>>>>> aed5c8df0fb60a063918d5814350d433893b035a
                     </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-<<<<<<< HEAD
 
 <div id="subjectDetailsModal" class="hidden fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-5 max-h-[80vh] overflow-y-auto">
@@ -329,9 +253,6 @@ $query = "SELECT * FROM sujet";
 </div>
 
 <script>
-=======
-    <script>
->>>>>>> aed5c8df0fb60a063918d5814350d433893b035a
         lucide.createIcons();
         document.addEventListener('DOMContentLoaded', function() {
         const buttonCreer = document.getElementById('creationSubjet'); // Le bouton + New Subject
@@ -346,7 +267,6 @@ $query = "SELECT * FROM sujet";
             form.classList.add('hidden');
     });
             });
-<<<<<<< HEAD
 
         const deleteButton = document.getElementById('delete-button');
         const deleteForm = document.getElementById('deleteForm');
@@ -360,9 +280,6 @@ $query = "SELECT * FROM sujet";
             }
         });
     });
-=======
-        });
->>>>>>> aed5c8df0fb60a063918d5814350d433893b035a
     </script>
     <script src="JS/script.js" ></script>
     <script src="JS/subject-modal.js" ></script>

@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_avatar'])) {
         $user='root';
         $pass ='';
         try {
-            $pdo = new PDO ("mysql:host=$host;port=3306;dbname=$db",$user,$pass);
+            $pdo = new PDO ("mysql:host=$host;port=3307;dbname=$db",$user,$pass);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Recommended for error handling
             //echo "Connexion reussite";
 
@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_avatar'])) {
 
             if ($stmt_update->execute()) {
                 // Avatar updated successfully, redirect to the dashboard
-                header("Location: ../Home page/dashboard.php"); // Adjust path as needed
+                header("Location: ../Dashboard/dashboardEt.php"); // Adjust path as needed
                 exit();
             } else {
                 echo "Error updating avatar.";
@@ -78,4 +78,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_avatar'])) {
 } else {
     echo "Invalid request.";
 }
+
 ?>

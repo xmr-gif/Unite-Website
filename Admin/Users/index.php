@@ -64,7 +64,7 @@ print_r($users[1]["FullName"]);*/
 
             <div class="space-y-2">
               <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
-                <a class="flex items-center gap-2" href="../Dashboard/index.html" >
+                <a class="flex items-center gap-2" href="../Dashboard/index.php" >
                   <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
                   Dashboard
                 </a>
@@ -130,6 +130,10 @@ print_r($users[1]["FullName"]);*/
                 <div class="bg-white px-9 py-4 rounded-3xl h-[72vh] " >
                     <div class="flex justify-between border-b-1 pt-4 pb-5 border-zinc-400" >
                         <p class="text-2xl font-medium " >Users</p>
+                        <form action="delete.php" method="POST" id="deleteForm">
+                            <button class="border border-red-500 text-red-500 px-3 py-1 rounded-md" id="delete-button" type="submit">Delete Selected</button>
+                        </form>
+                            
                         <div class=" rounded-md bg-gray-100 p-1 text-zinc-500 border-b-2 ">
                             <i class="ri-search-line"></i>
                             <input type="search" id="searchInput" placeholder="Search" >
@@ -148,7 +152,7 @@ print_r($users[1]["FullName"]);*/
                         <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
                             <!-- Leader Column -->
                             <div class="flex items-center w-1/4">
-                                <input type="checkbox" class="mr-1">
+                            <input form="deleteForm" type="checkbox" name="userss[]" value="<?=$user["Role"]=='Student'?'etudiant':'professeur'?>|<?=$user['Email']?>" class="mr-1">
                                 <img src="PP.webp" alt="" class="w-8 h-8 rounded-md mr-1">
                                 <p class="full-name" ><?= $user["FullName"] ?></p>
                             </div>
@@ -186,7 +190,7 @@ print_r($users[1]["FullName"]);*/
                             >
                                 Details
                             </button>
-
+                           
                         </div>
 
               <?php endforeach ; ?>
@@ -313,6 +317,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+const deleteButton = document.getElementById('delete-button');
+        const deleteForm = document.getElementById('deleteForm');
+
+        deleteButton.addEventListener('click', function(event) {
+            if (confirm('Are you sure you want to delete the selected subject?')) {
+                deleteForm.submit(); // If confirmed, submit the form
+            } else {
+                // If not confirmed, do nothing (form will not be submitted)
+                event.preventDefault(); // Prevent any default action of the button
+            }
+        });
 </script>
 
 
