@@ -6,18 +6,21 @@ CREATE TABLE Professeur (
     Nom VARCHAR(255),
     Prenom VARCHAR(255),
     Email VARCHAR(255),
+    Mdp VARCHAR(255),
     DateRegistration DATETIME DEFAULT CURRENT_TIMESTAMP,
-    Est_Admin BOOLEAN DEFAULT FALSE -- Default set to FALSE
+    Est_Admin BOOLEAN DEFAULT FALSE,
+    Avatar INT DEFAULT 1
 );
 
 CREATE TABLE Sujet (
     ID_Sujet INT unsigned AUTO_INCREMENT PRIMARY key ,
     Titre VARCHAR(255) ,
+    Descrition TEXT ,
     Date_Ajout DATETIME DEFAULT CURRENT_TIMESTAMP ,
     Est_Personnalise BOOLEAN ,
     Est_Valide BOOLEAN ,
     ID_Professeur INT unsigned ,
-    Foreign key (ID_Professeur) References Professeur (ID_Professeur)
+    Foreign key (id) References Professors (id)
 );
 
 CREATE TABLE Groupe (
@@ -31,11 +34,13 @@ CREATE TABLE Etudiant (
     Nom VARCHAR(255) ,
     Prenom VARCHAR(255) ,
     Email VARCHAR(255) ,
+    Mdp VARCHAR(255) ,
     Filiere_Precedente VARCHAR(255) ,
     DateRegistration DATETIME DEFAULT CURRENT_TIMESTAMP ,
     Dans_Un_Groupe BOOLEAN ,
     Est_Chef BOOLEAN ,
     Sexe VARCHAR(10) ,
+    Avatar INT DEFAULT 1,
     ID_Groupe INT Unsigned ,
     Foreign key (ID_Groupe) References Groupe (ID_Groupe)
 );

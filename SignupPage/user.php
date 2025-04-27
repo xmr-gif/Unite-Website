@@ -1,10 +1,10 @@
 <?php
 
     class User{
-        private $db ; 
+        private $db ;
         private $data ;
         private $errors = array();
-        private static $fields = ['firstname','lastname','email','password'] ;
+        private static $fields = ['Prenom','Nom','Email','Mdp'] ;
 
         public function __construct($post_data){
             $this->data = $post_data;
@@ -25,77 +25,77 @@
                     return ;
                 }
             }
-            $this->validateFirstName() ;
-            $this->validateLastName() ;
+            $this->validatePrenom() ;
+            $this->validateNom() ;
             $this->validateEmail();
-            $this->validatePassword();
+            $this->validateMdp();
             return $this->errors ;
         }
 
-        private function validateFirstName(){
-            $val = $this->data['firstname'];
-            if(empty($val)){$this->addError('firstname','First Name cannot be empty');
+        private function validatePrenom(){
+            $val = $this->data['Prenom'];
+            if(empty($val)){$this->addError('Prenom','First Name cannot be empty');
             }else{
                 if(!preg_match('/^[A-Za-z]{2,20}$/',$val)){
-                    $this->addError('firstname','First Name must be 2-20 chars & alphabetic') ;
+                    $this->addError('Prenom','First Name must be 2-20 chars & alphabetic') ;
                 }
             }
 
         }
 
-        private function validateLastName(){
-            $val = $this->data['lastname'];
-            if(empty($val)){$this->addError('lastname','Last Name cannot be empty');
+        private function validateNom(){
+            $val = $this->data['Nom'];
+            if(empty($val)){$this->addError('Nom','Last Name cannot be empty');
             }else{
                 if(!preg_match('/^[A-Za-z]{2,20}$/',$val)){
-                    $this->addError('lastname','Last Name must be 2-20 chars & alphabetic') ;
+                    $this->addError('Nom','Last Name must be 2-20 chars & alphabetic') ;
                 }
             }
 
         }
         private function validateEmail() {
-            $val = trim($this->data['email']);
+            $val = trim($this->data['Email']);
             if(empty($val)) {
-                $this->addError('email', 'Email cannot be empty');
+                $this->addError('Email', 'Email cannot be empty');
             } else {
-                // Fix: Add negation (!) before filter_var
                 if(!filter_var($val, FILTER_VALIDATE_EMAIL)) {
-                    $this->addError('email', 'Email must be a valid email address');
+                    $this->addError('Email', 'Email must be a valid email address');
                 }
             }
         }
-        // private function validateEmail(){
 
-        //     $val = trim($this->data['email']);
-        //     if(empty($val)){$this->addError('email','Email cannot be empty');
-        //     }else{
-        //         if(filter_var($val, FILTER_VALIDATE_EMAIL)){
-        //             $this->addError('email','Email must be a valid email') ;
-        //         }
-        //     }
-
-        // }
-
-        private function validatePassword(){
-
+        private function validateMdp(){
+            $val = $this->data['Mdp'];
+            if(empty($val)){$this->addError('Mdp','Password cannot be empty');
+            }
+            // You might want to add more password validation rules here
         }
 
         public function save($table) {
             try {
-                $query = "INSERT INTO $table
-                          (firstname, lastname, email, password)
-                          VALUES (:firstname, :lastname, :email, :password)";
+                if ($table === 'Professeur') {
+                    $query = "INSERT INTO Professeur
+                                    (Nom, Prenom, Email, Mdp, DateRegistration)
+                                    VALUES (:Nom, :Prenom, :Email, :Mdp, NOW())";
+                } elseif ($table === 'Etudiant') {
+                    $query = "INSERT INTO Etudiant
+                                    (Nom, Prenom, Email, Mdp, DateRegistration)
+                                    VALUES (:Nom, :Prenom, :Email, :Mdp, NOW())";
+                } else {
+                    // Handle invalid table name
+                    return false;
+                }
 
                 $stmt = $this->db->prepare($query);
 
                 // Hash password
-                $hashedPassword = password_hash($this->data['password'], PASSWORD_DEFAULT);
+                $hashedPassword = password_hash($this->data['Mdp'], PASSWORD_DEFAULT);
 
                 $stmt->execute([
-                    ':firstname' => $this->data['firstname'],
-                    ':lastname' => $this->data['lastname'],
-                    ':email' => $this->data['email'],
-                    ':password' => $hashedPassword
+                    ':Prenom' => $this->data['Prenom'],
+                    ':Nom' => $this->data['Nom'],
+                    ':Email' => $this->data['Email'],
+                    ':Mdp' => $hashedPassword
                 ]);
 
                 return true;
@@ -106,30 +106,9 @@
             }
         }
 
-        private function addError($key,$value){
+        public function addError($key,$value){
             $this->errors[$key] = $value ;
         }
-
-        // public function signup($POST){
-        //     foreach ($POST as $key => $value) {
-        //         # code...
-        //         if($key == "firstname"){
-        //             if(trim($value) == ""){
-        //                 $this->errors[] = "please enter a valid Name" ;
-        //             }
-        //         }
-        //     }
-
-        //     if(count($this->errors) == 0){
-
-        //         // save on db
-
-        //     }
-        //     return $this->errors ;
-
-
-
-        //}
     }
 
 

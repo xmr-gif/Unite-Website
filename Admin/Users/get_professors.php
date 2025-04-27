@@ -2,11 +2,11 @@
 header('Content-Type: application/json');
 
 $host = 'localhost';
-$db   = 'unite_db'; 
+$db   = 'unite_db';
 $pass = '';
 
 try {
-    $pdo = new PDO("mysql:host=$host;port=3307;dbname=$db", $user, $pass);
+    $pdo = new PDO("mysql:host=$host;port=3306;dbname=$db", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $stmt = $pdo->query("SELECT

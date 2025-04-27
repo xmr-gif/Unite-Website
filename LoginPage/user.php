@@ -58,20 +58,22 @@ class LoginUser {
 
     public function authenticate() {
         $accountType = $this->data['AccountType'];
-        $table = $accountType . 's'; // Assumes table names are 'students' and 'professors'
+        $table = ($accountType === 'professor') ? 'Professeur' : 'Etudiant';
 
         try {
-            $query = "SELECT * FROM $table WHERE email = :email";
+            $query = "SELECT Nom, Prenom, Email, Mdp FROM $table WHERE Email = :email";
             $stmt = $this->db->prepare($query);
             $stmt->execute([':email' => $this->data['email']]);
             $user = $stmt->fetch();
 
-            if ($user && password_verify($this->data['password'], $user['password'])) {
-                session_start();
-                $_SESSION['user'] = $user;
+            if ($user && password_verify($this->data['password'], $user['Mdp'])) {
+                $_SESSION['account_type'] = $accountType;
+                $_SESSION['Prenom'] = $user['Prenom'];
+                $_SESSION['Nom'] = $user['Nom'];
+                $_SESSION['Email'] = $user['Email'];
                 return true;
             } else {
-                $this->addError('email', 'Invalid email or password');
+                $this->addError('email', 'Invalid email or password for the selected account type');
                 return false;
             }
         } catch(PDOException $e) {
@@ -86,26 +88,6 @@ class LoginUser {
 
     public function getErrors() {
         return $this->errors;
-    }
-}
-
-
-session_start();
-$errors = [];
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    require_once 'config.php'; // Include your DB configuration
-
-    $loginUser = new LoginUser($_POST);
-    $errors = $loginUser->validateForm();
-
-    if (empty($errors)) {
-        if ($loginUser->authenticate()) {
-            echo "sucess";
-            // header('Location: dashboard.php'); // Redirect to dashboard
-            // exit();
-        }
-        $errors = $loginUser->getErrors();
     }
 }
 ?>
