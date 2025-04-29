@@ -57,8 +57,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_avatar'])) {
             $user_id = $_SESSION[$account_type . '_id'];
             $avatar_column = 'Avatar';
 
+            // Update the avatar for the existing user
             $sql_update = "UPDATE $table SET $avatar_column = :avatar WHERE $id_column = :user_id";
-            $stmt_update = $pdo->prepare($sql_update); // Use $pdo
+            $stmt_update = $pdo->prepare($sql_update);
             $stmt_update->bindParam(':avatar', $avatar_number);
             $stmt_update->bindParam(':user_id', $user_id);
 
@@ -68,14 +69,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_avatar'])) {
                 exit();
             } else {
                 echo "Error updating avatar.";
-                print_r($stmt_update->errorInfo()); // Debug database errors
+                print_r($stmt_update->errorInfo());
             }
-        } else {
-            echo "User ID not found in session after signup.";
-        }
+
+        } 
 
     } else {
-        echo "Essential user information not found in session.";
+        echo "Essential user information or User ID not found in session.";
     }
 } else {
     echo "Invalid request.";
