@@ -11,8 +11,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_avatar'])) {
         $prenom = $_SESSION['Prenom'];
         $nom = $_SESSION['Nom'];
         $email = $_SESSION['Email'];
-        $table = ($account_type === 'professor') ? 'Professeur' : 'Etudiant';
-        $id_column = ($account_type === 'professor') ? 'ID_Professeur' : 'ID_Etudiant'; // Ensure this matches your database
+        $mdp = $_SESSION['Mdp'];
+        
+        $table = ($account_type === 'professeur') ? 'Professeur' : 'Etudiant';
+        $id_column = ($account_type === 'professeur') ? 'ID_Professeur' : 'ID_Etudiant'; // Ensure this matches your database
 
         // Database connection details
         $host ='localhost';
@@ -36,8 +38,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_avatar'])) {
             $stmt_insert->bindParam(':nom', $nom);
             $stmt_insert->bindParam(':prenom', $prenom);
             $stmt_insert->bindParam(':email', $email);
-            $stmt_insert->bindParam(':mdp', $hashed_password); // Use $hashed_password - IMPORTANT!
-            $hashed_password = 'temporary'; // THIS IS STILL A PLACEHOLDER - YOU MUST GET THE HASHED PASSWORD FROM SIGNUP
+            $stmt_insert->bindParam(':mdp', $mdp); // Use $hashed_password - IMPORTANT!
+            
 
             if ($stmt_insert->execute()) {
                 // Get the last inserted ID
