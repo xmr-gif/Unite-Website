@@ -1,3 +1,30 @@
+<?php
+ $host ='localhost';
+ $db = 'unite_db';
+ $user='root';
+ $pass ='';
+ try {
+     $pdo = new PDO ("mysql:host=$host;port=3306;dbname=$db",$user,$pass);
+     //echo "Connexion reussite";
+
+ } catch (PDOException $e) {
+     echo "La connexion n'est pas reussie ".$e->getMessage() ;
+ }
+
+ $stmt = $pdo->query("SELECT COUNT(*) FROM sujet");
+ $count = $stmt->fetchColumn();
+ //
+ $stmt = $pdo->query("
+        SELECT
+            (SELECT COUNT(*) FROM Etudiant) AS students,
+            (SELECT COUNT(*) FROM professeur) AS teachers
+    ");
+
+    $counts = $stmt->fetch(PDO::FETCH_ASSOC);
+    $total = $counts['students'] + $counts['teachers'];
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +48,7 @@
                 </a>
               </div>
               <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
-                <a class="flex items-center gap-2">
+                <a class="flex items-center gap-2" href="../Users/index.php" >
                   <i data-lucide="user" class="w-4 h-4"></i>
                   Users
                 </a>
@@ -80,7 +107,7 @@
                     <div class="text-center flex font-medium bg-white w-1/4 py-7 rounded-3xl shadow-sm justify-around">
                         <div>
                             <p>Subjects</p>
-                            <p class="text-5xl" >10</p>
+                            <p class="text-5xl" ><?=$count?></p>
 
                         </div>
                         <div class="bg-indigo-400 p-5 rounded-full w-15 h-15 flex justify-center items-center mt-2 " >
@@ -116,7 +143,7 @@
                     <div class="text-center flex font-medium bg-white w-1/4 py-7 rounded-3xl shadow-sm justify-around">
                         <div>
                             <p>Users</p>
-                            <p class="text-5xl" >10</p>
+                            <p class="text-5xl" ><?=$total?></p>
 
                         </div>
                         <div class="bg-indigo-400 p-5 rounded-full w-15 h-15 flex justify-center items-center mt-2 " >
@@ -170,32 +197,7 @@
                             </button>
                         </div>
 
-                        <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
-                            <!-- Leader Column -->
-                            <div class="flex items-center w-1/4">
-                                <input type="checkbox" class="mr-1">
-                                <img src="../../images/PP.webp" alt="" class="w-8 h-8 rounded-md mr-1">
-                                <p>Bedlou Oussama</p>
-                            </div>
 
-                            <!-- Subject Column -->
-                            <p class="w-1/4">Subject Title ...</p>
-
-                            <!-- Status Column -->
-                            <div class="w-1/5">
-                                <div class="bg-orange-100 px-2 rounded-xl text-center w-1/2">
-                                    <p class="text-orange-300">Pending</p>
-                                </div>
-                            </div>
-
-                            <!-- Date Column -->
-                            <p class="w-1/5">Feb 20th, 2025</p>
-
-                            <!-- Details Button -->
-                            <button class="border text-zinc-500 px-2 rounded-md border-zinc-400 cursor-pointer">
-                                Details
-                            </button>
-                        </div>
 
                         <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
                             <!-- Leader Column -->

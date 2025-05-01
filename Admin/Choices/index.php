@@ -1,23 +1,3 @@
-<?php
-$host ='localhost';
-$db = 'unite_db';
-$user='root';
-$pass ='';
-try {
-    $pdo = new PDO ("mysql:host=$host;port=3306;dbname=$db",$user,$pass);
-    //echo "Connexion reussite";
-
-} catch (PDOException $e) {
-    echo "La connexion n'est pas reussie ".$e->getMessage() ;
-}
-
-$query = "SELECT * FROM sujet";
- $stmt = $pdo->prepare($query);
- $stmt->execute();
- $subjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

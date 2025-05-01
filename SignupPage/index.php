@@ -76,17 +76,9 @@ if(isset($_POST['Prenom'])) {
                 <a href="../Home page/index.html" ><img src="../images/black-logo.png" class=" w-20" alt="company logo"></a>
 
             </div>
-            <div class="hidden space-x-6" >
-                <a class="ml-5 hover:text-indigo-600 " href="#">About us</a>
-                <a class="ml-5 hover:text-indigo-600" href="#">Blog</a>
-                <a class="ml-5 hover:text-indigo-600" href="">Contact</a>
-                <button class="ml-5 border-1 px-3 py-1 rounded-3xl hover:text-white hover:bg-black cursor-pointer " id="loginButton" >Login</button>
 
-                </div>
 
-            <button id="mobile-btn" class="md:hidden cursor-pointer">
-                <i class="ri-menu-line text-2xl"></i>
-            </button>
+            
 
         </div>
 
