@@ -1,4 +1,5 @@
 <?php
+session_start();
 class LoginUser {
     private $db;
     private $data;

@@ -65,7 +65,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_avatar'])) {
 
             if ($stmt_update->execute()) {
                 // Avatar updated successfully, redirect to the dashboard
-                header("Location: ../Dashboard/dashboardEt.php"); // Adjust path as needed
+                if ($_SESSION['account_type'] === 'etudiant') {
+                    header("Location: ../Dashboard/dashboardEt.php"); // Dashboard étudiant
+                } elseif ($_SESSION['account_type'] === 'professeur') {
+                    header("Location: ../Dashboard/dashboardProf.php"); // Dashboard professeur
+                }
                 exit();
             } else {
                 echo "Error updating avatar.";

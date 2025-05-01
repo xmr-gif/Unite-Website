@@ -28,19 +28,16 @@ $colomn = 'id_'.$account_type ;
 $id = $_SESSION[$account_type . '_id'] ?? null;
 
 
-
+echo 'ddddd' ;
 $sql = "SELECT * FROM $account_type WHERE $colomn = (:id)"  ; 
 $stmt2 = $pdo->prepare($sql); // Use $pdo
 $stmt2->bindParam(':id', $id);
 $stmt2->execute();
 $user = $stmt2->fetchAll();
-print_r($_SESSION[ $account_type.'_id' ]);
+print_r($user);
 
 
-
-
-
-
+print_r($_SESSION[$account_type . '_id'] );
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -87,50 +84,54 @@ print_r($_SESSION[ $account_type.'_id' ]);
   <div class="flex min-h-screen">
     <!-- Sidebar -->
     <div class="py-5 px-6 w-1/4 h-screen border-r border-gray-200 bg-white">
-  <img src="../images/black-logo.png" class="w-20 mb-10 ml-4" alt="Logo Étudiant" />
-  <h1 class="text-xl font-bold text-center text-indigo-600 mb-6">Espace Étudiant</h1>
-  <div class="space-y-2">
-    <div class="px-4 py-2 bg-indigo-100 text-indigo-700 font-semibold rounded-md">
-      <a class="flex items-center gap-2" href="#">
-        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-        Tableau de bord
-      </a>
-    </div>
-    <div class="px-4 py-2 hover:bg-slate-100 rounded-md cursor-pointer text-zinc-600">
-      <a class="flex items-center gap-2" href="../Subject/index.php">
-        <i data-lucide="book-open" class="w-4 h-4"></i>
-        Mes Sujets
-      </a>
-    </div>
-    <div class="px-4 py-2 hover:bg-slate-100 rounded-md cursor-pointer text-zinc-600">
-      <a class="flex items-center gap-2" href="../Groupe/index.php">
-        <i data-lucide="users" class="w-4 h-4"></i>
-        Mon Groupe
-      </a>
-    </div>
-    <div class="px-4 py-2 hover:bg-slate-100 rounded-md cursor-pointer text-zinc-600">
-      <a class="flex items-center gap-2" href="#">
-        <i data-lucide="file-text" class="w-4 h-4"></i>
-        Mes Choix
-      </a>
-    </div>
-  </div>
+      <img src="../images/black-logo.png" class="w-20 mb-10 ml-4" alt="Logo" />
+      <h1 class="text-xl font-bold text-center text-indigo-600 mb-6">Espace Prof</h1>
+      <div class="space-y-2">
+        <div class="px-4 py-2 bg-slate-200 rounded-md cursor-pointer">
+          <a class="flex items-center gap-2" href="#">
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+            Dashboard
+          </a>
+        </div>
+        <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+          <span class="flex items-center gap-2">
+            <i data-lucide="lightbulb" class="w-4 h-4"></i>
+            Subjects
+          </span>
+        </div>
+        <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+          <span class="flex items-center gap-2">
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+            Choices
+          </span>
+        </div>
+        <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+          <span class="flex items-center gap-2">
+            <i data-lucide="file-text" class="w-4 h-4"></i>
+            Blogs
+          </span>
+        </div>
+      </div>
 
-  <div class="absolute bottom-8 space-y-2 w-[calc(25%-48px)]">
-    <div class="px-4 py-2 hover:bg-slate-100 rounded-md cursor-pointer text-zinc-600">
-      <a class="flex items-center gap-2" href="#">
-        <i data-lucide="settings" class="w-4 h-4"></i>
-        Paramètres
-      </a>
+      <div class="absolute bottom-8 space-y-2 w-[calc(25%-48px)]">
+        <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+          <span class="flex items-center gap-2">
+            <i data-lucide="settings" class="w-4 h-4"></i>
+            Settings
+          </span>
+        </div>
+        <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+          
+          <span class="flex items-center gap-2">
+          
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+            <a class="flex items-center gap-2" href="../logout/logout.php">
+            Log Out
+            </a>
+          </span>
+        </div>
+      </div>
     </div>
-    <div class="px-4 py-2 hover:bg-slate-100 rounded-md cursor-pointer text-zinc-600">
-      <a class="flex items-center gap-2" href="../logout/logout.php">
-        <i data-lucide="log-out" class="w-4 h-4"></i>
-        Déconnexion
-      </a>
-    </div>
-  </div>
-</div>
 
     <div class="h-screen bg-gray-100 py-5 w-4/5 px-7">
       <div>
@@ -180,7 +181,7 @@ print_r($_SESSION[ $account_type.'_id' ]);
             </div>
           </div>
         </div>
-        
+        <h2>Espace Etudiant</h2>
         <!-- Partie Groupe et Membres -->
         <?php
         if ($id) {
