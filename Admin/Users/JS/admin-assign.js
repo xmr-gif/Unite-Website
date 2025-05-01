@@ -51,18 +51,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 const result = await response.json();
-                console.log(result);
-                
 
                 if (result.success) {
+                    // Update button appearance
                     button.textContent = result.new_status ? 'Revoke Admin' : 'Make Admin';
                     button.classList.toggle('bg-blue-500');
                     button.classList.toggle('bg-green-500');
 
+                    // Update status display
                     const statusDiv = button.parentElement.querySelector('.text-sm');
                     statusDiv.textContent = `Admin Status: ${result.new_status ? 'Yes' : 'No'}`;
                     statusDiv.classList.toggle('text-red-600');
                     statusDiv.classList.toggle('text-green-600');
+
+                    // Show success notification
+                    const successNotification = document.getElementById('successNotification');
+                    successNotification.classList.remove('hidden');
+
+                    // Hide modal and redirect after 2 seconds
+                    setTimeout(() => {
+                        document.getElementById('assignAdminModal').classList.add('hidden');
+                        successNotification.classList.add('hidden');
+                        window.location.href = 'user.php'; // or 'index.php' if different
+                    }, 2000);
                 }
             } catch (error) {
                 console.error('Update failed:', error);

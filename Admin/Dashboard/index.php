@@ -194,32 +194,7 @@
                             </button>
                         </div>
 
-                        <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
-                            <!-- Leader Column -->
-                            <div class="flex items-center w-1/4">
-                                <input type="checkbox" class="mr-1">
-                                <img src="../../images/PP.webp" alt="" class="w-8 h-8 rounded-md mr-1">
-                                <p>Bedlou Oussama</p>
-                            </div>
 
-                            <!-- Subject Column -->
-                            <p class="w-1/4">Subject Title ...</p>
-
-                            <!-- Status Column -->
-                            <div class="w-1/5">
-                                <div class="bg-orange-100 px-2 rounded-xl text-center w-1/2">
-                                    <p class="text-orange-300">Pending</p>
-                                </div>
-                            </div>
-
-                            <!-- Date Column -->
-                            <p class="w-1/5">Feb 20th, 2025</p>
-
-                            <!-- Details Button -->
-                            <button class="border text-zinc-500 px-2 rounded-md border-zinc-400 cursor-pointer">
-                                Details
-                            </button>
-                        </div>
 
                         <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
                             <!-- Leader Column -->

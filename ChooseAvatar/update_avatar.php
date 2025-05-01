@@ -5,8 +5,8 @@ session_start();
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_avatar'])) {
     $avatar_number = $_POST['selected_avatar'];
 
-    // Check if basic user info is in the session (from signup)
-    if (isset($_SESSION['account_type']) && isset($_SESSION['Prenom']) && isset($_SESSION['Nom']) && isset($_SESSION['Email'])) {
+    // Check if essential user information AND the user ID are in the session
+    if (isset($_SESSION['account_type']) && isset($_SESSION['Prenom']) && isset($_SESSION['Nom']) && isset($_SESSION['Email']) && isset($_SESSION[$_SESSION['account_type'] . '_id'])) {
         $account_type = $_SESSION['account_type'];
         $prenom = $_SESSION['Prenom'];
         $nom = $_SESSION['Nom'];

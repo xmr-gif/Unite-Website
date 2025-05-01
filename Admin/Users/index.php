@@ -4,7 +4,7 @@
  $user='root';
  $pass ='';
  try {
-     $pdo = new PDO ("mysql:host=$host;port=3307;dbname=$db",$user,$pass);
+     $pdo = new PDO ("mysql:host=$host;port=3306;dbname=$db",$user,$pass);
      //echo "Connexion reussite";
 
  } catch (PDOException $e) {
@@ -55,6 +55,21 @@ print_r($users[1]["FullName"]);*/
     transition: opacity 0.3s ease-in-out;
     backdrop-filter: blur(2px);
 }
+#successNotification {
+    transition: opacity 0.3s ease-in-out;
+}
+</style>
+<style>
+    .truncate {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    /* If you want to allow email wrapping instead of truncation */
+    .email-cell {
+        word-break: break-word;
+        white-space: normal;
+    }
 </style>
 </head>
 <body>
@@ -127,7 +142,7 @@ print_r($users[1]["FullName"]);*/
                 </div>
 
 
-                <div class="bg-white px-9 py-4 rounded-3xl h-[72vh] " >
+                <div class="bg-white px-9 py-4 rounded-3xl h-[72vh] flex flex-col" >
                     <div class="flex justify-between border-b-1 pt-4 pb-5 border-zinc-400" >
                         <p class="text-2xl font-medium " >Users</p>
                         <form action="delete.php" method="POST" id="deleteForm">
@@ -147,20 +162,21 @@ print_r($users[1]["FullName"]);*/
                         <p class="w-1/5" ><a href="">Role <i class="ri-filter-3-fill"></i></a></p>
                         <p class="w-1/5" ><a href="">Member Since <i class="ri-filter-3-fill"></i></a></p>
                     </div>
+                    <div class="flex-1 overflow-y-auto">
             <?php foreach ($users as $user): ?>
                     <div class="snap-y" >
                         <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
-                            <!-- Leader Column -->
+                            <!-- Full name -->
                             <div class="flex items-center w-1/4">
                             <input form="deleteForm" type="checkbox" name="userss[]" value="<?=$user["Role"]=='Student'?'etudiant':'professeur'?>|<?=$user['Email']?>" class="mr-1">
                                 <img src="PP.webp" alt="" class="w-8 h-8 rounded-md mr-1">
-                                <p class="full-name" ><?= $user["FullName"] ?></p>
+                                <p class="full-name " ><?= $user["FullName"] ?></p>
                             </div>
 
-                            <!-- Subject Column -->
-                            <p class="w-1/4"><?= $user["Email"] ?></p>
+                            <!-- Email -->
+                            <p class="w-1/4 email-cell"><?= $user["Email"] ?></p>
 
-                            <!-- Status Column -->
+                            <!-- Role -->
                             <div class="w-1/5">
 
                                     <p ><?= $user["Role"] ?></p>
@@ -171,7 +187,7 @@ print_r($users[1]["FullName"]);*/
                                 $formattedDate = $date->format('F jS, Y');
                             ?>
 
-                            <!-- Date Column -->
+                            <!-- member since -->
                             <p class="w-1/5"><?=$formattedDate?></p>
 
                             <!-- Details Button -->
@@ -194,6 +210,7 @@ print_r($users[1]["FullName"]);*/
                         </div>
 
               <?php endforeach ; ?>
+              </div>
 
 
 
@@ -294,6 +311,10 @@ print_r($users[1]["FullName"]);*/
     </div>
   </div>
 </div>
+<!-- Add this anywhere in your user.php body -->
+<div id="successNotification" class="hidden fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300">
+    Admin status updated successfully!
+</div>
 
     <script>lucide.createIcons();</script>
     <script src="js/user-modal.js"></script>
@@ -301,7 +322,7 @@ print_r($users[1]["FullName"]);*/
     <script>
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('searchInput');
-    
+
     // Sélectionner toutes les lignes d'utilisateurs
     const userRows = document.querySelectorAll('.flex.items-center.text-sm.font-medium.border-zinc-200.border-b.py-2');
 
@@ -309,10 +330,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const query = searchInput.value.toLowerCase();
 
         userRows.forEach(row => {
-            // Récupérer le fullname 
+            // Récupérer le fullname
             const fullName = row.querySelector('.full-name')?.textContent.toLowerCase() || '';
-            
-            // Affiche o masque 
+
+            // Affiche o masque
             row.style.display = fullName.includes(query) ? '' : 'none';
         });
     });

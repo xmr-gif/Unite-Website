@@ -113,11 +113,14 @@ $query = "SELECT * FROM sujet";
                     <div class="flex justify-between border-b-1 pt-4 pb-5 border-zinc-400" >
                         <p class="text-2xl font-medium " >Subjects</p>
                         <div>
+
                             <form action="delete.php" method="POST" id="deleteForm">
                                 <button class="bg-red-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer transition-opacity duration-300 opacity-0 pointer-events-none checkbox-button" id="delete-button" type="button">Delete</button>
 
                                 <button  id="creationSubjet" class="bg-indigo-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-indigo-600" type="button" >+ New Subject</button>
                             </form>
+
+
                         </div>
 
 
@@ -191,6 +194,10 @@ $query = "SELECT * FROM sujet";
                 </svg>
             </button>
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2e5b9c701f2529de56621e86a7bb3f2fce64a3a2
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Create a New Subject</h2>
 
             <form action="add_subject.php" method="POST" class="space-y-6">
@@ -212,11 +219,13 @@ $query = "SELECT * FROM sujet";
                     <button type="submit" class="px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200 cursor-pointer ">
                         Create Subject
                     </button>
+
                 </div>
             </form>
         </div>
     </div>
 </div>
+
 
 <div id="subjectDetailsModal" class="hidden fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
     <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-5 max-h-[80vh] overflow-y-auto">
@@ -253,6 +262,9 @@ $query = "SELECT * FROM sujet";
 </div>
 
 <script>
+
+    <script>
+
         lucide.createIcons();
         document.addEventListener('DOMContentLoaded', function() {
         const buttonCreer = document.getElementById('creationSubjet'); // Le bouton + New Subject
@@ -280,6 +292,9 @@ $query = "SELECT * FROM sujet";
             }
         });
     });
+
+        });
+
     </script>
     <script src="JS/script.js" ></script>
     <script src="JS/subject-modal.js" ></script>
