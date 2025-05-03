@@ -9,17 +9,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     subjectCards.forEach(card => {
         const detailsButton = card.querySelector('.text-indigo-500'); // Select the details button within the card
-        detailsButton.addEventListener('click', function() {
-            const title = card.dataset.subjectTitle;
-            const professor = card.dataset.professorName;
-            const description = card.dataset.subjectDescription;
+        if(detailsButton){
+            detailsButton.addEventListener('click', function() {
+                const title = card.dataset.subjectTitle;
+                const professor = card.dataset.professorName;
+                const description = card.dataset.subjectDescription;
 
-            modalSubjectTitle.textContent = title;
-            modalProfessorName.textContent = professor;
-            modalSubjectDescription.textContent = description;
+                modalSubjectTitle.textContent = title;
+                modalProfessorName.textContent = professor;
+                modalSubjectDescription.textContent = description;
 
-            subjectDetailsModal.classList.remove('hidden');
-        });
+                subjectDetailsModal.classList.remove('hidden');
+            });
+        }
+
     });
 
     closeSubjectModalButton.addEventListener('click', function() {

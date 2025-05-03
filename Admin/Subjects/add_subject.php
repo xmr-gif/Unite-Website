@@ -1,40 +1,39 @@
 <?php
+// Enable error reporting
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-    $host = 'localhost';
-    $db = 'unite_db';
-    $user = 'root';
-    $pass = '';
+// Database connection
+$host = 'localhost';
+$db = 'unite_db';
+$user = 'root';
+$pass = '';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $titre = $_POST['titre'];
+    $description = $_POST['description'];
+    $professor_id = 1; // Replace with actual logged-in professor ID
 
     try {
-        $pdo = new PDO("mysql:host=$host;port=3307;dbname=$db", $user, $pass);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $stmt = $pdo->prepare("INSERT INTO sujet (Titre, Description, ID_Professeur)
+                       VALUES (:titre, :description, :prof_id)");
+        $stmt->execute([
+            ':titre' => $titre,
+            ':description' => $description,
+            ':prof_id' => $professor_id
+        ]);
+
+        // Redirect with success message
+        header("Location: index.php?success=1");
+        exit();
     } catch (PDOException $e) {
-        die("Database connection failed: " . $e->getMessage());
+        die("Error adding subject: " . $e->getMessage());
     }
-
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if (isset($_POST['titre']) && isset($_POST['description'])) {
-            $titre = trim($_POST['titre']);
-            $description = trim($_POST['description']);
-
-            // Get the current date and time
-            $dateAjout = date('Y-m-d H:i:s'); // Format: YYYY-MM-DD HH:MM:SS
-
-            $sql = "INSERT INTO sujet (Titre, Description, Date_Ajout) VALUES (?, ?, ?)";
-            $stmt = $pdo->prepare($sql);
-
-            try {
-                $stmt->execute([$titre, $description, $dateAjout]);
-                header("Location: index.php");
-                exit();
-            } catch (PDOException $e) {
-                echo "Error inserting data: " . $e->getMessage();
-            }
-        } else {
-            echo "Error: 'titre' or 'description' fields are missing in the form.";
-        }
-    } else {
-        echo "This script expects a POST request.";
-    }
-
-?>
+}

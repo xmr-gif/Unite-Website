@@ -1,10 +1,12 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 $host ='localhost';
 $db = 'unite_db';
 $user='root';
 $pass ='';
 try {
-    $pdo = new PDO ("mysql:host=$host;port=3307;dbname=$db",$user,$pass);
+    $pdo = new PDO ("mysql:host=$host;port=3306;dbname=$db",$user,$pass);
     //echo "Connexion reussite";
 
 } catch (PDOException $e) {
@@ -117,11 +119,12 @@ $query = "SELECT * FROM sujet";
                             <form action="delete.php" method="POST" id="deleteForm">
                                 <button class="bg-red-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer transition-opacity duration-300 opacity-0 pointer-events-none checkbox-button" id="delete-button" type="button">Delete</button>
 
-                                <button  id="creationSubjet" class="bg-indigo-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-indigo-600" type="button" >+ New Subject</button>
-                            </form>
+                                <a  id="creationSubjet" class="bg-indigo-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-indigo-600"  >+ New Subject</a>
 
 
                         </div>
+
+                           
 
 
 
@@ -132,25 +135,33 @@ $query = "SELECT * FROM sujet";
                         <p class="w-1/3" >Created By</p>
                         <p class="w-1/5" >Created On</p>
                     </div>
-                    <?php foreach ($subjects as $subject): ?>
+
     <?php
-    $id = $subject['ID_Professeur'];
-    $query2 = "SELECT CONCAT(Nom, ' ', Prenom) AS FullName FROM Professeur WHERE ID_Professeur = $id";
-    $stmt2 = $pdo->prepare($query2);
-    $stmt2->execute();
-    $professor = $stmt2->fetch(PDO::FETCH_ASSOC);
-    $professorName = $professor['FullName'];
+    try {
+        // Replace lines 140-150 with this:
+        $query = "SELECT s.*, CONCAT(p.Nom, ' ', p.Prenom) AS FullName
+                  FROM sujet s
+                  INNER JOIN Professeur p ON s.ID_Professeur = p.ID_Professeur"; // <-- FIXED JOIN
+
+        $stmt = $pdo->query($query); // No need for prepare/execute for static queries
+
+        $subjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    } catch (PDOException $e) {
+        die("Database error: " . $e->getMessage());
+    }
     ?>
+  <?php foreach ($subjects as $subject): ?>
     <div class="snap-y subject-card cursor-pointer"
-         data-subject-title="<?php echo htmlspecialchars($subject['Titre']); ?>"
-         data-professor-name="<?php echo htmlspecialchars($professorName); ?>"
-         data-subject-description="<?php echo htmlspecialchars($subject['Description']); ?>">
+         data-subject-title="<?= htmlspecialchars($subject['Titre']) ?>"
+         data-professor-name="<?= htmlspecialchars($subject['FullName']) ?>"
+         data-subject-description="<?= htmlspecialchars($subject['Description']) ?>">
         <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
             <div class="flex items-center w-1/3">
                 <input type="checkbox" name="subject[]" value="<?=$subject['ID_Sujet']?>" class="mr-1 checkbox-button ">
                 <p><?=$subject['Titre']?></p>
             </div>
-            <p class="w-1/3"><?=$professorName?></p>
+            <p class="w-1/3"><?= $subject['FullName'] ?? 'Unknown Professor' ?></p>
             <?php
             $date = new DateTime($subject["Date_Ajout"]);
             $formattedDate = $date->format('F jS, Y');
@@ -185,7 +196,7 @@ $query = "SELECT * FROM sujet";
 
         </div>
     </div>
-    <div id="new-subject-form" class="hidden fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-sm transition-opacity duration-200">
+    <div id="new-subject-form" class=" hidden fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 backdrop-blur-sm transition-opacity duration-200">
     <div class="max-w-2xl w-full mx-4 bg-white rounded-xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95">
         <div class="relative p-8">
             <button id="close" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors duration-200 cursor-pointer ">
@@ -193,11 +204,6 @@ $query = "SELECT * FROM sujet";
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 2e5b9c701f2529de56621e86a7bb3f2fce64a3a2
             <h2 class="text-2xl font-bold text-gray-800 mb-6">Create a New Subject</h2>
 
             <form action="add_subject.php" method="POST" class="space-y-6">
@@ -261,10 +267,8 @@ $query = "SELECT * FROM sujet";
     </div>
 </div>
 
-<script>
 
     <script>
-
         lucide.createIcons();
         document.addEventListener('DOMContentLoaded', function() {
         const buttonCreer = document.getElementById('creationSubjet'); // Le bouton + New Subject
@@ -273,12 +277,14 @@ $query = "SELECT * FROM sujet";
 
         buttonCreer.addEventListener('click', function() {
             // Toggle l'affichage du formulaire
-            form.classList.toggle('hidden');
+            form.classList.remove('hidden');
 
             close.addEventListener('click', function() {
             form.classList.add('hidden');
     });
             });
+
+
 
         const deleteButton = document.getElementById('delete-button');
         const deleteForm = document.getElementById('deleteForm');
@@ -293,7 +299,6 @@ $query = "SELECT * FROM sujet";
         });
     });
 
-        });
 
     </script>
     <script src="JS/script.js" ></script>
