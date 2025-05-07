@@ -148,7 +148,7 @@ print_r($users[1]["FullName"]);*/
                         <form action="delete.php" method="POST" id="deleteForm">
                             <button class="border border-red-500 text-red-500 px-3 py-1 rounded-md" id="delete-button" type="submit">Delete Selected</button>
                         </form>
-                            
+
                         <div class=" rounded-md bg-gray-100 p-1 text-zinc-500 border-b-2 ">
                             <i class="ri-search-line"></i>
                             <input type="search" id="searchInput" placeholder="Search" >
@@ -206,7 +206,7 @@ print_r($users[1]["FullName"]);*/
                             >
                                 Details
                             </button>
-                           
+
                         </div>
 
               <?php endforeach ; ?>

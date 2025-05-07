@@ -1,11 +1,13 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 $host ='localhost';
 $db = 'unite_db';
 $user='root';
 $pass ='';
 
 try {
-    $pdo = new PDO("mysql:host=$host;port=3307;dbname=$db", $user, $pass);
+    $pdo = new PDO("mysql:host=$host;port=3306;dbname=$db", $user, $pass);
     //echo "Connexion reussie";
 } catch (PDOException $e) {
     echo "La connexion n'est pas reussie ".$e->getMessage();
@@ -15,8 +17,8 @@ $query = "SELECT * FROM groupe";
 $stmt = $pdo->prepare($query);
 $stmt->execute();
 $groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
-if (isset($_POST['group_id'])) {
-  $groupId = $_POST['group_id'];
+//if (isset($_POST['group_id'])) {
+  //$groupId = $_POST['group_id'];
   // Récupérer les etudians
   $query2 = "SELECT Nom, Prenom FROM Etudiant WHERE ID_Groupe = :group_id";
   $stmtStudents = $pdo->prepare($query2);
@@ -28,10 +30,10 @@ if (isset($_POST['group_id'])) {
   $stmtSujet = $pdo->prepare($query3);
   $stmtSujet->execute(['group_id' => $groupId]);
   $sujet = $stmtSujet->fetch(PDO::FETCH_ASSOC);
-  
-}
-          
-       
+
+//}
+
+
 
 ?>
 
@@ -43,7 +45,7 @@ if (isset($_POST['group_id'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/lucide@0.462.0/dist/umd/lucide.min.js"></script>
-    <title>Dashboard</title>
+    <title>Groups</title>
 </head>
 <body>
 <div class="flex" >
@@ -104,7 +106,7 @@ if (isset($_POST['group_id'])) {
               </div>
             </div>
           </div>
-          
+
           <div class="w-3/4 py-5 px-6">
         <h2 class="text-xl font-bold mb-4">Groups List</h2>
         <table class="table-auto w-full border-collapse">
@@ -118,7 +120,7 @@ if (isset($_POST['group_id'])) {
             <tbody>
                 <?php foreach ($groups as $group) : ?>
                     <tr>
-                        
+
                         <td class="border px-4 py-2"><?= $group['ID_Groupe']; ?></td>
                         <td class="border px-4 py-2"><?= $group['ID_Sujet']; ?></td>
                         <td class="border px-4 py-2">
@@ -144,7 +146,7 @@ if (isset($_POST['group_id'])) {
                         </a>
                     </div>
 
-                   
+
 
                     <div class="flex items-center gap-2">
     <!-- Affichage des étudiants -->
@@ -176,7 +178,7 @@ if (isset($_POST['group_id'])) {
     </div>
 </div>
 
-                        
+
                     </div>
                 </div>
             </div>
@@ -185,7 +187,7 @@ if (isset($_POST['group_id'])) {
 </div>
 
 <script>
-    // Fermer le modal 
+    // Fermer le modal
     document.querySelector('.close-modal').addEventListener('click', () => {
         document.getElementById('groupModal').classList.add('hidden');
     });

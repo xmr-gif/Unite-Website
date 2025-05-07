@@ -7,18 +7,23 @@ $user='root';
 $pass ='';
 try {
     $pdo = new PDO ("mysql:host=$host;port=3306;dbname=$db",$user,$pass);
-    //echo "Connexion reussite";
-
 } catch (PDOException $e) {
     echo "La connexion n'est pas reussie ".$e->getMessage() ;
 }
 
-$query = "SELECT * FROM sujet";
- $stmt = $pdo->prepare($query);
- $stmt->execute();
- $subjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Modified SQL query to get group information
+$query = "SELECT
+            g.ID_groupe AS GroupID,
+            CONCAT(e.Nom, ' ', e.Prenom) AS GroupOwner,
+            COUNT(et.ID_Etudiant) AS TotalMembers
+          FROM Groupe g
+          LEFT JOIN Etudiant e ON g.ID_groupe = e.ID_Groupe AND e.Est_Chef = 1
+          LEFT JOIN Etudiant et ON g.ID_groupe = et.ID_Groupe
+          GROUP BY g.ID_groupe, e.Nom, e.Prenom";
 
-
+$stmt = $pdo->prepare($query);
+$stmt->execute();
+$groups = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +33,7 @@ $query = "SELECT * FROM sujet";
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/lucide@0.462.0/dist/umd/lucide.min.js"></script>
-    <title>Subjects</title>
+    <title>Groups</title>
     <style>
          <style>
     .transition-opacity {
@@ -59,7 +64,7 @@ $query = "SELECT * FROM sujet";
                   Users
                 </a>
               </div>
-              <div class="px-4 py-2 bg-slate-200 rounded-md cursor-pointer">
+              <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
                 <a class="flex items-center gap-2" href="index.php">
                   <i data-lucide="lightbulb" class="w-4 h-4"></i>
                   Subjects
@@ -77,7 +82,7 @@ $query = "SELECT * FROM sujet";
                   Blogs
                 </a>
               </div>
-              <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+              <div class="px-4 py-2 bg-slate-200 rounded-md cursor-pointer">
                 <a class="flex items-center gap-2" href="calendar.html">
                   <i data-lucide="users" class="w-4 h-4"></i>
                   Groups
@@ -116,13 +121,13 @@ $query = "SELECT * FROM sujet";
 
                 <div class="bg-white px-9 py-4 rounded-3xl h-[72vh] " >
                     <div class="flex justify-between border-b-1 pt-4 pb-5 border-zinc-400" >
-                        <p class="text-2xl font-medium " >Subjects</p>
+                        <p class="text-2xl font-medium " >Groups</p>
                         <div>
 
                             <form action="delete.php" method="POST" id="deleteForm">
                                 <button class="bg-red-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer transition-opacity duration-300 opacity-0 pointer-events-none checkbox-button" id="delete-button" type="button">Delete</button>
 
-                                <a  id="creationSubjet" class="bg-indigo-500 text-white text-sm px-2 py-1 rounded-md cursor-pointer hover:bg-indigo-600"  >+ New Subject</a>
+
 
 
                         </div>
@@ -134,48 +139,28 @@ $query = "SELECT * FROM sujet";
                     </div>
 
                     <div class="flex text-zinc-500 py-2 border-zinc-200 border-b " >
-                        <p class="w-1/3" >Subject</p>
+                        <p class="w-1/3" >GroupID</p>
                         <p class="w-1/3" >Created By</p>
-                        <p class="w-1/5" >Created On</p>
+                        <p class="w-1/5" >Total Members</p>
                     </div>
 
-    <?php
-    try {
-        // Replace lines 140-150 with this:
-        $query = "SELECT s.*, CONCAT(p.Nom, ' ', p.Prenom) AS FullName
-                  FROM sujet s
-                  INNER JOIN Professeur p ON s.ID_Professeur = p.ID_Professeur"; // <-- FIXED JOIN
 
-        $stmt = $pdo->query($query); // No need for prepare/execute for static queries
 
-        $subjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    } catch (PDOException $e) {
-        die("Database error: " . $e->getMessage());
-    }
-    ?>
-  <?php foreach ($subjects as $subject): ?>
-    <div class="snap-y subject-card cursor-pointer"
-         data-subject-title="<?= htmlspecialchars($subject['Titre']) ?>"
-         data-professor-name="<?= htmlspecialchars($subject['FullName']) ?>"
-         data-subject-description="<?= htmlspecialchars($subject['Description']) ?>">
+   <?php foreach ($groups as $group): ?>
+    <div class="snap-y subject-card cursor-pointer">
         <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
             <div class="flex items-center w-1/3">
-                <input type="checkbox" name="subject[]" value="<?=$subject['ID_Sujet']?>" class="mr-1 checkbox-button ">
-                <p><?=$subject['Titre']?></p>
+                <input type="checkbox" name="group[]" value="<?= $group['GroupID'] ?>" class="mr-1 checkbox-button ">
+                <p><?= $group['GroupID'] ?></p>
             </div>
-            <p class="w-1/3"><?= $subject['FullName'] ?? 'Unknown Professor' ?></p>
-            <?php
-            $date = new DateTime($subject["Date_Ajout"]);
-            $formattedDate = $date->format('F jS, Y');
-            ?>
-            <p class="w-1/5"><?=$formattedDate?></p>
-            <button type="button" class="border text-indigo-500 px-2 rounded-md border-zinc-400 cursor-pointer">
+            <p class="w-1/3"><?= $group['GroupOwner'] ?? 'No owner' ?></p>
+            <p class="w-1/5"><?= $group['TotalMembers'] ?></p>
+            <button type="button" class="border text-indigo-500 px-2 rounded-md border-zinc-400 cursor-pointer details-button" data-group-id="<?= $group['GroupID'] ?>">
                 Details
             </button>
         </div>
     </div>
-<?php endforeach ; ?>
+<?php endforeach; ?>
                                     </form>
                                     <?php
                                         if(isset($_POST['subject'])){
@@ -269,6 +254,105 @@ $query = "SELECT * FROM sujet";
         </div>
     </div>
 </div>
+
+<!-- Member Details Modal -->
+<div id="memberDetailsModal" class="hidden fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl p-6 max-h-[80vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-medium">Group Members</h3>
+            <button id="closeMemberModal" class="text-gray-500 hover:text-gray-700 cursor-pointer">
+                <i data-lucide="x" class="h-5 w-5"></i>
+            </button>
+        </div>
+
+        <div class="space-y-4">
+            <table class="w-full">
+                <thead>
+                    <tr class="text-left text-zinc-500 border-b">
+                        <th class="pb-2">Full Name</th>
+                        <th class="pb-2">Gender</th>
+                        <th class="pb-2">Previous Field</th>
+                    </tr>
+                </thead>
+                <tbody id="memberList">
+                    <!-- Member rows will be inserted here -->
+                </tbody>
+            </table>
+            <p id="noMembers" class="text-zinc-400 text-center py-4 hidden">No members in this group</p>
+        </div>
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Member details modal functionality
+    const memberModal = document.getElementById('memberDetailsModal');
+    const closeMemberModal = document.getElementById('closeMemberModal');
+    const memberList = document.getElementById('memberList');
+    const noMembers = document.getElementById('noMembers');
+
+    // Details button click handler
+    document.querySelectorAll('.details-button').forEach(button => {
+        button.addEventListener('click', async function() {
+            const groupId = this.dataset.groupId;
+
+            try {
+                // Show loading state
+                memberList.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-zinc-400">Loading members...</td></tr>';
+                memberModal.classList.remove('hidden');
+
+                // Fetch members data
+                const response = await fetch(`get_members.php?group_id=${groupId}`);
+                if (!response.ok) throw new Error('Network response was not ok');
+
+                const members = await response.json();
+
+                // Clear previous entries
+                memberList.innerHTML = '';
+
+                if (members.length > 0) {
+                    noMembers.classList.add('hidden');
+
+                    // Populate member list
+                    members.forEach(member => {
+                        const row = document.createElement('tr');
+                        row.className = 'py-2 border-b border-zinc-100 hover:bg-gray-50';
+                        row.innerHTML = `
+                            <td class="py-3 ${member.Est_Chef ? 'text-indigo-600 font-medium' : 'text-gray-700'}">
+                                ${member.FullName}
+                                ${member.Est_Chef ? '<span class="ml-2 text-xs text-Indigo-600">(Owner)</span>' : ''}
+                            </td>
+                            <td class="text-gray-600">${member.Sexe || '-'}</td>
+                            <td class="text-gray-600">${member.Filiere_Precedente || '-'}</td>
+                        `;
+                        memberList.appendChild(row);
+                    });
+                } else {
+                    noMembers.classList.remove('hidden');
+                }
+
+            } catch (error) {
+                console.error('Error fetching members:', error);
+                memberList.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-red-500">Error loading members</td></tr>';
+            }
+        });
+    });
+
+    // Close member modal
+    closeMemberModal.addEventListener('click', () => {
+        memberModal.classList.add('hidden');
+    });
+
+    // Close modal when clicking outside
+    memberModal.addEventListener('click', (e) => {
+        if (e.target === memberModal) {
+            memberModal.classList.add('hidden');
+        }
+    });
+
+    // Lucide icons refresh
+    lucide.createIcons();
+});
+</script>
 
 
     <script>

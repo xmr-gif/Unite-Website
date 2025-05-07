@@ -1,12 +1,15 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
+
 
 $host ='localhost';
 $db = 'unite_db';
 $user='root';
 $pass ='';
 try {
-    $pdo = new PDO ("mysql:host=$host;port=3307;dbname=$db",$user,$pass);
+    $pdo = new PDO ("mysql:host=$host;port=3306;dbname=$db",$user,$pass);
     //echo "Connexion reussie";
 } catch (PDOException $e) {
     echo "La connexion n'est pas reussie ".$e->getMessage() ;
@@ -23,18 +26,18 @@ $stmt->execute();
 $sujet = $stmt->fetch();
 
 // Nouveau : récupérer l'ID de l'étudiant connecté
-$account_type = $_SESSION['account_type'];
-$colomn = 'id_'.$account_type ;
-$id = $_SESSION[$account_type . '_id'] ?? null;
+// $account_type = $_SESSION['account_type'];
+// $colomn = 'id_'.$account_type ;
+// $id = $_SESSION[$account_type . '_id'] ?? null;
 
 
 
-$sql = "SELECT * FROM $account_type WHERE $colomn = (:id)"  ; 
-$stmt2 = $pdo->prepare($sql); // Use $pdo
-$stmt2->bindParam(':id', $id);
-$stmt2->execute();
-$user = $stmt2->fetchAll();
-print_r($_SESSION[ $account_type.'_id' ]);
+// $sql = "SELECT * FROM $account_type WHERE $colomn = (:id)"  ;
+// $stmt2 = $pdo->prepare($sql); // Use $pdo
+// $stmt2->bindParam(':id', $id);
+// $stmt2->execute();
+// $user = $stmt2->fetchAll();
+// print_r($_SESSION[ $account_type.'_id' ]);
 
 
 
@@ -134,7 +137,7 @@ print_r($_SESSION[ $account_type.'_id' ]);
 
     <div class="h-screen bg-gray-100 py-5 w-4/5 px-7">
       <div>
-        
+
         <div class="flex justify-end w-full mb-5">
           <div class="border border-zinc-400 text-zinc-600 p-5 w-10 h-10 flex justify-center items-center rounded-xl cursor-pointer">
             +
@@ -180,7 +183,7 @@ print_r($_SESSION[ $account_type.'_id' ]);
             </div>
           </div>
         </div>
-        
+
         <!-- Partie Groupe et Membres -->
         <?php
         if ($id) {

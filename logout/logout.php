@@ -1,6 +1,6 @@
 <?php
     session_start();
     session_destroy();
-    header('Location: ../SignupPage/index.php');
+    header('Location: ../Home page/index.html');
     exit();
 ?>

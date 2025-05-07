@@ -29,7 +29,7 @@ $id = $_SESSION[$account_type . '_id'] ?? null;
 
 
 
-$sql = "SELECT * FROM $account_type WHERE $colomn = (:id)"  ; 
+$sql = "SELECT * FROM $account_type WHERE $colomn = (:id)"  ;
 $stmt2 = $pdo->prepare($sql); // Use $pdo
 $stmt2->bindParam(':id', $id);
 $stmt2->execute();
