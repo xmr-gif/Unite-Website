@@ -6,13 +6,13 @@
      try {
          $pdo = new PDO ("mysql:host=$host;port=3307;dbname=$db",$user,$pass);
          //echo "Connexion reussite";
-    
+
      } catch (PDOException $e) {
          echo "La connexion n'est pas reussie ".$e->getMessage() ;
      }
-    
+
      $query = "SELECT (SELECT COUNT(*) FROM etudiant)+(select COUNT(*) from professeur) AS total";
-     
+
       $stmt = $pdo->prepare($query);
       $stmt->execute();
       $totalUser = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -20,7 +20,16 @@
       $stmt = $pdo->prepare($sqlsjt);
       $stmt->execute();
       $sujet = $stmt->fetch();
-    
+      $query = "SELECT COUNT(*) AS PendingCount FROM Sujet WHERE Est_Valide = 'pending'";
+      $stmt = $pdo->query($query);
+      $pendingCount = $stmt->fetchColumn();
+      $query = "SELECT COUNT(*) AS AcceptedCount FROM Sujet WHERE Est_Valide = 'Accepted'";
+      $stmt = $pdo->query($query);
+      $acceptedCount = $stmt->fetchColumn();
+
+    //echo "Pending Choices: " . $pendingCount;
+    //echo "Accepted Choices: " . $acceptedCount;
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -115,7 +124,7 @@
                     <div class="text-center flex font-medium bg-white w-1/4 py-7 rounded-3xl shadow-sm justify-around px-2">
                         <div>
                             <p>Accepted Choices</p>
-                            <p class="text-5xl" >10</p>
+                            <p class="text-5xl" ><?=$acceptedCount?></p>
 
                         </div>
                         <div class="bg-indigo-400 p-5 rounded-full w-15 h-15 flex justify-center items-center mt-2 " >
@@ -128,7 +137,7 @@
                     <div class="text-center flex font-medium bg-white w-1/4 py-7 rounded-3xl shadow-sm justify-around px-2">
                         <div>
                             <p>Pending Choices</p>
-                            <p class="text-5xl" >10</p>
+                            <p class="text-5xl" ><?=$pendingCount?></p>
 
                         </div>
                         <div class="bg-indigo-400 p-5 rounded-full w-15 h-15 flex justify-center items-center mt-2 " >
