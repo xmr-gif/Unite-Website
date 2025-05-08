@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <script src="https://unpkg.com/lucide@0.462.0/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+
     <title>New Article</title>
 </head>
 <body>
@@ -136,41 +138,7 @@
                         <label for="content" class="block text-sm font-medium text-gray-700">
                             Content
                         </label>
-                        <div class="flex flex-col space-y-2">
-                            <div class="flex flex-wrap items-center gap-1 border border-gray-200 rounded-t-md p-1 bg-white">
-                                <button type="button" data-command="bold" class="editor-btn h-8 w-8 p-0 rounded-md hover:bg-gray-100">
-                                    <i data-lucide="bold" class="h-4 w-4"></i>
-                                </button>
-                                <button type="button" data-command="italic" class="editor-btn h-8 w-8 p-0 rounded-md hover:bg-gray-100">
-                                    <i data-lucide="italic" class="h-4 w-4"></i>
-                                </button>
-                                <button type="button" data-command="underline" class="editor-btn h-8 w-8 p-0 rounded-md hover:bg-gray-100">
-                                    <i data-lucide="underline" class="h-4 w-4"></i>
-                                </button>
-                                <div class="w-px h-6 bg-gray-200 mx-1"></div>
-                                <button type="button" data-command="insertUnorderedList" class="editor-btn h-8 w-8 p-0 rounded-md hover:bg-gray-100">
-                                    <i data-lucide="list" class="h-4 w-4"></i>
-                                </button>
-                                <button type="button" data-command="insertOrderedList" class="editor-btn h-8 w-8 p-0 rounded-md hover:bg-gray-100">
-                                    <i data-lucide="list-ordered" class="h-4 w-4"></i>
-                                </button>
-                                <div class="w-px h-6 bg-gray-200 mx-1"></div>
-                                <button type="button" data-command="justifyLeft" class="editor-btn h-8 w-8 p-0 rounded-md hover:bg-gray-100">
-                                    <i data-lucide="align-left" class="h-4 w-4"></i>
-                                </button>
-                                <button type="button" data-command="justifyCenter" class="editor-btn h-8 w-8 p-0 rounded-md hover:bg-gray-100">
-                                    <i data-lucide="align-center" class="h-4 w-4"></i>
-                                </button>
-                                <button type="button" data-command="justifyRight" class="editor-btn h-8 w-8 p-0 rounded-md hover:bg-gray-100">
-                                    <i data-lucide="align-right" class="h-4 w-4"></i>
-                                </button>
-                            </div>
-
-                            <div
-                                id="editor"
-                                contenteditable="true"
-                                class="min-h-[300px] border border-gray-200 rounded-b-md p-3 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-300"
-                            ></div>
+                            <div id="editorjs"></div>
                             <textarea id="content" name="content" class="hidden" required></textarea>
                         </div>
                     </div>
@@ -183,72 +151,15 @@
         // Initialize Lucide icons
         lucide.createIcons();
 
-        // Rich Text Editor
-        document.querySelectorAll('.editor-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const command = this.getAttribute('data-command');
-                document.execCommand(command, false, null);
-                document.getElementById('editor').focus();
-            });
-        });
 
-        // Update hidden textarea with editor content when form is submitted
-        document.getElementById('saveArticleBtn').addEventListener('click', function() {
-            const editorContent = document.getElementById('editor').innerHTML;
-            document.getElementById('content').value = editorContent;
+    </script>
 
-            // Check if all required fields are filled
-            const title = document.getElementById('title').value;
-            const avatar = document.getElementById('selectedAvatar').value;
 
-            if (!title.trim()) {
-                alert('Please enter a title');
-                return;
-            }
-
-            if (!editorContent.trim()) {
-                alert('Please enter some content');
-                return;
-            }
-
-            if (!avatar) {
-                alert('Please select an avatar');
-                return;
-            }
-
-            document.getElementById('articleForm').submit();
-        });
-
-        // Avatar Selection
-        document.querySelectorAll('.avatar-option').forEach(option => {
-            option.addEventListener('click', function() {
-                // Remove selected class from all options
-                document.querySelectorAll('.avatar-option').forEach(opt => {
-                    opt.classList.remove('border-indigo-500');
-                    opt.classList.add('border-transparent');
-
-                    // Remove indicator if exists
-                    const indicator = opt.querySelector('.avatar-selected');
-                    if (indicator) {
-                        indicator.remove();
-                    }
-                });
-
-                // Add selected class to clicked option
-                this.classList.remove('border-transparent');
-                this.classList.add('border-indigo-500');
-
-                // Add indicator
-                const indicator = document.createElement('div');
-                indicator.className = 'avatar-selected absolute inset-0 bg-indigo-500 bg-opacity-20 flex items-center justify-center';
-                indicator.innerHTML = '<div class="w-4 h-4 rounded-full bg-indigo-500"></div>';
-                this.appendChild(indicator);
-
-                // Update hidden input
-                const avatarSrc = this.getAttribute('data-src');
-                document.getElementById('selectedAvatar').value = avatarSrc;
-            });
+    <script>
+        const editor = new EditorJS({
+          autofocus: true
         });
     </script>
+
 </body>
 </html>
