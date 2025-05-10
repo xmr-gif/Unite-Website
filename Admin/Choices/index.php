@@ -14,12 +14,39 @@ try {
     echo "La connexion n'est pas reussie ".$e->getMessage() ;
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    try {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        if (isset($data['sujet_id']) && isset($data['status'])) {
+            $updateQuery = "UPDATE Sujet SET Est_Valide = :status WHERE ID_Sujet = :sujet_id";
+            $stmt = $pdo->prepare($updateQuery);
+            $stmt->execute([
+                ':status' => $data['status'],
+                ':sujet_id' => $data['sujet_id']
+            ]);
+
+            // Add these 3 lines
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true]);
+            exit;
+        }
+    } catch (PDOException $e) {
+        // Add these 3 lines
+        header('Content-Type: application/json');
+        echo json_encode(['error' => $e->getMessage()]);
+        exit;
+    }
+}
+
+// Modify your initial query to include ID_Sujet
 $query = "SELECT
             e.Nom,
             e.Prenom,
             e.Avatar,
             s.Titre,
             s.Est_Valide,
+            s.ID_Sujet,
             g.ID_Groupe,
             (SELECT COUNT(*) FROM Etudiant WHERE ID_Groupe = g.ID_Groupe) AS TotalMembers
           FROM Etudiant e
@@ -69,6 +96,9 @@ $leaders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+        }
+        .row-checkbox:checked {
+            accent-color: #3b82f6;
         }
     </style>
 </head>
@@ -147,10 +177,10 @@ $leaders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <p class="text-2xl font-medium">Choices</p>
                 <div class="flex items-center gap-4">
                     <div class="flex gap-2">
-                        <button class="choice-btn border text-zinc-500 px-2 text-sm rounded-md border-zinc-400 cursor-pointer hover:border-blue-600 hover:text-blue-600 transition-colors" data-status="accept">
+                        <button id="acceptAll" class="border text-zinc-500 px-2 text-sm rounded-md border-zinc-400 cursor-pointer hover:border-blue-600 hover:text-blue-600 transition-colors">
                             Accept
                         </button>
-                        <button class="choice-btn border text-zinc-500 px-2 text-sm rounded-md border-zinc-400 cursor-pointer hover:border-orange-600 hover:text-orange-600 transition-colors" data-status="reject">
+                        <button id="rejectAll" class="border text-zinc-500 px-2 text-sm rounded-md border-zinc-400 cursor-pointer hover:border-orange-600 hover:text-orange-600 transition-colors">
                             Reject
                         </button>
                     </div>
@@ -189,7 +219,9 @@ $leaders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="flex items-center text-sm font-medium border-zinc-200 border-b py-2">
                     <!-- Leader Column -->
                     <div class="flex items-center w-1/4">
-                        <input type="checkbox" class="mr-1">
+                               <input type="checkbox"
+                               class="row-checkbox mr-1"
+                               data-sujet-id="<?= $leader['ID_Sujet'] ?>">
                         <img src="../../ChooseAvatar/Avatars/<?= $leader['Avatar'] ?>.png"
                              alt="Leader Avatar"
                              class="w-8 h-8 rounded-md mr-1">
@@ -200,7 +232,7 @@ $leaders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <p class="w-1/4"><?= $leader['Titre'] ?></p>
 
                     <!-- Status Column -->
-                    <div class="w-1/5">
+                    <div class="w-1/5 status-display">
                         <div class="<?= $statusClass ?> px-2 rounded-xl text-center w-1/2">
                             <p><?= $status ?></p>
                         </div>
@@ -254,6 +286,7 @@ $leaders = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script>
         lucide.createIcons();
     </script>
+
     <script>
         // Modal functions
         function showModal() {
@@ -293,6 +326,70 @@ $leaders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             });
         });
     </script>
+
+
+<script>
+    // Handle status updates
+    function updateStatus(status) {
+        const checkboxes = document.querySelectorAll('.row-checkbox:checked');
+        if (checkboxes.length === 0) {
+            alert('Please select at least one row');
+            return;
+        }
+
+        const sujetIds = Array.from(checkboxes).map(checkbox =>
+            parseInt(checkbox.dataset.sujetId)
+        );
+
+        fetch(window.location.href, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                sujet_id: sujetIds[0],
+                status: status
+            })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('HTTP error ' + response.status);
+            return response.text().then(text => text ? JSON.parse(text) : {});
+        })
+        .then(data => {
+            if (data.success) {
+                checkboxes.forEach(checkbox => {
+                    // Corrected line
+                    const row = checkbox.closest('.flex.items-center.text-sm.font-medium');
+                    const statusDiv = row.querySelector('.status-display');
+                    statusDiv.innerHTML = `
+                        <div class="${getStatusClass(status)} px-2 rounded-xl text-center w-1/2">
+                            <p>${status}</p>
+                        </div>
+                    `;
+                    checkbox.checked = false;
+                });
+            } else {
+                alert('Error: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error updating status: ' + error.message);
+        });
+    }
+
+    // Button click handlers
+    document.getElementById('acceptAll').addEventListener('click', () => updateStatus('Accepted'));
+    document.getElementById('rejectAll').addEventListener('click', () => updateStatus('Rejected'));
+
+    function getStatusClass(status) {
+        switch (status) {
+            case 'Pending': return 'bg-orange-100 text-orange-300';
+            case 'Accepted': return 'bg-green-100 text-green-400';
+            case 'Rejected': return 'bg-red-100 text-red-400';
+        }
+    }
+</script>
 
 </body>
 </html>
