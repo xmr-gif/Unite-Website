@@ -12,6 +12,7 @@
  }
  $sql = "SELECT
             CONCAT(Nom, ' ', Prenom) AS FullName,
+            Avatar,
             Email,
             'Professor' AS Role,
             DateRegistration,
@@ -24,6 +25,7 @@
         UNION ALL
         SELECT
             CONCAT(Nom, ' ', Prenom) AS FullName,
+            Avatar,
             Email,
             'Student' AS Role,
             DateRegistration,
@@ -169,7 +171,8 @@ print_r($users[1]["FullName"]);*/
                             <!-- Full name -->
                             <div class="flex items-center w-1/4">
                             <input form="deleteForm" type="checkbox" name="userss[]" value="<?=$user["Role"]=='Student'?'etudiant':'professeur'?>|<?=$user['Email']?>" class="mr-1">
-                                <img src="PP.webp" alt="" class="w-8 h-8 rounded-md mr-1">
+                                <img src="../../ChooseAvatar/Avatars/<?= $user["Avatar"] ?>.png" alt="" class="w-8 h-8 rounded-md mr-1">
+
                                 <p class="full-name " ><?= $user["FullName"] ?></p>
                             </div>
 

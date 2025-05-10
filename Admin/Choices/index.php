@@ -76,27 +76,31 @@ $leaders = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>Choices</title>
     <style>
         .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 1000;
-        }
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1000;
+        /* Add flex centering */
+        align-items: center;
+        justify-content: center;
+    }
 
-        .modal-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            width: 50%;
-            max-width: 600px;
-            position: relative;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+    .modal-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        width: 50%;
+        max-width: 600px;
+        /* Remove transform positioning */
+        position: relative;
+        /* Add max height and scroll if needed */
+        max-height: 80vh;
+        overflow-y: auto;
+    }
         .row-checkbox:checked {
             accent-color: #3b82f6;
         }
@@ -254,22 +258,15 @@ $leaders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <!-- ... (pagination remains the same) -->
     </div>
 
-                <div class="flex justify-end px-10 py-3 text-sm" >
-                    <button class="border text-blue-600 px-2 rounded-md border-zinc-300 cursor-pointer hover:border-blue-600">
-                        <i class="ri-arrow-left-line"></i> Back
-                    </button>
-                    <button class="border text-blue-600 px-2 rounded-md border-zinc-300 cursor-pointer ml-4 hover:border-blue-600">
-                        Next <i class="ri-arrow-right-line"></i>
-                    </button>
 
-                </div>
 
             </div>
 
         </div>
     </div>
 
-    <div id="groupModal" class="modal">
+
+    <div id="groupModal" class="modal ml-6">
         <div class="modal-content">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-semibold">Group Members</h3>
@@ -390,6 +387,7 @@ $leaders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
     }
 </script>
+
 
 </body>
 </html>
