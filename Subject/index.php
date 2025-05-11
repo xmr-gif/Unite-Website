@@ -6,7 +6,7 @@ $db = 'unite_db';
 $user='root';
 $pass ='';
 try {
-    $pdo = new PDO ("mysql:host=$host;port=3307;dbname=$db",$user,$pass);
+    $pdo = new PDO ("mysql:host=$host;port=3306;dbname=$db",$user,$pass);
     //echo "Connexion reussie";
 } catch (PDOException $e) {
     echo "La connexion n'est pas reussie ".$e->getMessage() ;
@@ -89,7 +89,7 @@ $sujets = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <h1 class="text-xl font-bold text-center text-indigo-600 mb-6">Espace Étudiant</h1>
   <div class="space-y-2">
     <div class="px-4 py-2 hover:bg-slate-100 rounded-md cursor-pointer text-zinc-600">
-      <a class="flex items-center gap-2" href="../Dashboard/dashboardEt.php">
+      <a class="flex items-center gap-2" href="../S/dashboardEt.php">
         <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
         Tableau de bord
       </a>

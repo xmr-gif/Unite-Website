@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_avatar'])) {
     $avatar_number = $_POST['selected_avatar'];
 
     // Check if essential user information AND the user ID are in the session
-    if (isset($_SESSION['account_type']) && isset($_SESSION['Prenom']) && isset($_SESSION['Nom']) && isset($_SESSION['Email']) && isset($_SESSION[$_SESSION['account_type'] . '_id'])) {
+    if (isset($_SESSION['account_type']) && isset($_SESSION['Prenom']) && isset($_SESSION['Nom']) && isset($_SESSION['Email']) ) {
         $account_type = $_SESSION['account_type'];
         $prenom = $_SESSION['Prenom'];
         $nom = $_SESSION['Nom'];
@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_avatar'])) {
         $user='root';
         $pass ='';
         try {
-            $pdo = new PDO ("mysql:host=$host;port=3307;dbname=$db",$user,$pass);
+            $pdo = new PDO ("mysql:host=$host;port=3306;dbname=$db",$user,$pass);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Recommended for error handling
             //echo "Connexion reussite";
 
@@ -45,6 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_avatar'])) {
                 // Get the last inserted ID
                 $user_id = $pdo->lastInsertId(); // Use $pdo
                 $_SESSION[$account_type . '_id'] = $user_id;
+                print_r($_SESSION[$account_type . '_id']);
             } else {
                 echo "Error saving basic user information.";
                 print_r($stmt_insert->errorInfo()); // Debug database errors
@@ -66,9 +67,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_avatar'])) {
             if ($stmt_update->execute()) {
                 // Avatar updated successfully, redirect to the dashboard
                 if ($_SESSION['account_type'] === 'etudiant') {
-                    header("Location: ../Dashboard/dashboardEt.php"); // Dashboard étudiant
+                    header("Location: ../Student/dashboardEt.php"); // Dashboard étudiant
                 } elseif ($_SESSION['account_type'] === 'professeur') {
-                    header("Location: ../Dashboard/dashboardProf.php"); // Dashboard professeur
+                    header("Location: ../Professor/dashboardProf.php"); // Dashboard professeur
                 }
                 exit();
             } else {

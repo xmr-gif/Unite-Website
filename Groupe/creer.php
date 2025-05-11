@@ -12,15 +12,11 @@ try {
     echo "La connexion n'est pas reussie ".$e->getMessage() ;
 }
 
-$query = "SELECT (SELECT COUNT(*) FROM etudiant)+(select COUNT(*) from professeur) AS total";
-$stmt = $pdo->prepare($query);
-$stmt->execute();
-$totalUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$sqlsjt = "SELECT COUNT(*) as sujet FROM sujet";
+$sqlsjt = "SELECT *  FROM sujet";
 $stmt = $pdo->prepare($sqlsjt);
 $stmt->execute();
-$sujet = $stmt->fetch();
+$sujets = $stmt->fetchAll();
 
 // Nouveau : récupérer l'ID de l'étudiant connecté
 $account_type = $_SESSION['account_type'];
@@ -35,19 +31,33 @@ $stmt2->bindParam(':id', $id);
 $stmt2->execute();
 $user = $stmt2->fetchAll();
 
+if($_SERVER['REQUEST_METHOD']=="POST" && isset($_POST["id_sujet"])){
+    $id_sujet = $_POST['id_sujet'];
+    if($id){
+        $sqlgroupe = "INSERT INTO groupe (ID_Sujet) VALUES (:id_groupe) ";
+        $stmtGroupe= $pdo->prepare($sqlgroupe);
+        $stmtGroupe->bindParam(":id_groupe",$id_sujet);
+        if($stmtGroupe->execute()){ //modifier la collone id_groupe dans la table etudiant
+            $id_groupe = $pdo->lastInsertId();
+            $sqlModifier = "UPDATE Etudiant SET id_groupe = :id_groupe WHERE ID_Etudiant = :id_etudiant" ;
+            $stmt_modifier = $pdo->prepare($sqlModifier);
+            $stmt_modifier->bindParam(":id_groupe",$id_groupe);
+            $stmt_modifier->bindParam(":id_etudiant",$id);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'quitter_groupe') {
-  if ($id) {
-      $sqlQuitter = "UPDATE etudiant SET ID_Groupe = NULL WHERE ID_Etudiant = :id";
-      $stmtQuitter = $pdo->prepare($sqlQuitter);
-      if ($stmtQuitter->execute(['id' => $id])) {
-          header("Location: index.php"); // recharge la page pour refléter le changement
-          exit;
-      } else {
-          echo "<div class='text-red-500'>Erreur lors de la sortie du groupe.</div>";
-      }
-  }
-}
+            if($stmt_modifier->execute()){
+                echo "<div class='bg-green-100 text-green-800 p-4 rounded-md'>Le groupe a été créé et l'étudiant a été associé avec succès !</div>";
+            } else {
+                echo "<div class='bg-red-100 text-red-800 p-4 rounded-md'>Erreur lors de l'association de l'étudiant au groupe.</div>";
+            }
+        } else {
+            echo "<div class='bg-red-100 text-red-800 p-4 rounded-md'>Erreur lors de la création du groupe.</div>";
+        }
+    } else {
+        echo "<div class='bg-red-100 text-red-800 p-4 rounded-md'>Utilisateur non connecté.</div>";
+    }
+        }
+    
+
 
 
 
@@ -65,7 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://unpkg.com/lucide@0.462.0/dist/umd/lucide.min.js"></script>
-  
 
   <style>
     .task-card {
@@ -143,57 +152,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
   </div>
 </div>
 <div class="flex-1 p-10">
-  <?php
-  if ($id) {
-      $queryGroupe = "SELECT ID_Groupe FROM etudiant WHERE ID_Etudiant = :id";
-      $stmtGroupe = $pdo->prepare($queryGroupe);
-      $stmtGroupe->execute(['id' => $id]);
-      $resultGroupe = $stmtGroupe->fetch(PDO::FETCH_ASSOC);
+<form action="" method="post" class="bg-white p-6 rounded-2xl shadow-md max-w-md mx-auto">
+  <label for="id_sujet" class="block mb-2 text-sm font-medium text-gray-700">Choisissez un sujet :</label>
+  <select name="id_sujet" id="id_sujet" class="w-full p-2 border border-gray-300 rounded-md mb-4">
+    <?php foreach ($sujets as $sujet) { ?> 
+      <option value="<?= htmlspecialchars($sujet["ID_Sujet"]) ?>"><?= htmlspecialchars($sujet["Titre"]) ?></option>
+    <?php } ?>
+  </select>
+  <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md w-full">Valider</button>
+</form>
 
-      if ($resultGroupe && $resultGroupe['ID_Groupe']) {
-          $id_groupe = $resultGroupe['ID_Groupe'];
-
-          $queryMembres = "SELECT Nom, Prenom FROM etudiant WHERE ID_Groupe = :id_groupe";
-          $stmtMembres = $pdo->prepare($queryMembres);
-          $stmtMembres->execute(['id_groupe' => $id_groupe]);
-          $membres = $stmtMembres->fetchAll(PDO::FETCH_ASSOC);
-
-          echo '<div class="bg-white p-6 rounded-2xl shadow-sm">';
-echo '<h2 class="text-2xl font-bold mb-5">Membres de votre groupe :</h2>';
-echo '<ul class="space-y-3">';
-foreach ($membres as $membre) {
-    echo '<li class="text-gray-700 font-medium">👤 ' . htmlspecialchars($membre['Prenom']) . ' ' . htmlspecialchars($membre['Nom']) . '</li>';
-}
-echo '</ul>';
-
-// ✅ Ajoute ici le bouton seulement si l'étudiant est dans un groupe
-echo '<form method="post" class="mt-6 text-center">';
-echo '<input type="hidden" name="action" value="quitter_groupe">';
-echo '<button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md">';
-echo 'Quitter le groupe';
-echo '</button>';
-echo '</form>';
-
-echo '</div>';
-      } else {
-        echo '<div class="bg-white p-6 rounded-2xl shadow-sm text-center">';
-        echo '<h2 class="text-xl font-semibold text-gray-600 mb-4">Vous n\'êtes dans aucun groupe.</h2>';
-        echo '<div class="flex justify-center gap-4">';
-        echo '<a href="../Groupe/creer.php" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg shadow-md transition">Créer un groupe</a>';
-        echo '<a href="../Groupe/rejoindre.php" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-5 py-2 rounded-lg shadow-md transition">Rejoindre un groupe</a>';
-        echo '</div>';
-        echo '</div>';
-      }
-  } else {
-      echo '<div class="bg-white p-6 rounded-2xl shadow-sm text-center">';
-      echo '<h2 class="text-xl font-semibold text-gray-600">Erreur : utilisateur non connecté.</h2>';
-      echo '</div>';
-  }
-  ?>
-  
-</div>
 <script>
     lucide.createIcons();
   </script>
+</div>
 </body>
 </html>

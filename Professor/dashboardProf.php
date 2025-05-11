@@ -6,7 +6,7 @@ $db = 'unite_db';
 $user='root';
 $pass ='';
 try {
-    $pdo = new PDO ("mysql:host=$host;port=3307;dbname=$db",$user,$pass);
+    $pdo = new PDO ("mysql:host=$host;port=3306;dbname=$db",$user,$pass);
     //echo "Connexion reussie";
 } catch (PDOException $e) {
     echo "La connexion n'est pas reussie ".$e->getMessage() ;
