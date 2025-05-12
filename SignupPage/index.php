@@ -434,7 +434,7 @@ pattern\="\[a\-z0\-9\.\_%\+\-\]\+@\[a\-z0\-9\.\-\]\+\\\.\[a\-z\]\{2,4\}</span>"
                              >
                              <input
                                  required
-                                 id="password"
+                                 id="passwordStudent"
                                  type="password"
                                  value="<?php echo htmlspecialchars($_POST['Mdp'] ?? '') ?>"
                                  placeholder="Write here..."
@@ -484,7 +484,7 @@ pattern\="\[a\-z0\-9\.\_%\+\-\]\+@\[a\-z0\-9\.\-\]\+\\\.\[a\-z\]\{2,4\}</span>"
 }
 </style>
 
-<div id="message" class="mt-3 hidden">
+<div id="messageStudent" class="mt-3 hidden">
     <h3 class="text-gray-600 mb-3 font-medium">Password must contain the following:</h3>
     <p data-validation="lowercase" class="validation-item">A <b>lowercase</b> letter</p>
     <p data-validation="uppercase" class="validation-item">A <b>capital (uppercase)</b> letter</p>
@@ -497,8 +497,8 @@ pattern\="\[a\-z0\-9\.\_%\+\-\]\+@\[a\-z0\-9\.\-\]\+\\\.\[a\-z\]\{2,4\}</span>"
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const passwordInput = document.getElementById('password');
-    const messageDiv = document.getElementById('message');
+    const passwordInput = document.getElementById('passwordStudent');
+    const messageDiv = document.getElementById('messageStudent');
 
     const validationChecks = {
         lowercase: (pw) => /[a-z]/.test(pw),

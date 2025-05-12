@@ -1,12 +1,15 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
+
 
 $host ='localhost';
 $db = 'unite_db';
 $user='root';
 $pass ='';
 try {
-    $pdo = new PDO ("mysql:host=$host;port=3307;dbname=$db",$user,$pass);
+    $pdo = new PDO ("mysql:host=$host;port=3306;dbname=$db",$user,$pass);
     //echo "Connexion reussie";
 } catch (PDOException $e) {
     echo "La connexion n'est pas reussie ".$e->getMessage() ;
@@ -41,21 +44,21 @@ $user = $stmt2->fetchAll();
 
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Team Task Manager</title>
-  <meta name="description" content="Team Task Manager" />
-  <meta name="author" content="Lovable" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Team Timebox Calendar</title>
+    <meta name="description" content="Team Timebox Calendar" />
+    <meta name="author" content="Lovable" />
 
-  <!-- Tailwind CSS via CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <script src="https://unpkg.com/lucide@0.462.0/dist/umd/lucide.min.js"></script>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@0.462.0/dist/umd/lucide.min.js"></script>
 
-  <style>
+    <style>
     .task-card {
       transition: all 0.2s ease;
     }
@@ -73,63 +76,66 @@ $user = $stmt2->fetchAll();
       transform: translateY(0);
     }
   </style>
-</head>
+  </head>
 
-<body class="bg-gray-50">
-  <div id="toast" class="fixed top-4 right-4 z-50 hidden">
-    <div class="bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3">
-      <i data-lucide="check-circle" class="h-5 w-5"></i>
-      <span id="toast-message"></span>
+  <body class="bg-gray-50">
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-4 right-4 z-50 hidden">
+      <div class="bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3">
+        <i data-lucide="check-circle" class="h-5 w-5"></i>
+        <span id="toast-message"></span>
+      </div>
     </div>
-  </div>
 
-  <div class="flex min-h-screen">
-    <!-- Sidebar -->
-    <div class="py-5 px-6 w-1/4 h-screen border-r border-gray-200 bg-white">
-  <img src="../images/black-logo.png" class="w-20 mb-10 ml-4" alt="Logo Étudiant" />
-  <h1 class="text-xl font-bold text-center text-indigo-600 mb-6">Espace Étudiant</h1>
-  <div class="space-y-2">
-    <div class="px-4 py-2 hover:bg-slate-100 rounded-md cursor-pointer text-zinc-600">
-      <a class="flex items-center gap-2" href="#">
-        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-        Tableau de bord
-      </a>
-    </div>
-    <div class="px-4 py-2 hover:bg-slate-100 rounded-md cursor-pointer text-zinc-600">
-      <a class="flex items-center gap-2" href="../Subject/index.php">
-        <i data-lucide="book-open" class="w-4 h-4"></i>
-        Mes Sujets
-      </a>
-    </div>
-    <div class="px-4 py-2 bg-indigo-100 text-indigo-700 font-semibold rounded-md">
-      <a class="flex items-center gap-2" href="../Groupe/index.php">
-        <i data-lucide="users" class="w-4 h-4"></i>
-        Mon Groupe
-      </a>
-    </div>
-    <div class="px-4 py-2 hover:bg-slate-100 rounded-md cursor-pointer text-zinc-600">
-      <a class="flex items-center gap-2" href="#">
-        <i data-lucide="file-text" class="w-4 h-4"></i>
-        Mes Choix
-      </a>
-    </div>
-  </div>
+    <!-- Main Layout -->
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <div class="py-5 px-6 w-1/4 h-screen border-r border-gray-200 bg-white">
+        <img src="../images/black-logo.png" class="w-20 mb-10 ml-4" alt="Logo" />
 
-  <div class="absolute bottom-8 space-y-2 w-[calc(25%-48px)]">
-    <div class="px-4 py-2 hover:bg-slate-100 rounded-md cursor-pointer text-zinc-600">
-      <a class="flex items-center gap-2" href="#">
-        <i data-lucide="settings" class="w-4 h-4"></i>
-        Paramètres
-      </a>
-    </div>
-    <div class="px-4 py-2 hover:bg-slate-100 rounded-md cursor-pointer text-zinc-600">
-      <a class="flex items-center gap-2" href="../logout/logout.php">
-        <i data-lucide="log-out" class="w-4 h-4"></i>
-        Déconnexion
-      </a>
-    </div>
-  </div>
-</div>
+        <div class="space-y-2">
+            <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+                <a class="flex items-center gap-2" href="#">
+                  <i data-lucide="lightbulb" class="w-4 h-4"></i>
+                  Subjects
+                </a>
+              </div>
+            <div class="px-4 py-2 bg-slate-200 rounded-md cursor-pointer">
+                <a class="flex items-center gap-2" href="../Groupe/index.php" >
+                  <i data-lucide="users" class="w-4 h-4"></i>
+                  My Group
+                </a>
+              </div>
+              <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+                <span class="flex items-center gap-2">
+                  <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+                  Tasks Manager
+                </span>
+              </div>
+              <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+                <a class="flex items-center gap-2" href="calendar.html" >
+                  <i data-lucide="calendar-days" class="w-4 h-4"></i>
+                  Calendar
+                </a>
+              </div>
+        </div>
+
+        <div class="absolute bottom-8 space-y-2 w-[calc(25%-48px)]">
+          <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+            <span class="flex items-center gap-2">
+              <i data-lucide="settings" class="w-4 h-4"></i>
+              Settings
+            </span>
+          </div>
+          <div class="px-4 py-2 text-zinc-500 rounded-md hover:bg-slate-100 cursor-pointer">
+            <span class="flex items-center gap-2">
+              <i data-lucide="log-out" class="w-4 h-4"></i>
+              Log Out
+            </span>
+          </div>
+        </div>
+      </div>
+
 <div class="flex-1 p-10">
   <?php
   if ($id) {
@@ -147,7 +153,7 @@ $user = $stmt2->fetchAll();
           $membres = $stmtMembres->fetchAll(PDO::FETCH_ASSOC);
 
           echo '<div class="bg-white p-6 rounded-2xl shadow-sm">';
-          echo '<h2 class="text-2xl font-bold mb-5">Membres de votre groupe :</h2>';
+          echo '<h2 class="text-2xl font-bold mb-5">Your Group Members :</h2>';
           echo '<ul class="space-y-3">';
           foreach ($membres as $membre) {
               echo '<li class="text-gray-700 font-medium">👤 ' . htmlspecialchars($membre['Prenom']) . ' ' . htmlspecialchars($membre['Nom']) . '</li>';
@@ -167,4 +173,7 @@ $user = $stmt2->fetchAll();
   ?>
 </div>
 </body>
+<script>
+    lucide.createIcons();
+</script>
 </html>
