@@ -98,7 +98,8 @@
                     ':Mdp' => $hashedPassword
                 ]);
 
-                return true;
+                // return true;
+                return $this->db->lastInsertId();
 
             } catch(PDOException $e) {
                 $this->addError('database', 'Database error: ' . $e->getMessage());

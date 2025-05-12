@@ -1,3 +1,63 @@
+<?php
+session_start();
+
+// Debug: Print session data
+// echo "<pre>Session Data:\n";
+// print_r($_SESSION);
+// echo "</pre>";
+
+// Check if the form was submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['selected_avatar'])) {
+    $avatar_number = $_POST['selected_avatar'];
+
+    // Check if essential session data exists
+    if (
+        isset($_SESSION['account_type'], $_SESSION[$_SESSION['account_type'] . '_id'])
+    ) {
+        $account_type = $_SESSION['account_type'];
+        $user_id = $_SESSION[$account_type . '_id'];
+        echo "id is = $user_id";
+
+        // Define table and column names (case-sensitive)
+        $table = ($account_type === 'Professeur') ? 'Professeur' : 'Etudiant';
+        $id_column = ($account_type === 'Professeur') ? 'ID_Professeur' : 'ID_Etudiant';
+        $avatar_column = 'Avatar';
+
+        try {
+            // Database connection
+            $host = 'localhost';
+            $db = 'unite_db';
+            $user = 'root';
+            $pass = '';
+            $pdo = new PDO("mysql:host=$host;port=3307;dbname=$db", $user, $pass);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            // Update the avatar
+            $sql = "UPDATE $table SET $avatar_column = :avatar WHERE $id_column = :user_id";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':avatar', $avatar_number);
+            $stmt->bindParam(':user_id', $user_id);
+
+            if ($stmt->execute()) {
+                // Redirect to dashboard
+                $dashboard = ($account_type === 'professeur')
+                    ? '../Dashboard/dashboardProf.php'
+                    : '../Dashboard/dashboardEt.php';
+                header("Location: $dashboard");
+                exit();
+            } else {
+                die("Error updating avatar: " . implode(", ", $stmt->errorInfo()));
+            }
+
+        } catch (PDOException $e) {
+            die("Database error: " . $e->getMessage());
+        }
+
+    } else {
+        die("Essential user information or User ID not found in session.");
+    }
+}
+?>
 <!doctype html>
 <html>
 <head>
@@ -95,7 +155,7 @@
 
                 <div class="flex flex-col sm:flex-row items-center justify-end gap-4">
 
-                <form action="update_avatar.php" method="post">
+                <form action="" method="post">
                     <input type="hidden" id="selected_avatar" name="selected_avatar" value="">
                     <button class="w-full sm:w-auto px-8 py-3 bg-indigo-600 text-white rounded-lg
                             hover:bg-indigo-700 transition-colors duration-300 disabled:opacity-50
@@ -132,11 +192,12 @@ avatarItems.forEach(item => {
         selectedAvatar = item;
         const avatarNumber = selectedAvatar.querySelector('img').getAttribute('data-avatar');
         selectedAvatarInput.value = avatarNumber; // Set the value of the hidden input
+        console.log('Selected Avatar:', avatarNumber);
 
         continueBtn.disabled = false;
     });
 });
-        
+
     </script>
 </body>
 </html>

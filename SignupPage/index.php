@@ -14,7 +14,7 @@ if(isset($_POST['Prenom'])) {
     echo "<pre>POST Data:\n";
     print_r($_POST);
     echo "</pre>";
-    
+
     $validation = new User($_POST);
     $errors = $validation->validateForm();
 
@@ -25,26 +25,29 @@ if(isset($_POST['Prenom'])) {
 
     if(empty($errors)) {
         $accountType = $_POST['account_type'] ?? 'unknown';
-        $table = ($accountType === 'professor') ? 'Professeur' : 'Etudiant';
+        $table = ($accountType === 'Professeur') ? 'Professeur' : 'Etudiant';
 
         // Debug: Show account type detection
         echo "<p>Trying to save to table: $table</p>";
 
-        if($validation->save($table)) {
+        $user_id = $validation->save($table); // new
+
+        if($user_id) {
             echo "<div class='success'>Registration successful!</div>";
 
             // Store essential information in the session
+            $_SESSION[$accountType . '_id'] = $user_id; // new
             $_SESSION['account_type'] = $accountType;
             $_SESSION['Prenom'] = $_POST['Prenom'];
             $_SESSION['Nom'] = $_POST['Nom'];
             $_SESSION['Email'] = $_POST['Email'];
-            
+
             $password = $_POST['Mdp'];
             $hashedpassword=password_hash($password,PASSWORD_DEFAULT);
             $_SESSION['Mdp'] = $hashedpassword ;
 
             // After successful registration and session setting, redirect to the avatars page
-            header("Location: ../ChooseAvatar/index.php"); // Assuming your avatars page is named 'avatars.php'
+            header("Location: ../ChooseAvatar/index.php");
             exit();
 
             // Clear POST data (moved after potential redirect)
@@ -82,7 +85,7 @@ if(isset($_POST['Prenom'])) {
             </div>
 
 
-            
+
 
         </div>
 
@@ -149,7 +152,7 @@ if(isset($_POST['Prenom'])) {
                          <?php endif;?>
                      <div class="flex-col "  >
                          <div class="flex-col md:flex-row gap-10" >
-                             <input type="hidden" name="account_type" value="professeur">
+                             <input type="hidden" name="account_type" value="Professeur">
                              <div class="input flex flex-col w-fit static group">
                              <label
                                  for="uuu"
@@ -537,5 +540,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
-
-            

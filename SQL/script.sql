@@ -57,9 +57,11 @@ CREATE TABLE Tache (
 
 CREATE TABLE Note (
     ID_Note INT unsigned AUTO_INCREMENT PRIMARY key ,
-    Titre VARCHAR(255) ,
     Contenu TEXT ,
+    Date_Ajout DATETIME DEFAULT CURRENT_TIMESTAMP ,
     ID_Tache INT unsigned ,
+    ID_Etudiant INT unsigned ,
+    Foreign key (ID_Etudiant) References Etudiant (ID_Etudiant)
     Foreign key (ID_Tache) References Tache (ID_Tache)
 );
 
