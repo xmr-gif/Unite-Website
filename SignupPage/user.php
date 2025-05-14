@@ -73,22 +73,11 @@
 
         public function save($table) {
             try {
-                if ($table === 'Professeur') {
-                    $query = "INSERT INTO Professeur
-                                    (Nom, Prenom, Email, Mdp, DateRegistration)
-                                    VALUES (:Nom, :Prenom, :Email, :Mdp, NOW())";
-                } elseif ($table === 'Etudiant') {
-                    $query = "INSERT INTO Etudiant
-                                    (Nom, Prenom, Email, Mdp, DateRegistration)
-                                    VALUES (:Nom, :Prenom, :Email, :Mdp, NOW())";
-                } else {
-                    // Handle invalid table name
-                    return false;
-                }
+                $query = "INSERT INTO $table
+                            (Nom, Prenom, Email, Mdp, DateRegistration)
+                            VALUES (:Nom, :Prenom, :Email, :Mdp, NOW())";
 
                 $stmt = $this->db->prepare($query);
-
-                // Hash password
                 $hashedPassword = password_hash($this->data['Mdp'], PASSWORD_DEFAULT);
 
                 $stmt->execute([
@@ -98,11 +87,29 @@
                     ':Mdp' => $hashedPassword
                 ]);
 
-                // return true;
-                return $this->db->lastInsertId();
+                $newUserId = $this->db->lastInsertId();
+
+                // Automatically log in after successful registration
+                $_SESSION['account_type'] = $table;
+                $_SESSION['user_id'] = $newUserId;
+                $_SESSION['Prenom'] = $this->data['Prenom'];
+                $_SESSION['Nom'] = $this->data['Nom'];
+                $_SESSION['Email'] = $this->data['Email'];
+
+                // For students, set specific session variable
+                if ($table === 'Etudiant') {
+                    $_SESSION['Etudiant_id'] = $newUserId;
+                }
+
+                return $newUserId;
 
             } catch(PDOException $e) {
-                $this->addError('database', 'Database error: ' . $e->getMessage());
+                // Handle duplicate email error
+                if ($e->getCode() == 23000) {
+                    $this->addError('Email', 'This email is already registered');
+                } else {
+                    $this->addError('database', 'Database error: ' . $e->getMessage());
+                }
                 return false;
             }
         }

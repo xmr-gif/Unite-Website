@@ -60,18 +60,25 @@ class LoginUser {
     public function authenticate() {
         $accountType = $this->data['AccountType'];
         $table = ($accountType === 'professor') ? 'Professeur' : 'Etudiant';
+        $idField = ($accountType === 'professor') ? 'ID_Professeur' : 'ID_Etudiant';
 
         try {
-            $query = "SELECT Nom, Prenom, Email, Mdp FROM $table WHERE Email = :email";
+            $query = "SELECT $idField, Nom, Prenom, Email, Mdp FROM $table WHERE Email = :email";
             $stmt = $this->db->prepare($query);
             $stmt->execute([':email' => $this->data['email']]);
             $user = $stmt->fetch();
 
             if ($user && password_verify($this->data['password'], $user['Mdp'])) {
-                $_SESSION['account_type'] = $accountType;
+                $_SESSION['account_type'] = ($accountType === 'professor') ? 'Professeur' : 'Etudiant';
+                $_SESSION['user_id'] = $user[$idField];
                 $_SESSION['Prenom'] = $user['Prenom'];
                 $_SESSION['Nom'] = $user['Nom'];
                 $_SESSION['Email'] = $user['Email'];
+
+                //doubt
+                if ($_SESSION['account_type'] === 'Etudiant') {
+                    $_SESSION['Etudiant_id'] = $user['ID_Etudiant'];
+                }
                 return true;
             } else {
                 $this->addError('email', 'Invalid email or password for the selected account type');
