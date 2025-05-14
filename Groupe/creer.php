@@ -12,15 +12,11 @@ try {
     echo "La connexion n'est pas reussie ".$e->getMessage() ;
 }
 
-$query = "SELECT (SELECT COUNT(*) FROM etudiant)+(select COUNT(*) from professeur) AS total";
-$stmt = $pdo->prepare($query);
-$stmt->execute();
-$totalUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$sqlsjt = "SELECT COUNT(*) as sujet FROM sujet";
+$sqlsjt = "SELECT *  FROM sujet";
 $stmt = $pdo->prepare($sqlsjt);
 $stmt->execute();
-$sujet = $stmt->fetch();
+$sujets = $stmt->fetchAll();
 
 // Nouveau : récupérer l'ID de l'étudiant connecté
 $account_type = $_SESSION['account_type'];
@@ -29,12 +25,38 @@ $id = $_SESSION[$account_type . '_id'] ?? null;
 
 
 
-$sqlsjt = "SELECT * FROM sujet";
-$stmt = $pdo->prepare($sqlsjt);
-$stmt->execute();
-$sujets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$sql = "SELECT * FROM $account_type WHERE $colomn = (:id)"  ; 
+$stmt2 = $pdo->prepare($sql); // Use $pdo
+$stmt2->bindParam(':id', $id);
+$stmt2->execute();
+$user = $stmt2->fetchAll();
 
+if($_SERVER['REQUEST_METHOD']=="POST" && isset($_POST["id_sujet"])){
+    $id_sujet = $_POST['id_sujet'];
+    if($id){
+        $sqlgroupe = "INSERT INTO groupe (ID_Sujet) VALUES (:id_groupe) ";
+        $stmtGroupe= $pdo->prepare($sqlgroupe);
+        $stmtGroupe->bindParam(":id_groupe",$id_sujet);
+        if($stmtGroupe->execute()){ //modifier la collone id_groupe dans la table etudiant
+            $id_groupe = $pdo->lastInsertId();
+            $sqlModifier = "UPDATE Etudiant SET id_groupe = :id_groupe WHERE ID_Etudiant = :id_etudiant" ;
+            $stmt_modifier = $pdo->prepare($sqlModifier);
+            $stmt_modifier->bindParam(":id_groupe",$id_groupe);
+            $stmt_modifier->bindParam(":id_etudiant",$id);
 
+            if($stmt_modifier->execute()){
+                echo "<div class='bg-green-100 text-green-800 p-4 rounded-md'>Le groupe a été créé et l'étudiant a été associé avec succès !</div>";
+            } else {
+                echo "<div class='bg-red-100 text-red-800 p-4 rounded-md'>Erreur lors de l'association de l'étudiant au groupe.</div>";
+            }
+        } else {
+            echo "<div class='bg-red-100 text-red-800 p-4 rounded-md'>Erreur lors de la création du groupe.</div>";
+        }
+    } else {
+        echo "<div class='bg-red-100 text-red-800 p-4 rounded-md'>Utilisateur non connecté.</div>";
+    }
+        }
+    
 
 
 
@@ -89,18 +111,18 @@ $sujets = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <h1 class="text-xl font-bold text-center text-indigo-600 mb-6">Espace Étudiant</h1>
   <div class="space-y-2">
     <div class="px-4 py-2 hover:bg-slate-100 rounded-md cursor-pointer text-zinc-600">
-      <a class="flex items-center gap-2" href="../S/dashboardEt.php">
+      <a class="flex items-center gap-2" href="../Student/dashboardEt.php">
         <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
         Tableau de bord
       </a>
     </div>
-    <div class="px-4 py-2 bg-indigo-100 text-indigo-700 font-semibold rounded-md">
-      <a class="flex items-center gap-2" href="">
+    <div class="px-4 py-2 hover:bg-slate-100 rounded-md cursor-pointer text-zinc-600">
+      <a class="flex items-center gap-2" href="../Subject/index.php">
         <i data-lucide="book-open" class="w-4 h-4"></i>
         Mes Sujets
       </a>
     </div>
-    <div class="px-4 py-2 hover:bg-slate-100 rounded-md cursor-pointer text-zinc-600">
+    <div class="px-4 py-2 bg-indigo-100 text-indigo-700 font-semibold rounded-md">
       <a class="flex items-center gap-2" href="../Groupe/index.php">
         <i data-lucide="users" class="w-4 h-4"></i>
         Mon Groupe
@@ -129,27 +151,20 @@ $sujets = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
   </div>
 </div>
+<div class="flex-1 p-10">
+<form action="" method="post" class="bg-white p-6 rounded-2xl shadow-md max-w-md mx-auto">
+  <label for="id_sujet" class="block mb-2 text-sm font-medium text-gray-700">Choisissez un sujet :</label>
+  <select name="id_sujet" id="id_sujet" class="w-full p-2 border border-gray-300 rounded-md mb-4">
+    <?php foreach ($sujets as $sujet) { ?> 
+      <option value="<?= htmlspecialchars($sujet["ID_Sujet"]) ?>"><?= htmlspecialchars($sujet["Titre"]) ?></option>
+    <?php } ?>
+  </select>
+  <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md w-full">Valider</button>
+</form>
 
-<div class="h-screen bg-gray-100 py-5 w-4/5 px-7">
-  <h2 class="text-2xl font-bold mb-6">Liste des Sujets</h2>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <?php foreach ($sujets as $s): ?>
-      <div class="bg-white p-5 rounded-lg shadow task-card">
-        <h3 class="text-xl font-semibold text-indigo-700 mb-2"><?= htmlspecialchars($s['Titre']) ?></h3>
-        <p class="text-sm text-gray-600 mb-2">Ajouté le : <?= date('d/m/Y', strtotime($s['Date_Ajout'])) ?></p>
-        <p class="text-gray-700">ID Sujet : <?= $s['ID_Sujet'] ?></p>
-      </div>
-    <?php endforeach; ?>
-  </div>
-</div>
-        
-        
-        
-        
-
-  <script>
+<script>
     lucide.createIcons();
   </script>
+</div>
 </body>
 </html>

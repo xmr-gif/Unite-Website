@@ -32,14 +32,25 @@ $id = $_SESSION[$account_type . '_id'] ?? null;
 
 
 
-$sql = "SELECT * FROM $account_type WHERE $colomn = (:id)"  ;
+$sql = "SELECT * FROM $account_type WHERE $colomn = (:id)"  ; 
 $stmt2 = $pdo->prepare($sql); // Use $pdo
 $stmt2->bindParam(':id', $id);
 $stmt2->execute();
 $user = $stmt2->fetchAll();
 
 
-
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'quitter_groupe') {
+  if ($id) {
+      $sqlQuitter = "UPDATE etudiant SET ID_Groupe = NULL WHERE ID_Etudiant = :id";
+      $stmtQuitter = $pdo->prepare($sqlQuitter);
+      if ($stmtQuitter->execute(['id' => $id])) {
+          header("Location: index.php"); // recharge la page pour refléter le changement
+          exit;
+      } else {
+          echo "<div class='text-red-500'>Erreur lors de la sortie du groupe.</div>";
+      }
+  }
+}
 
 
 
@@ -54,9 +65,17 @@ $user = $stmt2->fetchAll();
     <meta name="description" content="Team Timebox Calendar" />
     <meta name="author" content="Lovable" />
 
+<<<<<<< HEAD
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@0.462.0/dist/umd/lucide.min.js"></script>
+=======
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.css" integrity="sha512-kJlvECunwXftkPwyvHbclArO8wszgBGisiLeuDFwNM8ws+wKIw0sv1os3ClWZOcrEB2eRXULYUsm8OVRGJKwGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://unpkg.com/lucide@0.462.0/dist/umd/lucide.min.js"></script>
+  
+>>>>>>> cc2df2073e7bd32afc1c191f43b665d0994e3d87
 
     <style>
     .task-card {
@@ -87,6 +106,7 @@ $user = $stmt2->fetchAll();
       </div>
     </div>
 
+<<<<<<< HEAD
     <!-- Main Layout -->
     <div class="flex min-h-screen">
       <!-- Sidebar -->
@@ -135,6 +155,39 @@ $user = $stmt2->fetchAll();
           </div>
         </div>
       </div>
+=======
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <div class="py-5 px-6 w-1/4 h-screen border-r border-gray-200 bg-white">
+  <img src="../images/black-logo.png" class="w-20 mb-10 ml-4" alt="Logo Étudiant" />
+  <h1 class="text-xl font-bold text-center text-indigo-600 mb-6">Espace Étudiant</h1>
+  <div class="space-y-2">
+    <div class="px-4 py-2 hover:bg-slate-100 rounded-md cursor-pointer text-zinc-600">
+      <a class="flex items-center gap-2" href="../Student/dashboardEt.php">
+        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+        Tableau de bord
+      </a>
+    </div>
+    <div class="px-4 py-2 hover:bg-slate-100 rounded-md cursor-pointer text-zinc-600">
+      <a class="flex items-center gap-2" href="../Subject/index.php">
+        <i data-lucide="book-open" class="w-4 h-4"></i>
+        Mes Sujets
+      </a>
+    </div>
+    <div class="px-4 py-2 bg-indigo-100 text-indigo-700 font-semibold rounded-md">
+      <a class="flex items-center gap-2" href="../Groupe/index.php">
+        <i data-lucide="users" class="w-4 h-4"></i>
+        Mon Groupe
+      </a>
+    </div>
+    <div class="px-4 py-2 hover:bg-slate-100 rounded-md cursor-pointer text-zinc-600">
+      <a class="flex items-center gap-2" href="#">
+        <i data-lucide="file-text" class="w-4 h-4"></i>
+        Mes Choix
+      </a>
+    </div>
+  </div>
+>>>>>>> cc2df2073e7bd32afc1c191f43b665d0994e3d87
 
 <div class="flex-1 p-10">
   <?php
@@ -153,6 +206,7 @@ $user = $stmt2->fetchAll();
           $membres = $stmtMembres->fetchAll(PDO::FETCH_ASSOC);
 
           echo '<div class="bg-white p-6 rounded-2xl shadow-sm">';
+<<<<<<< HEAD
           echo '<h2 class="text-2xl font-bold mb-5">Your Group Members :</h2>';
           echo '<ul class="space-y-3">';
           foreach ($membres as $membre) {
@@ -160,10 +214,32 @@ $user = $stmt2->fetchAll();
           }
           echo '</ul>';
           echo '</div>';
+=======
+echo '<h2 class="text-2xl font-bold mb-5">Membres de votre groupe :</h2>';
+echo '<ul class="space-y-3">';
+foreach ($membres as $membre) {
+    echo '<li class="text-gray-700 font-medium">👤 ' . htmlspecialchars($membre['Prenom']) . ' ' . htmlspecialchars($membre['Nom']) . '</li>';
+}
+echo '</ul>';
+
+// ✅ Ajoute ici le bouton seulement si l'étudiant est dans un groupe
+echo '<form method="post" class="mt-6 text-center">';
+echo '<input type="hidden" name="action" value="quitter_groupe">';
+echo '<button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md">';
+echo 'Quitter le groupe';
+echo '</button>';
+echo '</form>';
+
+echo '</div>';
+>>>>>>> cc2df2073e7bd32afc1c191f43b665d0994e3d87
       } else {
-          echo '<div class="bg-white p-6 rounded-2xl shadow-sm text-center">';
-          echo '<h2 class="text-xl font-semibold text-gray-600">Vous n\'êtes dans aucun groupe.</h2>';
-          echo '</div>';
+        echo '<div class="bg-white p-6 rounded-2xl shadow-sm text-center">';
+        echo '<h2 class="text-xl font-semibold text-gray-600 mb-4">Vous n\'êtes dans aucun groupe.</h2>';
+        echo '<div class="flex justify-center gap-4">';
+        echo '<a href="../Groupe/creer.php" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg shadow-md transition">Créer un groupe</a>';
+        echo '<a href="../Groupe/rejoindre.php" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-5 py-2 rounded-lg shadow-md transition">Rejoindre un groupe</a>';
+        echo '</div>';
+        echo '</div>';
       }
   } else {
       echo '<div class="bg-white p-6 rounded-2xl shadow-sm text-center">';
@@ -171,7 +247,11 @@ $user = $stmt2->fetchAll();
       echo '</div>';
   }
   ?>
+  
 </div>
+<script>
+    lucide.createIcons();
+  </script>
 </body>
 <script>
     lucide.createIcons();

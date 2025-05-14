@@ -26,18 +26,18 @@ $stmt->execute();
 $sujet = $stmt->fetch();
 
 // Nouveau : récupérer l'ID de l'étudiant connecté
-// $account_type = $_SESSION['account_type'];
-// $colomn = 'id_'.$account_type ;
-// $id = $_SESSION[$account_type . '_id'] ?? null;
+$account_type = $_SESSION['account_type'];
+$colomn = 'id_'.$account_type ;
+$id = $_SESSION[$account_type . '_id'] ?? null;
 
 
 
-// $sql = "SELECT * FROM $account_type WHERE $colomn = (:id)"  ;
-// $stmt2 = $pdo->prepare($sql); // Use $pdo
-// $stmt2->bindParam(':id', $id);
-// $stmt2->execute();
-// $user = $stmt2->fetchAll();
-// print_r($_SESSION[ $account_type.'_id' ]);
+$sql = "SELECT * FROM $account_type WHERE $colomn = (:id)"  ;
+$stmt2 = $pdo->prepare($sql); // Use $pdo
+$stmt2->bindParam(':id', $id);
+$stmt2->execute();
+$user = $stmt2->fetchAll();
+print_r($_SESSION[ $account_type.'_id' ]);
 
 
 
